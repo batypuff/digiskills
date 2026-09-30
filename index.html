@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Švédský stůl aktivit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: katalog karet v mřížce; detail aktivity = náhled účastníka a administrace vedle sebe, na mobilu záložky.
+   Firemní barvy a písmo: měňte jen proměnné v tomto bloku a ve dvou tmavých blocích pod ním. */
+:root {
+  --bg: #F3F5F8;
+  --surface: #FFFFFF;
+  --surface-2: #E8ECF1;
+  --ink: #16202C;
+  --ink-2: #4B5767;
+  --line: #D3DAE2;
+  --line-strong: #7D8896;
+  --accent: #1E5BB8;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E1EAF8;
+  --ok: #16734A;
+  --ok-soft: #E0F2E8;
+  --warn: #8A5200;
+  --warn-soft: #FAEFD9;
+  --info: #5B3FA8;
+  --info-soft: #ECE6F8;
+  --shadow: rgb(22 32 44 / .16);
+  --goal-remember: #B5540F;
+  --goal-understand: #1E5BB8;
+  --goal-practice: #16734A;
+  --goal-habit: #8C3F9E;
+  --goal-feedback: #6B6F12;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E131A; --surface: #161D26; --surface-2: #1D2630; --ink: #E7ECF2; --ink-2: #A3AFBD;
+    --line: #2B3644; --line-strong: #6B7888; --accent: #86AEF2; --accent-ink: #0B1626; --accent-soft: #1B2A40;
+    --ok: #62CB93; --ok-soft: #13291E; --warn: #E3B25A; --warn-soft: #2D2311; --info: #B9A3F0; --info-soft: #251D3A;
+    --shadow: rgb(0 0 0 / .55);
+    --goal-remember: #F09A5B; --goal-understand: #86AEF2; --goal-practice: #62CB93; --goal-habit: #D08BE0; --goal-feedback: #C7CC5E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E131A; --surface: #161D26; --surface-2: #1D2630; --ink: #E7ECF2; --ink-2: #A3AFBD;
+  --line: #2B3644; --line-strong: #6B7888; --accent: #86AEF2; --accent-ink: #0B1626; --accent-soft: #1B2A40;
+  --ok: #62CB93; --ok-soft: #13291E; --warn: #E3B25A; --warn-soft: #2D2311; --info: #B9A3F0; --info-soft: #251D3A;
+  --shadow: rgb(0 0 0 / .55);
+  --goal-remember: #F09A5B; --goal-understand: #86AEF2; --goal-practice: #62CB93; --goal-habit: #D08BE0; --goal-feedback: #C7CC5E;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+html:has(dialog[open]) { overflow: hidden; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--font-body); }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+p { margin: 0; }
+button { font: inherit; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.skip { position: absolute; left: 16px; top: -4rem; background: var(--accent); color: var(--accent-ink); padding: .5rem 1rem; border-radius: 6px; z-index: 10; font-weight: 600; }
+.skip:focus { top: 1rem; }
+.muted { color: var(--ink-2); }
+
+.wrap { max-width: 1180px; margin-inline: auto; padding-inline: 16px; padding-block: 1.5rem 4rem; }
+body.has-picks .wrap { padding-bottom: 7rem; }
+@media (min-width: 720px) { .wrap { padding-inline: 32px; padding-top: 2.5rem; } }
+
+/* ---------- Úvod ---------- */
+.hero { display: grid; gap: 1rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+.eyebrow { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+h1 { font-size: clamp(2.1rem, 1.4rem + 2.8vw, 3.2rem); font-weight: 700; }
+.lead { font-size: 1.15rem; max-width: 60ch; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: .75rem 1.5rem; margin: .5rem 0 0; max-width: 820px; }
+.facts div { display: grid; gap: .1rem; border-top: 2px solid var(--ink); padding-top: .5rem; }
+.facts dt { font-size: .74rem; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
+.facts dd { margin: 0; font-weight: 500; }
+.today { font-size: .95rem; color: var(--ink-2); max-width: 75ch; }
+.today strong { color: var(--ink); }
+.version { justify-self: start; font-size: .85rem; font-weight: 600; padding: .35rem .7rem; border-radius: 6px; background: var(--surface-2); }
+
+/* ---------- Filtry ---------- */
+.filters { display: grid; gap: .9rem; padding-block: 1.75rem 1.25rem; }
+.filter-group { display: grid; gap: .45rem; }
+.filter-label { font-weight: 700; font-size: .9rem; }
+@media (min-width: 760px) {
+  .filter-group { grid-template-columns: 11rem minmax(0, 1fr); align-items: start; }
+  .filter-label { padding-top: .55rem; }
+  .legend, .filter-status { margin-left: 11rem; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.5rem; padding: .35rem .9rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: .92rem; cursor: pointer; }
+.chip:hover { border-color: var(--line-strong); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); font-weight: 600; }
+.chip[aria-pressed="true"]::before { content: "✓"; color: var(--accent); font-weight: 700; }
+.chip-n { font-size: .8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.dot { width: .6rem; height: .6rem; border-radius: 50%; background: var(--dot, var(--ink-2)); flex: none; }
+.legend { font-size: .85rem; color: var(--ink-2); max-width: 78ch; }
+.filter-status { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1rem; font-size: .9rem; font-weight: 600; }
+.linkbtn { background: none; border: 0; padding: .25rem 0; color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* ---------- Mřížka karet ---------- */
+.grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 1rem; }
+.card { min-width: 0; display: grid; grid-template-rows: auto auto 1fr auto auto; gap: .65rem; padding: 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.card.is-pending { background: transparent; border-style: dashed; border-color: var(--line-strong); }
+.card.is-picked { border: 1px solid var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.card-title { font-size: 1.22rem; }
+.card-text { color: var(--ink-2); font-size: .95rem; }
+.card-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .82rem; min-height: 1.6rem; }
+.card-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.card-actions .btn { flex: 1 1 8rem; }
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tag { display: inline-flex; align-items: center; gap: .4rem; padding: .2rem .55rem; border-radius: 6px; background: var(--surface-2); font-size: .78rem; font-weight: 600; }
+.bars { display: inline-flex; gap: 2px; align-items: flex-end; }
+.bars i { display: block; width: 5px; border-radius: 1px; border: 1px solid var(--ink-2); }
+.bars i:nth-child(1) { height: 6px; } .bars i:nth-child(2) { height: 9px; } .bars i:nth-child(3) { height: 12px; }
+.bars i.on { background: var(--ink-2); }
+.status { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; }
+.status-ready { color: var(--ok); }
+.status-ready::before { content: "●"; }
+.status-pending { color: var(--ink-2); }
+.status-pending::before { content: "○"; }
+.pick-order { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.empty { padding: 2rem 1rem; text-align: center; color: var(--ink-2); border: 1px dashed var(--line-strong); border-radius: var(--radius); }
+
+/* ---------- Tlačítka ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.6rem; padding: .5rem 1rem; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); font-weight: 600; font-size: .95rem; line-height: 1.2; text-align: center; cursor: pointer; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.btn-small { min-height: 2.2rem; padding: .3rem .7rem; font-size: .85rem; }
+.btn.pick[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.pick-check::before { content: "+"; font-weight: 700; }
+.btn.pick[aria-pressed="true"] .pick-check::before { content: "✓"; color: var(--accent); }
+.iconbtn { min-width: 2.5rem; padding-inline: .5rem; }
+
+/* ---------- Výběr priorit ---------- */
+.picks { margin-top: 3rem; display: grid; gap: 1rem; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+@media (min-width: 720px) { .picks { padding: 2rem; } }
+.picks h2 { font-size: 1.6rem; }
+.picks > p { max-width: 70ch; color: var(--ink-2); }
+.pick-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.pick-row { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; gap: .35rem .75rem; align-items: center; padding: .6rem .75rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+.pick-n { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; font-variant-numeric: tabular-nums; text-align: center; }
+.pick-main { display: grid; min-width: 0; }
+.pick-title { font-weight: 700; }
+.pick-meta { font-size: .82rem; color: var(--ink-2); }
+.pick-ctrl { display: flex; gap: .3rem; }
+@media (max-width: 560px) { .pick-row { grid-template-columns: 2rem minmax(0, 1fr); } .pick-ctrl { grid-column: 2; } }
+.pick-empty { padding: 1rem; border: 1px dashed var(--line-strong); border-radius: 8px; color: var(--ink-2); }
+.pick-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.say { font-size: .9rem; font-weight: 600; min-height: 1.4em; }
+.brief-preview summary { cursor: pointer; font-weight: 600; font-size: .92rem; }
+.brief-text { margin: .75rem 0 0; padding: 1rem; max-height: 22rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: .84rem/1.5 var(--font-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+.copy-fallback { width: 100%; min-height: 10rem; font: .84rem/1.5 var(--font-mono); padding: .75rem; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg); color: var(--ink); }
+
+.pickbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; padding: .65rem 16px calc(.65rem + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); }
+.pickbar-inner { max-width: 1180px; margin-inline: auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: 600; }
+.pickbar a { color: var(--bg); font-weight: 700; text-underline-offset: 3px; }
+
+/* ---------- Detail aktivity ---------- */
+dialog.detail { width: 100%; max-width: 100%; height: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+dialog.detail::backdrop { background: rgb(0 0 0 / .45); }
+.d-wrap { max-width: 1280px; margin-inline: auto; padding-inline: 16px; padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 720px) { .d-wrap { padding-inline: 32px; } }
+.d-bar { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding-top: calc(.75rem + env(safe-area-inset-top, 0px)); padding-bottom: .75rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+.d-title { font-size: clamp(1.2rem, .95rem + 1.1vw, 1.75rem); min-width: 0; }
+.d-title:focus { outline: none; }
+.d-actions { display: flex; gap: .5rem; flex: none; }
+.d-intro { display: grid; gap: .6rem; padding-block: 1rem 1.5rem; }
+.d-intro p { max-width: 70ch; font-size: 1.05rem; }
+@media (max-width: 520px) { .d-actions .btn { padding-inline: .7rem; } .d-actions .label-long { display: none; } }
+
+.d-body { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); }
+.tabs { display: flex; gap: .25rem; padding: .25rem; background: var(--surface-2); border-radius: 10px; }
+.tab { flex: 1; min-height: 2.6rem; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); font-weight: 600; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px var(--shadow); }
+@media (max-width: 959.98px) {
+  .d-body[data-tab="learner"] .pane-admin, .d-body[data-tab="admin"] .pane-learner { display: none; }
+}
+@media (min-width: 960px) {
+  .d-body { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "learner admin" "info admin"; column-gap: 2rem; align-items: start; }
+  .tabs { display: none; }
+  .pane-learner { grid-area: learner; }
+  .pane-admin { grid-area: admin; }
+  .d-body > .info { grid-area: info; }
+}
+.pane { min-width: 0; display: grid; gap: .75rem; align-content: start; }
+.pane-label { font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--ink-2); }
+.pane-head { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.portal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 14px 32px -20px var(--shadow); }
+.portal-bar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .25rem .75rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--ink-2); }
+.portal-course { font-weight: 700; color: var(--ink); }
+.portal-body { padding: 1.25rem 1rem 1.5rem; }
+@media (min-width: 720px) { .portal-body { padding: 1.75rem; } }
+
+/* ---------- Administrace ---------- */
+.admin { display: grid; gap: 1.1rem; padding: 1rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+@media (min-width: 720px) { .admin { padding: 1.25rem 1.4rem; } }
+.admin-note { font-size: .88rem; color: var(--ink-2); }
+.admin-type { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-size: .88rem; }
+.adm-sec { display: grid; gap: .8rem; padding-top: 1rem; border-top: 1px solid var(--line-strong); }
+.adm-sec > h4 { font-size: 1.02rem; }
+.f { display: grid; gap: .3rem; min-width: 0; margin: 0; }
+.f > label, .f-legend { font-weight: 600; font-size: .88rem; }
+.in { width: 100%; padding: .5rem .65rem; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; font-size: .95rem; line-height: 1.4; }
+textarea.in { resize: vertical; }
+input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
+.help { font-size: .8rem; color: var(--ink-2); }
+.f-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .75rem; }
+.f-check { display: flex; gap: .55rem; align-items: flex-start; font-size: .92rem; }
+.f-check input { flex: none; width: 1.1rem; height: 1.1rem; margin: .2rem 0 0; accent-color: var(--accent); }
+.f-radios { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; min-width: 0; }
+.f-radios > legend { padding: 0; margin-bottom: .35rem; float: left; width: 100%; }
+.radio { display: inline-flex; gap: .45rem; align-items: center; font-size: .92rem; }
+.radio input { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: var(--accent); }
+.adm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.adm-item { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.adm-item > summary { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; gap: .5rem; align-items: center; padding: .6rem .75rem; cursor: pointer; list-style: none; }
+.adm-item > summary::-webkit-details-marker { display: none; }
+.adm-item > summary::after { content: "▾"; color: var(--ink-2); transition: transform .15s; }
+.adm-item[open] > summary::after { transform: rotate(180deg); }
+.adm-n { font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.adm-sum { display: grid; min-width: 0; }
+.adm-sum-text { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-sum-meta { font-size: .8rem; color: var(--ink-2); }
+.adm-body { display: grid; gap: .8rem; padding: .85rem .75rem 1rem; border-top: 1px solid var(--line); }
+.ans-row { display: grid; grid-template-columns: 1.9rem minmax(0, 1fr) 5.5rem; gap: .5rem; align-items: end; }
+.ans-row .q-letter { margin-bottom: .45rem; }
+.ans-row input[type="number"].in { max-width: none; }
+.range { display: flex; gap: .55rem; align-items: flex-start; padding: .65rem .8rem; border-radius: 8px; font-size: .88rem; }
+.range.ok { background: var(--ok-soft); }
+.range.ok .range-icon { color: var(--ok); }
+.range.bad { background: var(--warn-soft); }
+.range.bad .range-icon { color: var(--warn); }
+.range-icon { font-weight: 700; }
+.adm-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* ---------- Rozbalovací panely ---------- */
+.info { display: grid; gap: .5rem; align-content: start; }
+.info details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.info summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .85rem 1rem; font-weight: 700; cursor: pointer; list-style: none; }
+.info summary::-webkit-details-marker { display: none; }
+.info summary::after { content: "+"; font-size: 1.25rem; line-height: 1; color: var(--ink-2); }
+.info details[open] summary::after { content: "−"; }
+.panel-body { display: grid; gap: .6rem; padding: 0 1rem 1rem; max-width: 70ch; }
+.src { font-size: .85rem; color: var(--ink-2); font-style: italic; }
+.dev { display: grid; gap: .65rem; margin: 0; }
+.dev dt { font-weight: 700; font-size: .85rem; }
+.dev dd { margin: 0; }
+
+.pending-body { display: grid; gap: 1.25rem; max-width: 800px; }
+.pending-note { padding: 1rem; border: 1px dashed var(--line-strong); border-radius: 10px; color: var(--ink-2); }
+.pending-facts { display: grid; gap: .9rem; margin: 0; }
+.pending-facts dt { font-size: .74rem; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); font-weight: 700; }
+.pending-facts dd { margin: .15rem 0 0; }
+
+/* ---------- Aktivita: Švihni kartou ---------- */
+.act { display: grid; gap: 1rem; }
+.act-title { font-size: 1.3rem; }
+.swipe-legend { display: flex; justify-content: space-between; gap: 1rem; font-size: .82rem; font-weight: 700; color: var(--ink-2); }
+.swipe-stack { position: relative; height: 14rem; margin-bottom: 1.5rem; }
+.swipe-card { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding: 1.25rem 1.4rem; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px; box-shadow: 0 14px 30px -16px var(--shadow); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .2s ease; overflow: hidden; }
+.swipe-card[data-depth="1"] { transform: translateY(12px) scale(.955); }
+.swipe-card[data-depth="2"] { transform: translateY(24px) scale(.91); }
+.swipe-card[data-depth="1"] > *, .swipe-card[data-depth="2"] > * { visibility: hidden; }
+.swipe-card.is-dragging { transition: none; cursor: grabbing; }
+.swipe-num { font-size: .76rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.swipe-text { font-family: var(--font-display); font-size: clamp(1.15rem, 1rem + .7vw, 1.45rem); font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+.hint { position: absolute; top: .9rem; padding: .15rem .55rem; border: 2px solid currentColor; border-radius: 6px; background: var(--surface); font-size: .8rem; font-weight: 700; opacity: 0; pointer-events: none; }
+.hint-left { right: .9rem; color: var(--ink); }
+.hint-right { left: .9rem; color: var(--accent); }
+.swipe-controls { display: grid; grid-template-columns: 1fr auto 1fr; gap: .5rem; align-items: center; }
+.swipe-count { min-width: 3.5rem; text-align: center; font-size: .9rem; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.kbd-hint { font-size: .8rem; color: var(--ink-2); text-align: center; }
+.res-head { display: grid; gap: .45rem; }
+.res-head:focus { outline: none; }
+.res-score { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
+.res-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.res-item { display: grid; gap: .35rem; padding: .75rem .85rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+.res-task { font-weight: 700; }
+.res-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .6rem; font-size: .85rem; color: var(--ink-2); }
+.res-st { display: inline-flex; gap: .3rem; padding: .1rem .5rem; border-radius: 5px; font-size: .78rem; font-weight: 700; }
+.st-ok .res-st { background: var(--ok-soft); color: var(--ok); }
+.st-diff .res-st { background: var(--warn-soft); color: var(--warn); }
+.st-disputed .res-st { background: var(--info-soft); color: var(--info); }
+.res-expl { font-size: .9rem; }
+
+/* ---------- Aktivita: Sebehodnoticí test ---------- */
+.q-top { display: grid; gap: .4rem; font-size: .85rem; font-weight: 600; color: var(--ink-2); }
+.q-bar { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.q-bar > span { display: block; height: 100%; background: var(--accent); transition: width .25s ease; }
+.q-fs { border: 0; margin: 0; padding: 0; display: grid; gap: .5rem; min-width: 0; }
+.q-text { float: left; width: 100%; padding: 0; margin-bottom: .5rem; font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.3; }
+.q-text:focus { outline: none; }
+.q-opt { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: .75rem; align-items: center; padding: .75rem .9rem; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; cursor: pointer; }
+.q-opt:hover { border-color: var(--accent); }
+.q-opt:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.q-opt:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.q-opt input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--accent); }
+.q-letter { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--surface-2); font-size: .85rem; font-weight: 700; }
+.q-opt:has(input:checked) .q-letter { background: var(--accent); color: var(--accent-ink); }
+.q-nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+.q-nav .next { margin-left: auto; }
+.prof-scale { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+.prof-seg { padding: .5rem .4rem; border-radius: 6px; background: var(--surface-2); color: var(--ink-2); font-size: .78rem; font-weight: 600; text-align: center; overflow-wrap: anywhere; }
+.prof-seg.is-you { background: var(--accent); color: var(--accent-ink); }
+.rec { display: grid; gap: .4rem; padding: 1rem; background: var(--accent-soft); border-radius: 10px; }
+.rec-label { font-size: .74rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; color: var(--ink-2); }
+.rec-chapter { font-weight: 700; font-size: 1.05rem; }
+.rec .btn { justify-self: start; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#katalog">Přeskočit na aktivity</a>
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Digiskills · podklad k rozvoji portálu</p>
+    <h1>Švédský stůl aktivit</h1>
+    <p class="lead">Vyzkoušejte si aktivity, které by portál mohl umět, podívejte se, jak by je autor kurzu zakládal, a vyberte, co se má naprogramovat jako první.</p>
+    <dl class="facts">
+      <div><dt>Délka kurzu</dt><dd>kolem 45 minut</dd></div>
+      <div><dt>Jedna aktivita</dt><dd>3 až 4 minuty</dd></div>
+      <div><dt>Cíl kurzů</dt><dd>nový pracovní návyk, ne jen informace</dd></div>
+    </dl>
+    <p class="today"><strong>Portál dnes umí:</strong> text, video, obrázek, test s výběrem odpovědi, formulář s otevřenou odpovědí a tlačítko na dokončení aktivity. Třídění a přiřazování řešíme řadou otázek s rozbalovací nabídkou.</p>
+    <p class="version" id="version"></p>
+  </header>
+
+  <section class="filters" aria-labelledby="filters-title">
+    <h2 id="filters-title" class="sr-only">Filtry</h2>
+    <div class="filter-group" role="group" aria-labelledby="fg-goal">
+      <span class="filter-label" id="fg-goal">Cíl učení</span>
+      <div class="chips" id="goal-chips"></div>
+    </div>
+    <div class="filter-group" role="group" aria-labelledby="fg-effort">
+      <span class="filter-label" id="fg-effort">Náročnost vývoje</span>
+      <div class="chips" id="effort-chips"></div>
+    </div>
+    <p class="legend"><strong>S</strong> nový typ zobrazení · <strong>M</strong> nový typ interakce s ukládáním odpovědí · <strong>L</strong> plánování, e-maily, souhrny za víc účastníků nebo napojení na AI. Jde o odhad, ověří ho vývoj.</p>
+    <div class="filter-status">
+      <p id="count" aria-live="polite"></p>
+      <button type="button" class="linkbtn" id="reset-filters" hidden>Zrušit filtry</button>
+    </div>
+  </section>
+
+  <section id="katalog" aria-labelledby="katalog-title" tabindex="-1">
+    <h2 id="katalog-title" class="sr-only">Aktivity</h2>
+    <ul class="grid" id="grid"></ul>
+    <p class="empty" id="empty" hidden>Filtrům neodpovídá žádná aktivita.</p>
+  </section>
+
+  <section class="picks" id="vyber" aria-labelledby="vyber-title" tabindex="-1">
+    <h2 id="vyber-title">Vybrané priority</h2>
+    <p>Pořadí určuje, co se programuje jako první, změníte ho šipkami. Výběr platí jen v této otevřené stránce a nikam se neodesílá.</p>
+    <ol class="pick-list" id="pick-list"></ol>
+    <p class="pick-empty" id="pick-empty">Zatím nic. U aktivity klikněte na <strong>Chci tohle</strong>.</p>
+    <div class="pick-actions">
+      <button type="button" class="btn primary" id="copy-brief">Zkopírovat zadání pro programátory</button>
+      <button type="button" class="btn" id="save-csv">Stáhnout CSV</button>
+    </div>
+    <p class="say" id="say" role="status"></p>
+    <textarea class="copy-fallback" id="copy-fallback" aria-label="Zadání pro programátory ke zkopírování" readonly hidden></textarea>
+    <details class="brief-preview" id="brief-preview" hidden>
+      <summary>Náhled textu pro programátory</summary>
+      <pre class="brief-text" id="brief-text"></pre>
+    </details>
+  </section>
+</div>
+
+<div class="pickbar" id="pickbar" hidden>
+  <div class="pickbar-inner">
+    <span id="pickbar-text"></span>
+    <a href="#vyber" id="pickbar-link">Zobrazit priority</a>
+  </div>
+</div>
+
+<dialog class="detail" id="detail" aria-labelledby="d-title"></dialog>
+
+<script>
+/* =====================================================================
+   DATA AKTIVIT
+   Jedna aktivita = jeden objekt. Jedenáctou aktivitu přidáte tak, že sem
+   připíšete další objekt se stejnými poli.
+   - goal: remember | understand | practice | habit | feedback
+   - effort: pole z "S", "M", "L" (odhad, ověří vývoj)
+   - component: typ interaktivní ukázky z COMPONENTS níže ("swipe",
+     "profileQuiz"); null = ukázka se připravuje
+   - config: obsah ukázky, stejná data vyplňuje administrace
+   - panels: texty tří rozbalovacích panelů pod ukázkou
+   ===================================================================== */
+const ACTIVITIES = [
+  {
+    id: "svihni-kartou",
+    title: "Švihni kartou",
+    oneLiner: "Kartu po kartě rozhoduje, jestli pracovní úkol udělá sám, nebo ho dá Copilotovi.",
+    goal: "understand",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Úkoly: udělám sám, nebo dám Copilotovi. Druhá varianta: aplikace, které nabíjí, nebo vyčerpávají.",
+    component: "swipe",
+    config: {
+      instruction: "U každého úkolu se rozhodněte, jestli ho uděláte sami, nebo ho svěříte Copilotovi. Švihněte kartou doleva nebo doprava, případně použijte tlačítka pod ní.",
+      leftLabel: "Udělám sám",
+      rightLabel: "Dám Copilotovi",
+      shuffle: false,
+      explainMode: "disputed",
+      threshold: 80,
+      feedbackHigh: "Dobrý odhad. Copilotovi svěřujete práci, kde ušetří čas, a rozhodnutí s dopadem na lidi a peníze si necháváte.",
+      feedbackLow: "U několika úkolů jste zvolili jinak než doporučení. Projděte si rozdíly níže, v další části kurzu na ně navážeme.",
+      cards: [
+        { text: "Shrnout dlouhé e-mailové vlákno, než se připojíte k poradě", answer: "right", disputed: false, explanation: "Copilot rychle vytáhne, kdo co navrhl a co zůstává otevřené. Podstatné body si ověřte v původních e-mailech." },
+        { text: "Napsat kondolenci kolegovi, kterému zemřel otec", answer: "left", disputed: false, explanation: "Osobní slova od vás mají váhu, kterou vygenerovaný text nenahradí." },
+        { text: "Připravit první návrh osnovy prezentace z dvacetistránkové zprávy", answer: "right", disputed: false, explanation: "Návrh struktury z dlouhého dokumentu je pro Copilota typický úkol. Osnovu pak upravíte podle publika." },
+        { text: "Rozhodnout, komu v týmu přidělit nový projekt", answer: "left", disputed: true, explanation: "Copilot vám může shrnout, kdo na čem právě pracuje. Rozhodnutí o lidech ale zůstává na vás, protože znáte souvislosti, které v datech nejsou." },
+        { text: "Dohledat v zápisech z porad, co jste slíbili klientovi", answer: "right", disputed: false, explanation: "Hledání v mnoha dokumentech najednou zvládne Copilot za pár vteřin. Zkontrolujte zdroje, na které odkáže." },
+        { text: "Odpovědět na stížnost rozzlobeného zákazníka", answer: "right", disputed: true, explanation: "Copilot pomůže s klidným a věcným prvním návrhem. Tón, omluvu a konkrétní nabídku ale zvažte sami a odpověď před odesláním upravte." },
+        { text: "Přepsat odborný postup srozumitelně pro nové kolegy", answer: "right", disputed: false, explanation: "Zjednodušit text pro jiné publikum Copilotovi jde dobře. Odbornou správnost pak zkontrolujete vy." },
+        { text: "Zkontrolovat čísla ve smlouvě před podpisem", answer: "left", disputed: true, explanation: "Copilot může upozornit na nesrovnalosti, za správnost ale odpovídáte vy. Čísla vždy ověřte proti zdroji." }
+      ]
+    },
+    panels: {
+      why: "Rychlé rozhodnutí u každé karty nutí účastníka použít kritérium, ne jen číst seznam. Ujasní si, kde mu Copilot ušetří práci a kde ne, a to je první krok k tomu, aby ho začal používat. Z odpovědí uvidíme, jestli účastník AI spíš přeceňuje, nebo podceňuje.",
+      today: "Řada otázek s rozbalovací nabídkou Udělám sám / Dám Copilotovi, nebo jedna otázka s výběrem více odpovědí. Vyhodnocení zná jen správně a špatně, sporné případy neumí a souhrn na konci chybí.",
+      dev: {
+        stores: "Pro každou kartu její ID, volbu (vlevo, nebo vpravo) a čas volby. Na konci počet shod s doporučením.",
+        evaluation: "Volba se porovná se stranou nastavenou v administraci. Sporné karty se do shody nepočítají a ukáže se u nich vysvětlení. Text zpětné vazby se vybere podle hranice shody v procentech.",
+        keyboard: "Karta dostane focus, šipka vlevo a vpravo rozhodne. Pod kartou jsou vždy i tlačítka. Každou volbu oznámí čtečka obrazovky (aria-live).",
+        effortNote: "Nový typ interakce s gesty a ukládáním odpovědí."
+      }
+    }
+  },
+  {
+    id: "serad-kroky",
+    title: "Seřaď kroky",
+    oneLiner: "Přetažením seřadí 6 kroků, jak s Copilotem v Teams připravit shrnutí schůzky.",
+    goal: "remember",
+    effort: ["S"],
+    example: "Kroky shrnutí schůzky v Teams. Druhá varianta: seřaď aplikace v telefonu podle času, který v nich trávíte.",
+    component: null,
+    panels: {
+      why: "Vybavení postupu z paměti odhalí mezery v pochopení sledu.",
+      today: "Řada otázek s rozbalovací nabídkou: krok 1 je…, krok 2 je…"
+    }
+  },
+  {
+    id: "sebehodnotici-test",
+    title: "Sebehodnoticí test s profilem",
+    oneLiner: "Odpoví na 6 otázek A, B, C, body se sečtou na pozadí a dostane jeden ze tří profilů s doporučením, kde v kurzu začít.",
+    goal: "habit",
+    effort: ["S"],
+    course: "Digitální wellbeing",
+    example: "Digitální wellbeing (dotaz klienta StopVision)",
+    component: "profileQuiz",
+    config: {
+      title: "Jak jste na tom s digitálním wellbeingem?",
+      intro: "Šest krátkých otázek o tom, jak pracujete s telefonem a zprávami. Odpovídejte podle toho, jak to máte obvykle, ne jak byste to chtěli mít.",
+      allowBack: true,
+      showScore: false,
+      questions: [
+        { text: "Když vám při soustředěné práci přijde oznámení, co obvykle uděláte?", answers: [
+          { text: "Nechám ho být a podívám se později.", points: 0 },
+          { text: "Mrknu, od koho je, a vrátím se k práci.", points: 1 },
+          { text: "Hned ho otevřu a odpovím.", points: 2 } ] },
+        { text: "Jak často během hodiny přepnete mezi e-mailem, chatem a rozdělanou prací?", answers: [
+          { text: "Skoro vůbec, poštu vyřizuji v pevných časech.", points: 0 },
+          { text: "Několikrát.", points: 1 },
+          { text: "Neustále.", points: 2 } ] },
+        { text: "Čtete pracovní zprávy po skončení pracovní doby?", answers: [
+          { text: "Ne, oznámení mám vypnutá.", points: 0 },
+          { text: "Občas, když něco čekám.", points: 1 },
+          { text: "Ano, skoro každý večer.", points: 2 } ] },
+        { text: "Kde máte telefon, když usínáte?", answers: [
+          { text: "V jiné místnosti nebo mimo dosah.", points: 0 },
+          { text: "Na nočním stolku, ale nedívám se do něj.", points: 1 },
+          { text: "V ruce, dokud neusnu.", points: 2 } ] },
+        { text: "Jak často si během pracovního dne dáte přestávku bez obrazovky?", answers: [
+          { text: "Pravidelně, několikrát denně.", points: 0 },
+          { text: "Jednou, obvykle u oběda.", points: 1 },
+          { text: "Skoro nikdy, i obědvám u počítače.", points: 2 } ] },
+        { text: "Jak se obvykle cítíte po půlhodině na sociálních sítích?", answers: [
+          { text: "Dobře, odpočinu si.", points: 0 },
+          { text: "Nijak zvlášť, jen mi uteče víc času, než plánuji.", points: 1 },
+          { text: "Cítím únavu nebo podráždění.", points: 2 } ] }
+      ],
+      profiles: [
+        { name: "V rovnováze", min: 0, max: 4, text: "Technologie máte pod kontrolou a umíte se od nich odpojit. V kurzu najdete tipy, jak si rovnováhu udržet i v náročném období.", chapter: "Kapitola 4: Jak si dobré návyky udržet" },
+        { name: "Na hraně", min: 5, max: 8, text: "Většinou to zvládáte, ale oznámení a přepínání mezi aplikacemi vám občas berou soustředění. Pomůže pár jednoduchých pravidel, která si nastavíte hned.", chapter: "Kapitola 2: Oznámení a soustředění" },
+        { name: "Stále na příjmu", min: 9, max: 12, text: "Telefon a zprávy vás často vyrušují a zasahují i do volného času. Začněte kapitolou o hranicích mezi prací a volnem, přinese nejrychlejší úlevu.", chapter: "Kapitola 3: Hranice mezi prací a volnem" }
+      ]
+    },
+    panels: {
+      why: "Otázky vedou k zamyšlení nad vlastními zvyky, takže se téma účastníka začne osobně týkat. Výsledek mu ukáže, kde v kurzu začít, a kurz pro něj dává smysl od první minuty. Z profilu víme, na které návyky se u něj zaměřit.",
+      today: "Test s výběrem odpovědi umí jen správně a špatně, body za odpovědi nesčítá. Obcházíme to větou „Máte nejvíc odpovědí C? Přečtěte si tuto část PDF.“ a účastník si výsledek počítá sám. Klient StopVision to bral jako standardní funkci.",
+      dev: {
+        stores: "Zvolenou odpověď u každé otázky, součet bodů, přiřazený profil a čas dokončení.",
+        evaluation: "Každá odpověď má v administraci body. Po poslední otázce se sečtou a součet se porovná s rozsahy profilů. Administrace hlídá, aby rozsahy pokryly všechny možné součty a nepřekrývaly se.",
+        keyboard: "Odpovědi jsou běžné přepínače (radio), mezi nimi se chodí šipkami, na tlačítka Zpět a Další tabulátorem. Po zobrazení výsledku dostane focus nadpis profilu.",
+        effortNote: "Rozšíření stávajícího testu o body a profily. Souhrn profilů za celou firmu by byl L."
+      }
+    }
+  },
+  {
+    id: "roztrid-do-skupin",
+    title: "Roztřiď do skupin",
+    oneLiner: "Přetáhne 8 promptů do skupin dobrý, chybí kontext a chybí formát výstupu a u každého hned vidí, jestli trefil.",
+    goal: "understand",
+    effort: ["M"],
+    example: "Prompty: dobrý, chybí kontext, chybí formát výstupu",
+    component: null,
+    panels: {
+      why: "Třídění podle kritéria je náročnější než poznat správnou odpověď.",
+      today: "U každého promptu jedna otázka s rozbalovací nabídkou skupin."
+    }
+  },
+  {
+    id: "klikni-na-misto",
+    title: "Klikni na správné místo",
+    oneLiner: "Na snímku obrazovky Outlooku najde, kde je Copilot. Správných míst je víc, protože se ikona liší podle verze aplikace.",
+    goal: "practice",
+    effort: ["M"],
+    example: "Kde najdete Copilota v Outlooku",
+    component: null,
+    panels: {
+      why: "Orientace přímo v rozhraní, snadný přenos do praxe.",
+      today: "Obrázek a pod ním otázka s výběrem odpovědi (vpravo nahoře, na pásu karet…)."
+    }
+  },
+  {
+    id: "ktery-vystup",
+    title: "Který výstup je lepší",
+    oneLiner: "Porovná dva prompty a jejich výstupy, vybere lepší a pak uvidí zvýrazněné rozdíly.",
+    goal: "understand",
+    effort: ["S"],
+    example: "Dva prompty a jejich výstupy vedle sebe",
+    component: null,
+    panels: {
+      why: "Srovnání kontrastních příkladů ukáže, na čem záleží.",
+      today: "Obrázek se dvěma variantami a otázka s výběrem odpovědi. Rozdíly vysvětlujeme až v dalším textu."
+    }
+  },
+  {
+    id: "vetveny-scenar",
+    title: "Větvený scénář",
+    oneLiner: "Ve 3 krocích volí, jak naloží s urgentní žádostí kolegy, a každá volba má viditelný důsledek.",
+    goal: "practice",
+    effort: ["L"],
+    example: "Urgentní žádost od kolegy",
+    component: null,
+    panels: {
+      why: "Nácvik rozhodování v bezpečném prostředí blízkém realitě.",
+      today: "Neumíme. Nejblíž je série samostatných otázek bez návaznosti."
+    }
+  },
+  {
+    id: "osobni-kalkulacka",
+    title: "Osobní kalkulačka",
+    oneLiner: "Posuvníkem zadá, kolik minut týdně píše zápisy ze schůzek, a uvidí, kolik hodin ročně by ušetřil zkrácením na polovinu.",
+    goal: "habit",
+    effort: ["S"],
+    example: "Minuty zápisů týdně, úspora hodin ročně. Počítá jen s číslem účastníka.",
+    component: null,
+    panels: {
+      why: "Osobní číslo zvyšuje motivaci ke změně.",
+      today: "Neumíme. Účastník si může spočítat úsporu sám podle návodu v textu."
+    }
+  },
+  {
+    id: "zavazek-s-pripominkou",
+    title: "Závazek s připomínkou",
+    oneLiner: "Doplní větu „Když [situace], tak [co udělám s Copilotem]“, vybere den a uvidí, jak by vypadala připomínka od portálu.",
+    goal: "habit",
+    effort: ["M", "L"],
+    example: "Kdy poprvé vyzkouším shrnutí e-mailů",
+    component: null,
+    panels: {
+      why: "Plány typu když, tak zvyšují šanci, že člověk opravdu začne.",
+      today: "Formulář s otevřenou odpovědí. Připomínka nepřijde."
+    }
+  },
+  {
+    id: "zpetna-vazba",
+    title: "Zpětná vazba jedním tahem",
+    oneLiner: "Posuvníkem nebo reakcí jako na sociálních sítích odpoví, jak se mu aktivita líbila. Dotaz může vyskočit jen náhodně a po 10 odpovědích přestat.",
+    goal: "feedback",
+    effort: ["S"],
+    example: "Jak se vám aktivita líbila?",
+    component: null,
+    panels: {
+      why: "Menší zátěž než formulář, víc odpovědí.",
+      today: "Dotazník s několika otázkami na konci kurzu."
+    }
+  }
+];
+
+const GOALS = {
+  remember:   { label: "Zapamatovat si",    color: "--goal-remember" },
+  understand: { label: "Pochopit",          color: "--goal-understand" },
+  practice:   { label: "Vyzkoušet v praxi", color: "--goal-practice" },
+  habit:      { label: "Reflexe a návyk",   color: "--goal-habit" },
+  feedback:   { label: "Zpětná vazba",      color: "--goal-feedback" }
+};
+const EFFORTS = { S: 1, M: 2, L: 3 };
+
+/* =====================================================================
+   POMOCNÉ FUNKCE
+   ===================================================================== */
+document.documentElement.lang = "cs";
+const $ = s => document.querySelector(s);
+const LETTERS = "ABCDEFGHIJ";
+const clone = o => JSON.parse(JSON.stringify(o));
+const byId = id => ACTIVITIES.find(a => a.id === id);
+const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const plural = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4 ? few : many);
+const effortText = a => a.effort.join(" až ");
+const isReady = a => !!(a.component && COMPONENTS[a.component]);
+const NBSP_RE = /(^|[\s(„])([ksvzouaiKSVZOUAI])\s+/g;
+const nb = s => String(s).replace(NBSP_RE, "$1$2 ").replace(NBSP_RE, "$1$2 ");
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k === "style") for (const p in v) el.style.setProperty(p, v[p]);
+    else if (k === "value" || k === "checked") el[k] = v;
+    else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat(Infinity)) {
+    if (kid == null || kid === false) continue;
+    el.append(typeof kid === "object" ? kid : nb(kid));
+  }
+  return el;
+}
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+function shuffled(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function fixStaticText(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => { const t = nb(n.nodeValue); if (t !== n.nodeValue) n.nodeValue = t; });
+}
+
+/* ---------- Pole formulářů v administraci ---------- */
+function field(id, label, control, help) {
+  if (help) control.setAttribute("aria-describedby", id + "-help");
+  return h("div", { class: "f" }, h("label", { for: id }, label), control, help && h("p", { class: "help", id: id + "-help" }, help));
+}
+function fText(id, label, value, onInput, help) {
+  return field(id, label, h("input", { type: "text", id, class: "in", value: value ?? "", oninput: e => onInput(e.target.value) }), help);
+}
+function fArea(id, label, value, onInput, rows, help) {
+  const ta = h("textarea", { id, class: "in", rows: rows || 2, oninput: e => onInput(e.target.value) });
+  ta.value = value ?? "";
+  return field(id, label, ta, help);
+}
+function fNum(id, label, value, onInput, opts = {}) {
+  const input = h("input", { type: "number", id, class: "in", inputmode: "numeric", min: opts.min, max: opts.max, step: opts.step || 1, value: value ?? 0,
+    oninput: e => onInput(e.target.value === "" ? 0 : Number(e.target.value)) });
+  return field(id, label, input, opts.help);
+}
+function fCheck(id, label, checked, onChange) {
+  return h("div", { class: "f-check" },
+    h("input", { type: "checkbox", id, checked: !!checked, onchange: e => onChange(e.target.checked) }),
+    h("label", { for: id }, label));
+}
+function fSelect(id, label, options, value, onChange) {
+  const s = h("select", { id, class: "in", onchange: e => onChange(e.target.value) }, options.map(([v, t]) => h("option", { value: v }, t)));
+  s.value = value;
+  return field(id, label, s);
+}
+function radio(name, id, label, checked, onPick) {
+  return h("label", { class: "radio", for: id }, h("input", { type: "radio", name, id, checked, onchange: onPick }), label);
+}
+function admSection(title, ...kids) {
+  return h("div", { class: "adm-sec" }, h("h4", {}, title), ...kids);
+}
+function openStates(list) {
+  return new Set([...list.querySelectorAll(":scope > li > details")].map((d, i) => d.open ? i : -1).filter(i => i >= 0));
+}
+
+/* =====================================================================
+   KOMPONENTY AKTIVIT
+   Každá má renderLearner(root, config) pro pohled účastníka
+   a renderAdmin(root, config, changed, ctx) pro administraci.
+   ===================================================================== */
+const SwipeActivity = {
+  renderLearner(root, cfg) {
+    root.replaceChildren();
+    const L = cfg.leftLabel || "Vlevo", R = cfg.rightLabel || "Vpravo";
+    const cards = cfg.cards.filter(c => c.text.trim());
+    if (!cards.length) { root.append(h("p", { class: "muted" }, "Přidejte v administraci alespoň jednu kartu.")); return; }
+    const order = cfg.shuffle ? shuffled(cards) : cards;
+    const picks = [];
+    let busy = false;
+
+    const live = h("p", { class: "sr-only", "aria-live": "polite" });
+    const stack = h("div", { class: "swipe-stack" });
+    const count = h("span", { class: "swipe-count" });
+    const btnL = h("button", { type: "button", class: "btn", onclick: () => choose("left", false) }, h("span", { "aria-hidden": "true" }, "←"), L);
+    const btnR = h("button", { type: "button", class: "btn", onclick: () => choose("right", false) }, R, h("span", { "aria-hidden": "true" }, "→"));
+    const threshold = () => Math.max(60, Math.min(120, stack.clientWidth * 0.28));
+
+    root.append(h("div", { class: "act" },
+      h("p", {}, cfg.instruction),
+      h("div", { class: "swipe-legend", "aria-hidden": "true" }, h("span", {}, "← " + L), h("span", {}, R + " →")),
+      stack,
+      h("div", { class: "swipe-controls" }, btnL, count, btnR),
+      h("p", { class: "kbd-hint" }, "Na klávesnici: klikněte na kartu a použijte šipky vlevo a vpravo."),
+      live));
+    draw(false);
+
+    function draw(focusTop) {
+      stack.replaceChildren();
+      const pos = picks.length;
+      count.textContent = `${pos + 1} / ${order.length}`;
+      const visible = order.slice(pos, pos + 3);
+      for (let d = visible.length - 1; d >= 0; d--) {
+        const c = visible[d];
+        const el = h("div", { class: "swipe-card", "data-depth": d },
+          h("span", { class: "hint hint-left", "aria-hidden": "true" }, "← " + L),
+          h("span", { class: "hint hint-right", "aria-hidden": "true" }, R + " →"),
+          h("span", { class: "swipe-num" }, `Úkol ${pos + d + 1} z ${order.length}`),
+          h("p", { class: "swipe-text" }, c.text));
+        if (d === 0) {
+          el.tabIndex = 0;
+          el.setAttribute("role", "group");
+          el.setAttribute("aria-roledescription", "karta");
+          el.setAttribute("aria-label", `Úkol ${pos + 1} z ${order.length}: ${c.text}. Šipka vlevo: ${L}. Šipka vpravo: ${R}.`);
+          el.addEventListener("keydown", e => {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); choose(e.key === "ArrowLeft" ? "left" : "right", true); }
+          });
+          attachDrag(el);
+        } else {
+          el.setAttribute("aria-hidden", "true");
+        }
+        stack.append(el);
+      }
+      if (focusTop) stack.querySelector('[data-depth="0"]').focus();
+    }
+
+    function attachDrag(el) {
+      let startX = 0, dx = 0, active = false;
+      const hl = el.querySelector(".hint-left"), hr = el.querySelector(".hint-right");
+      el.addEventListener("pointerdown", e => {
+        if (busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+        active = true; startX = e.clientX; dx = 0;
+        el.setPointerCapture(e.pointerId);
+        el.classList.add("is-dragging");
+      });
+      el.addEventListener("pointermove", e => {
+        if (!active) return;
+        dx = e.clientX - startX;
+        el.style.transform = `translateX(${dx}px) rotate(${dx / 22}deg)`;
+        const t = Math.min(1, Math.abs(dx) / threshold());
+        hl.style.opacity = dx < 0 ? t : 0;
+        hr.style.opacity = dx > 0 ? t : 0;
+      });
+      const end = () => {
+        if (!active) return;
+        active = false;
+        el.classList.remove("is-dragging");
+        if (Math.abs(dx) >= threshold()) choose(dx < 0 ? "left" : "right", false);
+        else { el.style.transform = ""; hl.style.opacity = 0; hr.style.opacity = 0; }
+      };
+      el.addEventListener("pointerup", end);
+      el.addEventListener("pointercancel", end);
+    }
+
+    function choose(side, fromCard) {
+      if (busy || picks.length >= order.length) return;
+      busy = true;
+      const card = order[picks.length];
+      picks.push({ card, side });
+      live.textContent = `${card.text}: ${side === "left" ? L : R}.`;
+      const top = stack.querySelector('[data-depth="0"]');
+      const next = () => { busy = false; if (picks.length >= order.length) result(); else draw(fromCard); };
+      if (reduceMotion() || !top) { next(); return; }
+      const dir = side === "left" ? -1 : 1;
+      top.classList.remove("is-dragging");
+      top.style.transition = "transform .28s ease-in, opacity .28s ease-in";
+      top.style.transform = `translateX(${dir * 130}%) rotate(${dir * 14}deg)`;
+      top.style.opacity = "0";
+      setTimeout(next, 260);
+    }
+
+    function result() {
+      let clear = 0, ok = 0, disputed = 0;
+      const items = picks.map(({ card, side }) => {
+        const isDisputed = !!card.disputed;
+        const match = side === card.answer;
+        if (isDisputed) disputed++; else { clear++; if (match) ok++; }
+        const st = isDisputed ? "disputed" : match ? "ok" : "diff";
+        const label = { ok: "✓ Shoda", diff: "≠ Jinak než doporučení", disputed: "≈ Sporné, obstojí obě volby" }[st];
+        const showExpl = card.explanation && (isDisputed || cfg.explainMode === "all" || (cfg.explainMode === "mismatch" && !match));
+        return h("li", { class: "res-item st-" + st },
+          h("p", { class: "res-task" }, card.text),
+          h("p", { class: "res-meta" }, h("span", { class: "res-st" }, label),
+            h("span", {}, `Vaše volba: ${side === "left" ? L : R} · Doporučení: ${card.answer === "left" ? L : R}`)),
+          showExpl && h("p", { class: "res-expl" }, card.explanation));
+      });
+      const pct = clear ? Math.round(ok / clear * 100) : 100;
+      const head = h("div", { class: "res-head", tabindex: "-1" },
+        h("p", { class: "res-score" }, clear ? `Shoda s doporučením: ${ok} z ${clear}` : "Hotovo"),
+        disputed > 0 && h("p", { class: "muted" }, `Sporné úkoly: ${disputed}. U nich obstojí obě volby, rozhoduje situace.`),
+        h("p", {}, pct >= (Number(cfg.threshold) || 0) ? cfg.feedbackHigh : cfg.feedbackLow));
+      root.replaceChildren(h("div", { class: "act" }, head,
+        h("ul", { class: "res-list" }, items),
+        h("div", {}, h("button", { type: "button", class: "btn", onclick: () => SwipeActivity.renderLearner(root, cfg) }, "Zkusit znovu"))));
+      head.focus();
+    }
+  },
+
+  renderAdmin(root, cfg, changed, ctx) {
+    const p = ctx.prefix;
+    const L = () => cfg.leftLabel || "Vlevo", R = () => cfg.rightLabel || "Vpravo";
+    const list = h("ol", { class: "adm-list" });
+    const addBtn = h("button", { type: "button", class: "btn btn-small", onclick: () => {
+      const open = openStates(list);
+      cfg.cards.push({ text: "", answer: "right", disputed: false, explanation: "" });
+      open.add(cfg.cards.length - 1);
+      drawCards(open);
+      changed();
+      document.getElementById(`${p}c${cfg.cards.length - 1}-text`).focus();
+    } }, "+ Přidat kartu");
+
+    function drawCards(open) {
+      list.replaceChildren(...cfg.cards.map((c, i) => cardEditor(c, i, open.has(i))));
+    }
+    function cardEditor(c, i, open) {
+      const sumText = h("span", { class: "adm-sum-text" });
+      const sumMeta = h("span", { class: "adm-sum-meta" });
+      const upd = () => {
+        sumText.textContent = c.text || "(karta bez textu)";
+        sumMeta.textContent = nb(`Doporučení: ${c.answer === "left" ? L() : R()}${c.disputed ? " · sporná" : ""}`);
+      };
+      upd();
+      const name = `${p}ans${i}`;
+      return h("li", {}, h("details", { class: "adm-item", open },
+        h("summary", {}, h("span", { class: "adm-n" }, i + 1), h("span", { class: "adm-sum" }, sumText, sumMeta)),
+        h("div", { class: "adm-body" },
+          fArea(`${p}c${i}-text`, "Text karty", c.text, v => { c.text = v; upd(); changed(); }, 2),
+          h("fieldset", { class: "f-radios" }, h("legend", { class: "f-legend" }, "Doporučená volba"),
+            radio(name, `${p}c${i}-l`, "← " + L(), c.answer === "left", () => { c.answer = "left"; upd(); changed(); }),
+            radio(name, `${p}c${i}-r`, R() + " →", c.answer === "right", () => { c.answer = "right"; upd(); changed(); })),
+          fCheck(`${p}c${i}-disp`, "Sporná karta: obstojí obě volby, do shody se nepočítá", c.disputed, v => { c.disputed = v; upd(); changed(); }),
+          fArea(`${p}c${i}-expl`, "Vysvětlení pro účastníka", c.explanation, v => { c.explanation = v; changed(); }, 2),
+          h("div", { class: "adm-actions" }, h("button", { type: "button", class: "btn btn-small", onclick: () => {
+            const open = openStates(list);
+            cfg.cards.splice(i, 1);
+            const shifted = new Set([...open].filter(k => k !== i).map(k => k > i ? k - 1 : k));
+            drawCards(shifted);
+            changed();
+            (list.querySelectorAll("summary")[Math.min(i, cfg.cards.length - 1)] || addBtn).focus();
+          } }, "Odebrat kartu")))));
+    }
+
+    const onLabel = key => v => { cfg[key] = v; drawCards(openStates(list)); changed(); };
+    root.replaceChildren(
+      admSection("Zadání",
+        fArea(p + "instr", "Zadání pro účastníka", cfg.instruction, v => { cfg.instruction = v; changed(); }, 3),
+        h("div", { class: "f-row" },
+          fText(p + "left", "Popisek vlevo", cfg.leftLabel, onLabel("leftLabel")),
+          fText(p + "right", "Popisek vpravo", cfg.rightLabel, onLabel("rightLabel")))),
+      admSection(`Karty`, h("p", { class: "help" }, "Pořadí karet je pořadí v ukázce, pokud nezapnete míchání."), list, h("div", {}, addBtn)),
+      admSection("Vyhodnocení a zpětná vazba",
+        fSelect(p + "expl", "Vysvětlení zobrazit", [["disputed", "jen u sporných karet"], ["mismatch", "u sporných karet a při neshodě"], ["all", "u všech karet"]], cfg.explainMode, v => { cfg.explainMode = v; changed(); }),
+        fNum(p + "thr", "Hranice dobré shody (%)", cfg.threshold, v => { cfg.threshold = v; changed(); }, { min: 0, max: 100, help: "Počítá se jen z jednoznačných karet." }),
+        fArea(p + "fbh", "Zpětná vazba při shodě nad hranicí", cfg.feedbackHigh, v => { cfg.feedbackHigh = v; changed(); }, 2),
+        fArea(p + "fbl", "Zpětná vazba při nižší shodě", cfg.feedbackLow, v => { cfg.feedbackLow = v; changed(); }, 2)),
+      admSection("Nastavení",
+        fCheck(p + "shuffle", "Zamíchat pořadí karet pro každého účastníka", cfg.shuffle, v => { cfg.shuffle = v; changed(); })));
+    drawCards(new Set([0]));
+  }
+};
+
+const ProfileQuiz = {
+  sums(cfg) {
+    const qs = cfg.questions.filter(q => q.answers.length);
+    const min = qs.reduce((s, q) => s + Math.min(...q.answers.map(a => Number(a.points) || 0)), 0);
+    const max = qs.reduce((s, q) => s + Math.max(...q.answers.map(a => Number(a.points) || 0)), 0);
+    return { min, max };
+  },
+  findProfile(cfg, sum) {
+    return cfg.profiles.find(pr => sum >= Number(pr.min) && sum <= Number(pr.max));
+  },
+
+  renderLearner(root, cfg) {
+    const qs = cfg.questions.filter(q => q.text.trim() && q.answers.some(a => a.text.trim()));
+    const answers = [];
+    const uid = "q" + Math.random().toString(36).slice(2, 7);
+    if (!qs.length) { root.replaceChildren(h("p", { class: "muted" }, "Přidejte v administraci alespoň jednu otázku.")); return; }
+    intro();
+
+    function intro() {
+      root.replaceChildren(h("div", { class: "act" },
+        h("h3", { class: "act-title" }, cfg.title),
+        h("p", {}, cfg.intro),
+        h("p", { class: "muted" }, `${qs.length} ${plural(qs.length, "otázka", "otázky", "otázek")} · odpovědi ${LETTERS.slice(0, Math.max(...qs.map(q => q.answers.length))).split("").join(", ")}`),
+        h("div", {}, h("button", { type: "button", class: "btn primary", onclick: () => question(0) }, "Začít"))));
+    }
+
+    function question(n) {
+      const q = qs[n];
+      const last = n === qs.length - 1;
+      const next = h("button", { type: "submit", class: "btn primary next", disabled: answers[n] == null }, last ? "Zobrazit výsledek" : "Další");
+      const legend = h("legend", { class: "q-text", tabindex: "-1" }, q.text);
+      const opts = q.answers.map((a, k) => {
+        const id = `${uid}-${n}-${k}`;
+        return h("label", { class: "q-opt", for: id },
+          h("input", { type: "radio", name: `${uid}-${n}`, id, value: k, checked: answers[n] === k, onchange: () => { answers[n] = k; next.disabled = false; } }),
+          h("span", { class: "q-letter", "aria-hidden": "true" }, LETTERS[k]),
+          h("span", {}, a.text));
+      });
+      const form = h("form", { class: "act", onsubmit: e => { e.preventDefault(); if (answers[n] == null) return; last ? result() : question(n + 1); } },
+        h("div", { class: "q-top" }, h("span", {}, `Otázka ${n + 1} z ${qs.length}`),
+          h("div", { class: "q-bar", "aria-hidden": "true" }, h("span", { style: { width: `${(n + 1) / qs.length * 100}%` } }))),
+        h("fieldset", { class: "q-fs" }, legend, opts),
+        h("div", { class: "q-nav" },
+          cfg.allowBack && n > 0 && h("button", { type: "button", class: "btn", onclick: () => question(n - 1) }, "← Zpět"),
+          next));
+      root.replaceChildren(form);
+      legend.focus();
+    }
+
+    function result() {
+      const sum = qs.reduce((s, q, n) => s + (Number(q.answers[answers[n]].points) || 0), 0);
+      const { max } = ProfileQuiz.sums({ questions: qs });
+      const prof = ProfileQuiz.findProfile(cfg, sum);
+      const note = h("p", { class: "help", role: "status" });
+      const sorted = cfg.profiles.slice().sort((a, b) => Number(a.min) - Number(b.min));
+      const head = h("h3", { class: "act-title", tabindex: "-1" }, prof ? `Váš profil: ${prof.name}` : "Pro tento součet chybí profil");
+      root.replaceChildren(h("div", { class: "act" },
+        head,
+        prof && h("div", { class: "prof-scale" }, sorted.map(pr => h("span", { class: "prof-seg" + (pr === prof ? " is-you" : "") }, pr === prof ? "● " : "", pr.name, pr === prof ? h("span", { class: "sr-only" }, " (váš profil)") : null))),
+        prof ? h("p", {}, prof.text) : h("p", { class: "muted" }, `Součet ${sum} bodů nespadá do žádného rozsahu. Upravte rozsahy profilů v administraci.`),
+        cfg.showScore && h("p", { class: "muted" }, `Váš součet: ${sum} z ${max} bodů.`),
+        prof && prof.chapter && h("div", { class: "rec" },
+          h("p", { class: "rec-label" }, "Doporučujeme začít"),
+          h("p", { class: "rec-chapter" }, prof.chapter),
+          h("button", { type: "button", class: "btn primary", onclick: () => { note.textContent = nb("V portálu by vás tlačítko přeneslo rovnou do této kapitoly."); } }, "Přejít na kapitolu"),
+          note),
+        h("div", {}, h("button", { type: "button", class: "btn", onclick: () => { answers.length = 0; intro(); } }, "Vyplnit znovu"))));
+      head.focus();
+    }
+  },
+
+  renderAdmin(root, cfg, changed, ctx) {
+    const p = ctx.prefix;
+    const range = h("div", { class: "range", role: "status" });
+    const qList = h("ol", { class: "adm-list" });
+    const pList = h("ol", { class: "adm-list" });
+    const change = () => { updateRange(); changed(); };
+
+    function fmtRanges(nums) {
+      const out = [];
+      for (let i = 0; i < nums.length; i++) {
+        let j = i;
+        while (j + 1 < nums.length && nums[j + 1] === nums[j] + 1) j++;
+        out.push(i === j ? `${nums[i]}` : `${nums[i]}–${nums[j]}`);
+        i = j;
+      }
+      return out.join(", ");
+    }
+    function updateRange() {
+      const { min, max } = ProfileQuiz.sums(cfg);
+      const gaps = [], overlaps = [];
+      for (let s = min; s <= max; s++) {
+        const n = cfg.profiles.filter(pr => s >= Number(pr.min) && s <= Number(pr.max)).length;
+        if (n === 0) gaps.push(s); else if (n > 1) overlaps.push(s);
+      }
+      const bad = gaps.length || overlaps.length;
+      range.className = "range " + (bad ? "bad" : "ok");
+      const msgs = [];
+      if (gaps.length) msgs.push(`Součty ${fmtRanges(gaps)} nemají profil.`);
+      if (overlaps.length) msgs.push(`Součty ${fmtRanges(overlaps)} spadají do víc profilů.`);
+      range.replaceChildren(
+        h("span", { class: "range-icon", "aria-hidden": "true" }, bad ? "!" : "✓"),
+        h("span", {}, bad ? msgs.join(" ") + ` Možné součty jsou ${min}–${max} bodů.` : `Profily pokrývají všechny možné součty ${min}–${max} bodů.`));
+    }
+
+    function drawQuestions(open) {
+      qList.replaceChildren(...cfg.questions.map((q, i) => qEditor(q, i, open.has(i))));
+    }
+    function qEditor(q, i, open) {
+      const sumText = h("span", { class: "adm-sum-text" });
+      const sumMeta = h("span", { class: "adm-sum-meta" });
+      const upd = () => {
+        sumText.textContent = q.text || "(otázka bez textu)";
+        sumMeta.textContent = `Body: ${q.answers.map((a, k) => LETTERS[k] + " " + (Number(a.points) || 0)).join(" · ")}`;
+      };
+      upd();
+      return h("li", {}, h("details", { class: "adm-item", open },
+        h("summary", {}, h("span", { class: "adm-n" }, i + 1), h("span", { class: "adm-sum" }, sumText, sumMeta)),
+        h("div", { class: "adm-body" },
+          fArea(`${p}q${i}`, "Otázka", q.text, v => { q.text = v; upd(); changed(); }, 2),
+          q.answers.map((a, k) => h("div", { class: "ans-row" },
+            h("span", { class: "q-letter", "aria-hidden": "true" }, LETTERS[k]),
+            fText(`${p}q${i}a${k}`, `Odpověď ${LETTERS[k]}`, a.text, v => { a.text = v; changed(); }),
+            fNum(`${p}q${i}a${k}p`, "Body", a.points, v => { a.points = v; upd(); change(); }, { min: 0, max: 10 }))),
+          h("div", { class: "adm-actions" }, h("button", { type: "button", class: "btn btn-small", onclick: () => {
+            const openNow = openStates(qList);
+            cfg.questions.splice(i, 1);
+            drawQuestions(new Set([...openNow].filter(k => k !== i).map(k => k > i ? k - 1 : k)));
+            change();
+            (qList.querySelectorAll("summary")[Math.min(i, cfg.questions.length - 1)] || addQ).focus();
+          } }, "Odebrat otázku")))));
+    }
+    const addQ = h("button", { type: "button", class: "btn btn-small", onclick: () => {
+      const open = openStates(qList);
+      cfg.questions.push({ text: "", answers: [{ text: "", points: 0 }, { text: "", points: 1 }, { text: "", points: 2 }] });
+      open.add(cfg.questions.length - 1);
+      drawQuestions(open);
+      change();
+      document.getElementById(`${p}q${cfg.questions.length - 1}`).focus();
+    } }, "+ Přidat otázku");
+
+    function drawProfiles() {
+      pList.replaceChildren(...cfg.profiles.map((pr, i) => {
+        const sumText = h("span", { class: "adm-sum-text" });
+        const sumMeta = h("span", { class: "adm-sum-meta" });
+        const upd = () => { sumText.textContent = pr.name || "(profil bez názvu)"; sumMeta.textContent = `${pr.min}–${pr.max} bodů`; };
+        upd();
+        return h("li", {}, h("details", { class: "adm-item" },
+          h("summary", {}, h("span", { class: "adm-n" }, i + 1), h("span", { class: "adm-sum" }, sumText, sumMeta)),
+          h("div", { class: "adm-body" },
+            fText(`${p}pr${i}n`, "Název profilu", pr.name, v => { pr.name = v; upd(); changed(); }),
+            h("div", { class: "f-row" },
+              fNum(`${p}pr${i}min`, "Od (bodů)", pr.min, v => { pr.min = v; upd(); change(); }, { min: 0 }),
+              fNum(`${p}pr${i}max`, "Do (bodů)", pr.max, v => { pr.max = v; upd(); change(); }, { min: 0 })),
+            fArea(`${p}pr${i}t`, "Text pro účastníka", pr.text, v => { pr.text = v; changed(); }, 3),
+            fText(`${p}pr${i}c`, "Doporučená část kurzu", pr.chapter, v => { pr.chapter = v; changed(); }))));
+      }));
+    }
+
+    root.replaceChildren(
+      admSection("Úvod",
+        fText(p + "title", "Název testu", cfg.title, v => { cfg.title = v; changed(); }),
+        fArea(p + "intro", "Úvodní text", cfg.intro, v => { cfg.intro = v; changed(); }, 3)),
+      admSection("Otázky a body", h("p", { class: "help" }, "Body účastník nevidí. Po poslední otázce se sečtou a součet určí profil."), qList, h("div", {}, addQ)),
+      admSection("Profily a doporučení", range, pList),
+      admSection("Nastavení",
+        fCheck(p + "back", "Povolit návrat na předchozí otázku", cfg.allowBack, v => { cfg.allowBack = v; changed(); }),
+        fCheck(p + "score", "Ukázat účastníkovi součet bodů", cfg.showScore, v => { cfg.showScore = v; changed(); })));
+    drawQuestions(new Set([0]));
+    drawProfiles();
+    updateRange();
+  }
+};
+
+const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz };
+
+/* =====================================================================
+   STRÁNKA: filtry, karty, detail, výběr priorit
+   ===================================================================== */
+const state = { goals: new Set(), efforts: new Set(), selected: [], opener: null };
+const refs = {};
+
+function goalTag(a) {
+  return h("span", { class: "tag", style: { "--dot": `var(${GOALS[a.goal].color})` } }, h("span", { class: "dot", "aria-hidden": "true" }), GOALS[a.goal].label);
+}
+function effortTag(a) {
+  const lvl = Math.max(...a.effort.map(e => EFFORTS[e]));
+  return h("span", { class: "tag" },
+    h("span", { class: "bars", "aria-hidden": "true" }, [1, 2, 3].map(i => h("i", { class: i <= lvl ? "on" : "" }))),
+    `Vývoj ${effortText(a)}`);
+}
+function pickButton(a, extraClass) {
+  return h("button", { type: "button", class: "btn pick" + (extraClass ? " " + extraClass : ""), "aria-pressed": "false", "data-pick": a.id, onclick: () => togglePick(a.id) },
+    h("span", { class: "pick-check", "aria-hidden": "true" }), "Chci tohle");
+}
+
+function buildFilters() {
+  const goalBox = $("#goal-chips"), effortBox = $("#effort-chips");
+  for (const key in GOALS) {
+    const n = ACTIVITIES.filter(a => a.goal === key).length;
+    goalBox.append(h("button", { type: "button", class: "chip", "aria-pressed": "false", style: { "--dot": `var(${GOALS[key].color})` },
+      onclick: e => toggleFilter(state.goals, key, e.currentTarget) },
+      h("span", { class: "dot", "aria-hidden": "true" }), GOALS[key].label, h("span", { class: "chip-n" }, `(${n})`)));
+  }
+  for (const key in EFFORTS) {
+    const n = ACTIVITIES.filter(a => a.effort.includes(key)).length;
+    effortBox.append(h("button", { type: "button", class: "chip", "aria-pressed": "false", onclick: e => toggleFilter(state.efforts, key, e.currentTarget) },
+      key, h("span", { class: "chip-n" }, `(${n})`)));
+  }
+  $("#reset-filters").addEventListener("click", resetFilters);
+}
+function toggleFilter(set, key, btn) {
+  set.has(key) ? set.delete(key) : set.add(key);
+  btn.setAttribute("aria-pressed", set.has(key));
+  applyFilters();
+}
+function resetFilters() {
+  state.goals.clear(); state.efforts.clear();
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+  applyFilters();
+}
+function applyFilters() {
+  let n = 0;
+  for (const a of ACTIVITIES) {
+    const show = (!state.goals.size || state.goals.has(a.goal)) && (!state.efforts.size || a.effort.some(e => state.efforts.has(e)));
+    refs[a.id].li.hidden = !show;
+    if (show) n++;
+  }
+  $("#count").textContent = `Zobrazeno ${n} z ${ACTIVITIES.length} ${ACTIVITIES.length === 1 ? "aktivity" : "aktivit"}`;
+  $("#empty").hidden = n > 0;
+  $("#reset-filters").hidden = !(state.goals.size || state.efforts.size);
+}
+
+function buildGrid() {
+  const grid = $("#grid");
+  for (const a of ACTIVITIES) {
+    const ready = isReady(a);
+    const order = h("span", { class: "pick-order" });
+    const li = h("li", { class: "card" + (ready ? "" : " is-pending"), "data-id": a.id },
+      h("div", { class: "tags" }, goalTag(a), effortTag(a)),
+      h("h3", { class: "card-title" }, a.title),
+      h("p", { class: "card-text" }, a.oneLiner),
+      h("div", { class: "card-foot" },
+        h("span", { class: "status " + (ready ? "status-ready" : "status-pending") }, ready ? "Funkční ukázka" : "Ukázka se připravuje"),
+        order),
+      h("div", { class: "card-actions" },
+        h("button", { type: "button", class: "btn" + (ready ? " primary" : ""), onclick: e => openDetail(a.id, e.currentTarget) }, ready ? "Vyzkoušet" : "Zobrazit popis"),
+        pickButton(a)));
+    refs[a.id] = { li, order };
+    grid.append(li);
+  }
+}
+
+/* ---------- Výběr priorit ---------- */
+function togglePick(id) {
+  const i = state.selected.indexOf(id);
+  if (i >= 0) state.selected.splice(i, 1); else state.selected.push(id);
+  syncPicks();
+}
+function movePick(id, dir) {
+  const i = state.selected.indexOf(id), j = i + dir;
+  if (j < 0 || j >= state.selected.length) return;
+  [state.selected[i], state.selected[j]] = [state.selected[j], state.selected[i]];
+  syncPicks();
+  const row = document.querySelector(`.pick-row[data-id="${id}"]`);
+  const btn = row.querySelector(`[data-act="${dir < 0 ? "up" : "down"}"]`);
+  (btn.disabled ? row.querySelector(`[data-act="${dir < 0 ? "down" : "up"}"]`) : btn).focus();
+}
+function syncPicks() {
+  const sel = state.selected;
+  document.querySelectorAll("[data-pick]").forEach(b => b.setAttribute("aria-pressed", sel.includes(b.dataset.pick)));
+  for (const a of ACTIVITIES) {
+    const k = sel.indexOf(a.id);
+    refs[a.id].li.classList.toggle("is-picked", k >= 0);
+    refs[a.id].order.textContent = k >= 0 ? `Priorita ${k + 1}` : "";
+  }
+  const list = $("#pick-list");
+  list.replaceChildren(...sel.map((id, i) => {
+    const a = byId(id);
+    return h("li", { class: "pick-row", "data-id": id },
+      h("span", { class: "pick-n", "aria-hidden": "true" }, i + 1),
+      h("div", { class: "pick-main" },
+        h("span", { class: "pick-title" }, a.title),
+        h("span", { class: "pick-meta" }, `${GOALS[a.goal].label} · vývoj ${effortText(a)} · ${isReady(a) ? "ukázka hotová" : "ukázka se připravuje"}`)),
+      h("div", { class: "pick-ctrl" },
+        h("button", { type: "button", class: "btn btn-small iconbtn", "data-act": "up", disabled: i === 0, "aria-label": `Posunout výš: ${a.title}`, onclick: () => movePick(id, -1) }, "↑"),
+        h("button", { type: "button", class: "btn btn-small iconbtn", "data-act": "down", disabled: i === sel.length - 1, "aria-label": `Posunout níž: ${a.title}`, onclick: () => movePick(id, 1) }, "↓"),
+        h("button", { type: "button", class: "btn btn-small", "aria-label": `Odebrat: ${a.title}`, onclick: () => { togglePick(id); ($("#pick-list button") || $("#katalog")).focus(); } }, "Odebrat")));
+  }));
+  const n = sel.length;
+  $("#pick-empty").hidden = n > 0;
+  $("#copy-brief").disabled = n === 0;
+  $("#save-csv").disabled = n === 0;
+  $("#brief-preview").hidden = n === 0;
+  $("#brief-text").textContent = n ? buildBrief() : "";
+  $("#pickbar").hidden = n === 0;
+  document.body.classList.toggle("has-picks", n > 0);
+  $("#pickbar-text").textContent = `Vybráno: ${n} ${plural(n, "aktivita", "aktivity", "aktivit")}`;
+  $("#copy-fallback").hidden = true;
+  $("#say").textContent = "";
+}
+
+function buildBrief() {
+  const date = new Date().toLocaleDateString("cs-CZ");
+  const out = [`Švédský stůl aktivit: vybrané priority (${date})`, "Pořadí určuje, co programovat jako první. Náročnost je odhad, ověří ji vývoj.", ""];
+  state.selected.forEach((id, i) => {
+    const a = byId(id), d = a.panels.dev;
+    out.push(`${i + 1}. ${a.title}`);
+    out.push(`   Co účastník dělá: ${a.oneLiner}`);
+    out.push(`   Cíl učení: ${GOALS[a.goal].label}`);
+    out.push(`   Náročnost: ${effortText(a)}${d && d.effortNote ? ". " + d.effortNote : ""}`);
+    out.push(`   Funkční ukázka: ${isReady(a) ? "ano, je na stránce" : "připravuje se"}`);
+    if (d) {
+      out.push(`   Co se ukládá: ${d.stores}`);
+      out.push(`   Jak se vyhodnocuje: ${d.evaluation}`);
+      out.push(`   Ovládání bez myši a dotyku: ${d.keyboard}`);
+    } else {
+      out.push("   Technický popis: doplníme spolu s funkční ukázkou.");
+    }
+    out.push("");
+  });
+  return out.join("\n");
+}
+function buildCsv() {
+  const rows = [["Pořadí", "Aktivita", "Co účastník dělá", "Cíl učení", "Náročnost (odhad)", "Funkční ukázka", "Co se ukládá", "Jak se vyhodnocuje", "Ovládání bez myši a dotyku"]];
+  state.selected.forEach((id, i) => {
+    const a = byId(id), d = a.panels.dev || {};
+    rows.push([i + 1, a.title, a.oneLiner, GOALS[a.goal].label, effortText(a), isReady(a) ? "ano" : "připravuje se", d.stores || "", d.evaluation || "", d.keyboard || ""]);
+  });
+  const cell = v => { const s = String(v); return /[";\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  return "﻿" + rows.map(r => r.map(cell).join(";")).join("\r\n");
+}
+function say(msg) { $("#say").textContent = msg; }
+
+function copyBrief() {
+  const text = buildBrief();
+  const done = () => { $("#copy-fallback").hidden = true; say("Zadání je ve schránce. Vložte ho do e-mailu nebo úkolu pro vývoj."); };
+  const fallback = () => {
+    const ta = $("#copy-fallback");
+    ta.value = text; ta.hidden = false; ta.focus(); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    if (ok) done(); else say("Schránka tu není dostupná. Text je označený v poli níže, zkopírujte ho klávesami Ctrl+C (na Macu Cmd+C).");
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+}
+
+const downloadsReady = (window.claude && typeof window.claude.use === "function")
+  ? window.claude.use("downloads").catch(() => null)
+  : Promise.resolve(null);
+async function saveCsv() {
+  const data = buildCsv();
+  const filename = `priority-aktivit-${new Date().toISOString().slice(0, 10)}.csv`;
+  const dl = await downloadsReady;
+  if (dl) {
+    try { await dl.save({ filename, data }); say("CSV je uložené."); }
+    catch (e) { say(e && e.code === "declined" ? "Ukládání jste zrušili." : "CSV se tu nepodařilo uložit. Použijte Zkopírovat zadání pro programátory."); }
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([data], { type: "text/csv;charset=utf-8" }));
+  const link = h("a", { href: url, download: filename });
+  document.body.append(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  say("CSV se stahuje. Otevřete ho v Excelu nebo v Tabulkách Google.");
+}
+
+/* ---------- Detail aktivity ---------- */
+function infoPanels(a) {
+  const P = a.panels, d = P.dev, ready = isReady(a);
+  const panel = (title, ...body) => h("details", {}, h("summary", {}, title), h("div", { class: "panel-body" }, ...body));
+  return h("div", { class: "info" },
+    panel("Proč to funguje",
+      h("p", {}, P.why),
+      !ready && h("p", { class: "src" }, "Pracovní hypotéza, potvrdí nebo opraví ji rešerše."),
+      h("p", { class: "src" }, "Zdroj: doplnit")),
+    panel("Jak to děláme dnes", h("p", {}, P.today)),
+    panel("Pro programátory", d
+      ? h("dl", { class: "dev" },
+          h("dt", {}, "Co se ukládá"), h("dd", {}, d.stores),
+          h("dt", {}, "Jak se odpověď vyhodnocuje"), h("dd", {}, d.evaluation),
+          h("dt", {}, "Ovládání bez myši a dotyku"), h("dd", {}, d.keyboard),
+          h("dt", {}, "Hrubý odhad náročnosti"), h("dd", {}, `${effortText(a)}. ${d.effortNote} Odhad, ověří vývoj.`))
+      : h("p", {}, `Hrubý odhad náročnosti: ${effortText(a)} (odhad, ověří vývoj). Technický popis doplníme spolu s funkční ukázkou.`)));
+}
+
+function openDetail(id, opener) {
+  const a = byId(id);
+  const comp = isReady(a) ? COMPONENTS[a.component] : null;
+  const dlg = $("#detail");
+  state.opener = opener;
+  const title = h("h2", { class: "d-title", id: "d-title", tabindex: "-1" }, a.title);
+  const bar = h("div", { class: "d-bar" }, title,
+    h("div", { class: "d-actions" },
+      pickButton(a),
+      h("button", { type: "button", class: "btn", onclick: () => dlg.close() }, h("span", { "aria-hidden": "true" }, "✕"), h("span", { class: "label-long" }, "Zavřít"), h("span", { class: "sr-only" }, " detail"))));
+  const intro = h("div", { class: "d-intro" }, h("div", { class: "tags" }, goalTag(a), effortTag(a)), h("p", {}, a.oneLiner));
+  const wrap = h("div", { class: "d-wrap" }, bar, intro);
+
+  if (comp) {
+    let cfg = clone(a.config);
+    const learnerRoot = h("div", { class: "portal-body" });
+    const adminRoot = h("div", { class: "admin-fields", style: { display: "grid", gap: "1.1rem" } });
+    const rerender = debounce(() => comp.renderLearner(learnerRoot, cfg), 250);
+    const mountAdmin = () => comp.renderAdmin(adminRoot, cfg, rerender, { prefix: a.id + "-" });
+    const reset = h("button", { type: "button", class: "btn btn-small", onclick: () => { cfg = clone(a.config); mountAdmin(); comp.renderLearner(learnerRoot, cfg); } }, "Vrátit původní obsah");
+
+    const tabL = h("button", { type: "button", role: "tab", class: "tab", id: "tab-learner", "aria-controls": "pane-learner" }, "Účastník");
+    const tabA = h("button", { type: "button", role: "tab", class: "tab", id: "tab-admin", "aria-controls": "pane-admin" }, "Administrace");
+    const tabs = h("div", { class: "tabs", role: "tablist", "aria-label": "Pohled" }, tabL, tabA);
+    const body = h("div", { class: "d-body" }, tabs,
+      h("section", { class: "pane pane-learner", id: "pane-learner", role: "tabpanel", "aria-labelledby": "tab-learner" },
+        h("p", { class: "pane-label" }, "Pohled účastníka"),
+        h("div", { class: "portal" },
+          h("div", { class: "portal-bar" }, h("span", { class: "portal-course" }, a.course || "Kurz"), h("span", {}, "Aktivita · 3 až 4 min")),
+          learnerRoot)),
+      h("section", { class: "pane pane-admin", id: "pane-admin", role: "tabpanel", "aria-labelledby": "tab-admin" },
+        h("div", { class: "pane-head" }, h("p", { class: "pane-label" }, "Administrace portálu"), reset),
+        h("div", { class: "admin" },
+          h("div", { class: "admin-type" }, h("span", { class: "muted" }, "Typ aktivity:"), h("strong", {}, a.title)),
+          h("p", { class: "admin-note" }, "Takhle by aktivitu zakládal autor kurzu. Formulář je vyplněný obsahem z ukázky a každá změna se v ukázce hned projeví, ukázka se přitom spustí znovu."),
+          adminRoot)),
+      infoPanels(a));
+    const selectTab = (which, focus) => {
+      body.dataset.tab = which;
+      [[tabL, "learner"], [tabA, "admin"]].forEach(([t, k]) => { t.setAttribute("aria-selected", k === which); t.tabIndex = k === which ? 0 : -1; });
+      if (focus) (which === "learner" ? tabL : tabA).focus();
+    };
+    tabL.addEventListener("click", () => selectTab("learner"));
+    tabA.addEventListener("click", () => selectTab("admin"));
+    tabs.addEventListener("keydown", e => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+      e.preventDefault();
+      const cur = body.dataset.tab;
+      selectTab(e.key === "Home" ? "learner" : e.key === "End" ? "admin" : (cur === "learner" ? "admin" : "learner"), true);
+    });
+    selectTab("learner");
+    wrap.append(body);
+    comp.renderLearner(learnerRoot, cfg);
+    mountAdmin();
+  } else {
+    wrap.append(h("div", { class: "pending-body" },
+      h("p", { class: "pending-note" }, "Ukázka se připravuje. Funkční ukázku a administraci doplníme po schválení první verze stránky. Už teď ji ale můžete zařadit mezi priority."),
+      h("dl", { class: "pending-facts" },
+        h("div", {}, h("dt", {}, "Příklad z kurzu"), h("dd", {}, a.example)),
+        h("div", {}, h("dt", {}, "Cíl učení"), h("dd", {}, GOALS[a.goal].label)),
+        h("div", {}, h("dt", {}, "Náročnost vývoje"), h("dd", {}, `${effortText(a)} (odhad, ověří vývoj)`))),
+      infoPanels(a)));
+  }
+
+  dlg.replaceChildren(wrap);
+  syncPicks();
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  title.focus();
+}
+
+/* =====================================================================
+   START
+   ===================================================================== */
+fixStaticText(document.body);
+$("#version").textContent = nb(`Verze 1: funkční ukázka a administrace jsou hotové u ${ACTIVITIES.filter(isReady).length} z ${ACTIVITIES.length} aktivit, zbytek přibude po schválení.`);
+buildFilters();
+buildGrid();
+applyFilters();
+syncPicks();
+$("#copy-brief").addEventListener("click", copyBrief);
+$("#save-csv").addEventListener("click", saveCsv);
+$("#pickbar-link").addEventListener("click", e => { e.preventDefault(); const s = $("#vyber"); s.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); s.focus({ preventScroll: true }); });
+$("#detail").addEventListener("close", () => { if (state.opener && state.opener.isConnected) state.opener.focus(); });
+{
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (id && byId(id)) openDetail(id, refs[id].li.querySelector(".card-actions .btn"));
+}
+</script>
+</body>
+</html>
