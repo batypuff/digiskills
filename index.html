@@ -550,6 +550,110 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .ai-list .st-ok .res-st { background: var(--mint); }
 .ai-list .st-diff .res-st { background: var(--salmon-soft); box-shadow: inset 0 0 0 1px var(--salmon); }
 
+/* Otočná kartička */
+.fc-stage { display: grid; gap: .75rem; }
+.fc { display: block; width: 100%; height: 11rem; padding: 0; border: 0; background: none; perspective: 900px; cursor: pointer; font: inherit; color: var(--sky); }
+.fc-inner { position: relative; display: block; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+.fc[aria-pressed="true"] .fc-inner { transform: rotateY(180deg); }
+.fc-face { position: absolute; inset: 0; display: grid; align-content: center; gap: .4rem; padding: 1.2rem 1.4rem; border-radius: var(--r-card); backface-visibility: hidden; text-align: left; }
+.fc-front { background: var(--white); border: 2px solid var(--sky); box-shadow: var(--shadow); }
+.fc-back { background: var(--sky); color: var(--white); transform: rotateY(180deg); }
+.fc-back .swipe-num { color: var(--mint); }
+.fc-text { font-style: italic; font-weight: 800; font-size: 1.5rem; }
+.fc-text-sm { font-style: normal; font-weight: 600; font-size: 1rem; }
+.fc-hint { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+@media (prefers-reduced-motion: reduce) { .fc[aria-pressed="true"] .fc-front { visibility: hidden; } .fc-inner { transform: none !important; } .fc[aria-pressed="true"] .fc-back { transform: none; } .fc:not([aria-pressed="true"]) .fc-back { visibility: hidden; } }
+
+/* Doplň do mezer */
+.fill-text { font-size: 1rem; line-height: 2.4; }
+.fill-slot { white-space: nowrap; }
+.fill-in { font: inherit; font-weight: 700; color: var(--sky); padding: .15rem .45rem; border: 0; border-bottom: 2px solid var(--sky); border-radius: 6px 6px 0 0; background: var(--breeze); max-width: 12rem; }
+.fill-in.is-ok { background: var(--mint-soft); }
+.fill-in.is-bad { background: var(--salmon-soft); }
+.fill-mark { font-weight: 700; font-size: .85rem; }
+
+/* Najdi chybu */
+.fe-src { padding: .7rem .9rem; background: var(--breeze); border-radius: 12px; font-size: .88rem; }
+.fe-src summary { cursor: pointer; font-weight: 700; }
+.fe-src p { margin-top: .4rem; }
+.fe-ai { display: grid; gap: .5rem; padding: .9rem; border: 1px solid var(--line-strong); border-radius: 16px; }
+.fe-list { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.fe-list li { display: grid; gap: .2rem; }
+.fe-s { font: inherit; font-size: .92rem; text-align: left; color: var(--sky); padding: .45rem .6rem; border: 1px solid transparent; border-radius: 10px; background: var(--breeze); cursor: pointer; }
+.fe-s[aria-pressed="true"] { background: var(--salmon-soft); border-color: var(--salmon); text-decoration: underline wavy var(--salmon); }
+.fe-s.fe-hit { background: var(--mint-soft); border-color: var(--sky); }
+.fe-s.fe-miss { border: 2px dashed var(--salmon); }
+.fe-s.fe-wrong { background: var(--orange-soft); }
+.fe-s:disabled { cursor: default; }
+.fe-why { font-size: .8rem; color: var(--ink-2); padding-left: .6rem; }
+
+/* Před a po */
+.ba { position: relative; display: grid; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-strong); }
+.ba-pane { grid-area: 1 / 1; display: grid; align-content: start; gap: .5rem; padding: 1.1rem 1.2rem; font-size: .92rem; }
+.ba-before { background: var(--white); color: var(--ink-2); }
+.ba-after { background: var(--sky); color: var(--white); }
+.ba-tag { justify-self: start; padding: .1rem .6rem; border-radius: 999px; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: var(--breeze); color: var(--sky); }
+.ba-after .ba-tag { background: var(--mint); justify-self: end; }
+.ba-before .ba-tag { justify-self: start; }
+
+/* Anketa */
+.poll { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.poll li { display: grid; grid-template-columns: minmax(0, 1fr) 3rem; gap: .2rem .6rem; font-size: .88rem; }
+.poll-label { grid-column: 1 / -1; }
+.poll-bar { height: .8rem; background: var(--breeze); border-radius: 999px; overflow: hidden; align-self: center; }
+.poll-bar span { display: block; height: 100%; background: var(--blue); border-radius: 999px; }
+.poll li.is-you .poll-bar span { background: var(--sky); }
+.poll-pct { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Přiřaď dvojice */
+.mp { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: .6rem; }
+.mp-col { display: grid; gap: .45rem; align-content: start; }
+.mp-item { display: flex; align-items: center; gap: .5rem; min-height: 2.8rem; padding: .45rem .7rem; font: inherit; font-size: .88rem; text-align: left; color: var(--sky); background: var(--white); border: 1px solid var(--line-strong); border-radius: 12px; cursor: pointer; }
+.mp-item[aria-pressed="true"] { border: 2px solid var(--sky); background: var(--mint-soft); }
+.mp-item.is-linked { background: var(--breeze); }
+.mp-n { flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1px dashed var(--line-strong); font-weight: 800; font-size: .75rem; }
+.is-linked .mp-n { background: var(--sky); color: var(--mint); border: 0; }
+.mp-item.mp-ok { background: var(--mint-soft); }
+.mp-item.mp-bad { background: var(--salmon-soft); }
+.mp-fix { font-size: .78rem; color: var(--ink-2); }
+
+/* Interaktivní video */
+.vid { border-radius: 16px; overflow: hidden; background: var(--sky); color: var(--white); }
+.vid-screen { position: relative; display: grid; place-items: center; min-height: 12rem; padding: 1.5rem; }
+.vid-text { font-style: italic; font-weight: 700; font-size: 1.1rem; text-align: center; max-width: 30ch; }
+.vid-q { position: absolute; inset: 0; display: grid; align-content: center; gap: .6rem; padding: 1rem; background: var(--white); color: var(--sky); }
+.vid-qtext { font-weight: 700; }
+.vid-qtext:focus { outline: none; box-shadow: none; }
+.vid-ctrl { display: flex; align-items: center; gap: .7rem; padding: .6rem .8rem; background: rgb(255 255 255 / .08); }
+.vid-bar { position: relative; flex: 1; height: 6px; background: rgb(255 255 255 / .25); border-radius: 999px; }
+.vid-fill { display: block; height: 100%; background: var(--mint); border-radius: 999px; }
+.vid-dot { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--orange); border: 2px solid var(--sky); }
+.vid-time { font-size: .75rem; font-variant-numeric: tabular-nums; }
+
+/* Tahák */
+.cs-card { display: grid; gap: .8rem; padding: 1.2rem 1.3rem; background: var(--white); border: 2px solid var(--sky); border-radius: 18px; box-shadow: var(--shadow); }
+.cs-card:focus { outline: none; }
+.cs-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; font-style: italic; font-weight: 800; }
+.cs-row { display: grid; gap: .15rem; padding-top: .6rem; border-top: 1px solid var(--line); font-size: .9rem; }
+.cs-label { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+
+/* Rozcestník */
+.path { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.path li { display: grid; grid-template-columns: 1.4rem minmax(0, 1fr) auto; gap: .5rem; align-items: center; padding: .55rem .75rem; border-radius: 12px; font-size: .9rem; }
+.path .is-on { background: var(--mint-soft); font-weight: 600; }
+.path .is-off { color: var(--ink-2); text-decoration: line-through; }
+.path-min { font-size: .78rem; text-decoration: none; }
+
+/* Týdenní výzva */
+.wk-bar { display: block; }
+.wk-bar > span { display: block; height: 100%; background: var(--sky); border-radius: 999px; transition: width .25s; }
+.wk { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.wk-item { display: grid; grid-template-columns: auto 2.2rem minmax(0, 1fr); gap: .6rem; align-items: center; padding: .6rem .8rem; background: var(--white); border: 1px solid var(--line-strong); border-radius: 12px; font-size: .9rem; cursor: pointer; }
+.wk-item:has(input:checked) { background: var(--mint-soft); border-color: var(--sky); }
+.wk-item input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--sky); }
+.wk-day { font-weight: 800; font-style: italic; }
+.chip[aria-pressed="true"].chip { }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -571,7 +675,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead">14 aktivit, které by náš portál mohl umět. Všechny si rovnou vyzkoušejte a vyberte, co chcete naprogramovat.</p>
+      <p class="lead"><span id="n-act">24</span> aktivit, které by náš portál mohl umět. Všechny si rovnou vyzkoušejte a vyberte, co chcete naprogramovat.</p>
       <ul class="stats" aria-label="Co říká výzkum">
         <li><b>d = 0,65</b><span>plán „když, tak“ pomáhá začít</span><small>Gollwitzer a Sheeran 2006</small></li>
         <li><b>d = 0,85</b><span>opakování s odstupem drží znalost</span><small>Cepeda a kol. 2006</small></li>
@@ -1153,6 +1257,277 @@ const ACTIVITIES = [
         keyboard: "Textové pole a tlačítko, odpověď oznámí čtečka.",
         effortNote: "Napojení na AI, řízení nákladů a ochrany dat."
       }
+    }
+  },
+  {
+    id: "otocna-karticka",
+    title: "Otočná kartička",
+    oneLiner: "Vidí pojem, zkusí si vybavit význam, kartu otočí a řekne si, jestli to uměl. Neznámé karty se vrátí.",
+    goal: "remember",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Pojmy z kurzu o Copilotovi",
+    component: "flashcards",
+    config: {
+      instruction: "Zkuste si vybavit, co pojem znamená, a pak kartu otočte.",
+      repeatUnknown: true,
+      outro: "Karty, které jste napoprvé neuměli, vám portál připomene za pár dní.",
+      cards: [
+        { front: "Prompt", back: "Pokyn, kterým Copilotovi zadáte úkol. Čím konkrétnější, tím lepší výsledek." },
+        { front: "Halucinace", back: "Sebejistě podaná, ale vymyšlená informace od AI. Proto výstupy vždy kontrolujte." },
+        { front: "Kontext v promptu", back: "Pro koho, v jaké situaci a proč výstup potřebujete." },
+        { front: "Přepis schůzky", back: "Záznam řeči ze schůzky v Teams. Bez něj Copilot schůzku po skončení neshrne." },
+        { front: "Oprávnění", back: "Copilot pracuje jen s daty, ke kterým máte přístup vy." }
+      ]
+    },
+    evidence: { strength: "strong", source: "Adesope a kol. 2017, metaanalýza testovacího efektu (g = 0,61): vybavování z paměti funguje lépe než opakované čtení.", level: "L2 zapamatování" },
+    panels: {
+      why: "Než kartu otočí, musí si účastník význam sám vybavit. Právě to úsilí upevní paměť. Hned taky vidí, jestli svoje znalosti nepřeceňuje.",
+      today: "Text se seznamem pojmů, případně test s výběrem odpovědi.",
+      dev: { stores: "Pro každou kartu Umím / Ještě ne a počet otočení.", evaluation: "Nehodnotí se, neznámé karty se zařadí znovu. Data jdou využít pro opakování s odstupem.", keyboard: "Karta je tlačítko, otáčí se Enterem nebo mezerníkem. Zadní stranu přečte čtečka.", effortNote: "Nový typ zobrazení." }
+    }
+  },
+  {
+    id: "dopln-do-mezer",
+    title: "Doplň do mezer",
+    oneLiner: "Dopíše chybějící slova do textu, nebo je vybere z nabídky. Hned vidí, co bylo správně.",
+    goal: "remember",
+    effort: ["S"],
+    course: "Bezpečná práce v Microsoft 365",
+    example: "Pravidla práce s Copilotem",
+    component: "fillBlanks",
+    config: {
+      instruction: "Doplňte chybějící slova.",
+      text: "Copilot odpovídá jen z dat, ke kterým máte {{přístup|oprávnění}}. Každý výstup od AI před odesláním {{zkontrolujte|ověřte}}. Shrnutí schůzky v Teams vznikne jen tehdy, když je zapnutý {{přepis|záznam}}.",
+      mode: "type",
+      feedbackOk: "Výborně, tahle tři pravidla jsou základ bezpečné práce s Copilotem.",
+      feedbackBad: "Podívejte se na správné odpovědi, v další kapitole se k nim vrátíme."
+    },
+    evidence: { strength: "strong", source: "Adesope a kol. 2017 (testovací efekt). Vlastní vybavení odpovědi posiluje paměť víc než výběr z možností.", level: "L2 zapamatování" },
+    panels: {
+      why: "Účastník musí slovo vylovit z paměti, ne jen poznat v nabídce. Takové vybavování chrání informaci před zapomenutím.",
+      today: "Otázka s výběrem odpovědi. Psaný text portál nevyhodnocuje.",
+      dev: { stores: "Odpověď v každé mezeře a správnost.", evaluation: "Porovnání bez ohledu na velikost písmen a diakritiku, s povolenými variantami z administrace.", keyboard: "Mezery jsou běžná textová pole nebo rozbalovací nabídky.", effortNote: "Syntaxe {{…}} v editoru a jednoduché porovnání textu." }
+    }
+  },
+  {
+    id: "najdi-chybu",
+    title: "Najdi chybu",
+    oneLiner: "Porovná shrnutí od AI s poznámkami ze schůzky a označí věty, které nesedí nebo jsou vymyšlené.",
+    goal: "understand",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v Teams",
+    example: "Vymyšlený údaj ve shrnutí schůzky",
+    component: "findError",
+    config: {
+      instruction: "Copilot shrnul poradu. Označte věty, které nesedí s poznámkami.",
+      sourceTitle: "Poznámky ze schůzky",
+      source: "Porada 3. 6.: spuštění webu se posouvá na 15. 7. Rozpočet se navyšuje o 40 000 Kč. Texty dodá Jana do 20. 6. Příští porada je 10. 6.",
+      outputTitle: "Shrnutí od Copilota",
+      sentences: [
+        { text: "Spuštění webu se posouvá na 15. července.", error: false, why: "Sedí s poznámkami." },
+        { text: "Rozpočet se navyšuje o 400 000 Kč.", error: true, why: "V poznámkách je 40 000 Kč. Čísla kontrolujte vždy." },
+        { text: "Texty dodá Jana do 20. června.", error: false, why: "Sedí s poznámkami." },
+        { text: "Grafiku připraví externí agentura do konce června.", error: true, why: "O agentuře se na poradě nemluvilo. Tohle AI vymyslela." },
+        { text: "Další porada proběhne 10. června.", error: false, why: "Sedí s poznámkami." }
+      ],
+      feedbackOk: "Přesně tak. Takhle je potřeba číst každé shrnutí od AI.",
+      feedbackBad: "Něco proklouzlo. Nejčastěji chybují čísla a údaje, které v podkladu vůbec nejsou."
+    },
+    evidence: { strength: "medium", source: "Keith a Frese 2008, metaanalýza tréninku práce s chybou (error management training).", level: "L2 až L3, kritické čtení výstupů AI" },
+    panels: {
+      why: "Hledání chyb učí kriticky číst výstup AI, což je jádro AI gramotnosti. Kdo chybu jednou najde sám, v práci ji snáz pozná.",
+      today: "Neumíme. Nejblíž je otázka „Která věta je chybná?“ s výběrem odpovědi.",
+      dev: { stores: "Označené věty, nalezené a přehlédnuté chyby, falešné poplachy.", evaluation: "Každá věta má v administraci příznak chyby. Počítá se nalezené, přehlédnuté a označené navíc.", keyboard: "Věty jsou přepínací tlačítka.", effortNote: "Nová interakce s ukládáním výběru." }
+    }
+  },
+  {
+    id: "pred-a-po",
+    title: "Před a po",
+    oneLiner: "Posuvníkem přejíždí mezi původním textem a verzí upravenou s Copilotem.",
+    goal: "understand",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot ve Wordu",
+    example: "Zmatený e-mail před a po úpravě",
+    component: "beforeAfter",
+    config: {
+      instruction: "Posuňte jezdec a porovnejte obě verze.",
+      beforeLabel: "Před",
+      before: "ahoj, tak jak jsme se bavili tak ta porada asi nebude ve čtvrtek ale možná až v pátek nebo v pondělí, ještě to řeším s Petrem, kdyžtak dej vědět co ti vyhovuje a jo ještě prosím pošli ty čísla za květen",
+      afterLabel: "Po",
+      after: "Ahoj, poradu přesouváme ze čtvrtka. Hodí se ti pátek, nebo pondělí? Potvrdím do středy po domluvě s Petrem. A prosím pošli mi čísla za květen. Díky!",
+      caption: "Prompt: „Přepiš e-mail stručně a srozumitelně, zachovej neformální tón.“"
+    },
+    evidence: { strength: "weak", source: "Přímý výzkum chybí. Rešerše odkazuje na fázi Awareness v modelu ADKAR.", level: "L1 motivace" },
+    panels: {
+      why: "Rozdíl je vidět během vteřiny, bez vysvětlování. Hodí se jako úvod, který ukáže, proč se tématu věnovat.",
+      today: "Dva obrázky nebo texty pod sebou.",
+      dev: { stores: "Nic, jen zda si ukázku účastník prohlédl.", evaluation: "Nehodnotí se.", keyboard: "Nativní posuvník, ovládá se šipkami.", effortNote: "Nový typ zobrazení." }
+    }
+  },
+  {
+    id: "anketa-se-srovnanim",
+    title: "Anketa se srovnáním",
+    oneLiner: "Odpoví na otázku a hned vidí, jak odpověděli kolegové.",
+    goal: "habit",
+    effort: ["M"],
+    course: "Digitální wellbeing",
+    example: "Kolik času denně trávíte v poště?",
+    component: "pollCompare",
+    config: {
+      question: "Kolik času denně trávíte v e-mailové poště?",
+      hint: "Odpovězte odhadem, výsledky ostatních uvidíte hned potom.",
+      options: [{ text: "Méně než 30 minut", seed: 12 }, { text: "30 až 60 minut", seed: 31 }, { text: "1 až 2 hodiny", seed: 38 }, { text: "Víc než 2 hodiny", seed: 19 }],
+      note: "Ukázková data.",
+      after: "V další kapitole si ukážeme, jak čas v poště zkrátit.",
+      minAnswers: 20
+    },
+    evidence: { strength: "principle", source: "Predikce před výkladem budí zvědavost; srovnání s kolegy podporuje sounáležitost (teorie sebeurčení, Deci a Ryan). Přímé studie chybí.", level: "L1 zapojení; souhrn za firmu" },
+    panels: {
+      why: "Účastník si nejdřív udělá vlastní odhad a pak ho porovná s ostatními. To vzbudí zvědavost na výklad. Firma navíc získá souhrn odpovědí.",
+      today: "Neumíme. Odpovědi ostatních se účastníkům nezobrazují.",
+      dev: { stores: "Odpověď každého účastníka, anonymně.", evaluation: "Procenta ze všech odpovědí v kurzu. Výsledky se ukážou až od nastaveného počtu odpovědí.", keyboard: "Možnosti jsou tlačítka, výsledky jsou i v číslech.", effortNote: "Souhrn odpovědí za víc účastníků." }
+    }
+  },
+  {
+    id: "prirad-dvojice",
+    title: "Přiřaď dvojice",
+    oneLiner: "Spojí každou aplikaci s úkolem, se kterým v ní Copilot pomůže.",
+    goal: "remember",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Aplikace a typické úkoly pro Copilota",
+    component: "matchPairs",
+    config: {
+      instruction: "Klikněte na aplikaci vlevo a pak na úkol vpravo.",
+      pairs: [
+        { left: "Word", right: "Návrh dokumentu podle osnovy" },
+        { left: "Excel", right: "Vzorce a grafy z tabulky" },
+        { left: "PowerPoint", right: "Prezentace z dokumentu" },
+        { left: "Teams", right: "Shrnutí schůzky" },
+        { left: "Outlook", right: "Shrnutí e-mailového vlákna" }
+      ],
+      feedbackOk: "Přesně. Teď víte, kde Copilota hledat.",
+      feedbackBad: "Podívejte se na opravené dvojice."
+    },
+    evidence: { strength: "principle", source: "Vybavování z paměti (Adesope a kol. 2017). Verze jen s tažením je podle rešerše riziko pro přístupnost.", level: "L2 zapamatování" },
+    panels: {
+      why: "Spojování nutí účastníka přemýšlet o vztahu mezi pojmy, ne jen o jednom z nich. Díky klikání místo tažení to jde i z klávesnice.",
+      today: "Řada otázek s rozbalovací nabídkou u každé položky.",
+      dev: { stores: "Vytvořené dvojice a správnost.", evaluation: "Porovnání s dvojicemi z administrace.", keyboard: "Obě strany jsou tlačítka: vyberte vlevo, pak vpravo. Žádné tažení.", effortNote: "Nový typ zobrazení." }
+    }
+  },
+  {
+    id: "interaktivni-video",
+    title: "Interaktivní video",
+    oneLiner: "Video se v klíčových chvílích samo zastaví a položí otázku. Po odpovědi pokračuje.",
+    goal: "understand",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v Outlooku",
+    example: "Videonávod se dvěma otázkami",
+    component: "interactiveVideo",
+    config: {
+      instruction: "Pusťte si krátký návod. Video se samo zastaví.",
+      scenes: [
+        { text: "V Outlooku otevřete dlouhé e-mailové vlákno.", seconds: 3 },
+        { text: "Nad zprávou klikněte na Shrnout. Copilot vypíše hlavní body.", seconds: 4 },
+        { text: "Shrnutí si přečtěte a porovnejte s posledními e-maily.", seconds: 3 },
+        { text: "Pak můžete požádat o návrh odpovědi.", seconds: 3 },
+        { text: "Návrh upravte a odešlete až po kontrole.", seconds: 3 }
+      ],
+      questions: [
+        { at: 7, text: "Co udělat se shrnutím jako první?", options: [{ text: "Rovnou odpovědět" }, { text: "Zkontrolovat ho s e-maily" }], correct: 1, feedback: "Shrnutí může něco vynechat, krátká kontrola se vyplatí." },
+        { at: 13, text: "Kdy návrh odpovědi odeslat?", options: [{ text: "Hned, jak ho Copilot napíše" }, { text: "Až po úpravě a kontrole" }], correct: 1, feedback: "Za odeslaný e-mail odpovídáte vy." }
+      ]
+    },
+    evidence: { strength: "medium", source: "Szpunar, Khan a Schacter 2013: otázky vložené do videa snižují toulání myšlenek a zlepšují zapamatování.", level: "L2 porozumění" },
+    panels: {
+      why: "Otázka uprostřed videa vrátí pozornost a ověří, že účastník sleduje. Video přestane být pasivní.",
+      today: "Video a test až po něm, jako dvě samostatné aktivity.",
+      dev: { stores: "Odpovědi na otázky ve videu, čas sledování a místa, kde účastník video opustil.", evaluation: "Otázky jako běžný test, navázané na čas ve videu.", keyboard: "Tlačítko přehrát a pauza, otázka dostane focus. Video musí mít titulky.", effortNote: "Přehrávač s časovými značkami." }
+    }
+  },
+  {
+    id: "osobni-tahak",
+    title: "Osobní tahák",
+    oneLiner: "Napíše své vlastní prompty a z nich vznikne tahák ke stažení.",
+    goal: "practice",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Moje 3 prompty na poštu",
+    component: "cheatSheet",
+    config: {
+      instruction: "Napište si prompty, které opravdu použijete. Vznikne z nich tahák.",
+      cardTitle: "Můj tahák: Copilot v práci",
+      fields: [
+        { label: "Prompt na poštu", placeholder: "např. Shrň vlákno do 3 bodů…", suggestion: "Shrň toto vlákno do 3 odrážek a napiš, co se ode mě čeká." },
+        { label: "Prompt na schůzky", placeholder: "např. Z přepisu vypiš úkoly…", suggestion: "Z přepisu schůzky vypiš úkoly: kdo, co, do kdy." },
+        { label: "Moje pravidlo", placeholder: "např. Čísla vždy kontroluji…", suggestion: "Čísla a jména od Copilota vždy zkontroluji." }
+      ]
+    },
+    evidence: { strength: "principle", source: "Chi a Wylie 2014 (ICAP, konstruktivní zapojení). Tahák slouží i jako podpora výkonu po kurzu.", level: "L3 použití v práci" },
+    panels: {
+      why: "Vlastní formulace si účastník zapamatuje líp než cizí. Tahák mu po kurzu zůstane po ruce, když ho bude potřebovat.",
+      today: "Formulář s otevřenou odpovědí. Odpověď se nikam neuloží a účastník ji po kurzu nenajde.",
+      dev: { stores: "Texty účastníka.", evaluation: "Nehodnotí se. Tahák jako soubor ke stažení nebo stránka v profilu.", keyboard: "Textová pole a tlačítka.", effortNote: "Generování souboru a ukládání do profilu." }
+    }
+  },
+  {
+    id: "rozcestnik-urovne",
+    title: "Rozcestník podle úrovně",
+    oneLiner: "Na začátku řekne, jak Copilota používá, a kurz mu ukáže jen kapitoly, které potřebuje.",
+    goal: "understand",
+    effort: ["L"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Začátečník, nebo pokročilý",
+    component: "adaptivePath",
+    config: {
+      question: "Jak často dnes používáte Copilota?",
+      options: [{ text: "Ještě nikdy", level: 0 }, { text: "Občas si s ním něco zkusím", level: 0 }, { text: "Skoro každý den", level: 1 }],
+      chapters: [
+        { name: "Co je Copilot a co umí", minutes: 5, beg: true, adv: false },
+        { name: "Jak napsat dobrý prompt", minutes: 8, beg: true, adv: true },
+        { name: "Copilot v Outlooku", minutes: 8, beg: true, adv: false },
+        { name: "Copilot v Teams", minutes: 8, beg: true, adv: true },
+        { name: "Pokročilé prompty a vlastní šablony", minutes: 10, beg: false, adv: true },
+        { name: "Bezpečnost a kontrola výstupů", minutes: 6, beg: true, adv: true }
+      ]
+    },
+    evidence: { strength: "principle", source: "Přehledové studie adaptivního učení; teorie sebeurčení (autonomie). Pro firemní mikrolekce přímé důkazy chybí.", level: "L1 spokojenost, dokončení kurzu" },
+    panels: {
+      why: "Zkušení nechtějí ztrácet čas tím, co znají, a začátečníky nepřetíží pokročilé věci. Kurz je kratší a víc sedí.",
+      today: "Všichni procházejí celý kurz stejně.",
+      dev: { stores: "Zvolenou úroveň a prošlé kapitoly.", evaluation: "Úroveň určuje, které kapitoly se zobrazí. Přeskočené jdou otevřít ručně.", keyboard: "Odpovědi jsou tlačítka.", effortNote: "Podmíněné zobrazování kapitol napříč kurzem." }
+    }
+  },
+  {
+    id: "tydenni-vyzva",
+    title: "Týdenní výzva",
+    oneLiner: "Týden po kurzu odškrtává malé úkoly v práci a na konci řekne, co ho brzdilo.",
+    goal: "habit",
+    effort: ["L"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "5 dní s Copilotem",
+    component: "weeklyChallenge",
+    config: {
+      title: "5 dní s Copilotem",
+      instruction: "Každý den jeden malý úkol ve vaší běžné práci.",
+      tasks: [
+        { day: "Po", text: "Nechte Copilota shrnout nejdelší e-mailové vlákno." },
+        { day: "Út", text: "Z jedné schůzky si nechte vypsat úkoly." },
+        { day: "St", text: "Napište s Copilotem první verzi odpovědi a upravte ji." },
+        { day: "Čt", text: "Požádejte o osnovu dokumentu, který chystáte." },
+        { day: "Pá", text: "Uložte si prompt, který se vám osvědčil." }
+      ],
+      question: "Co vás tento týden brzdilo?",
+      obstacles: [{ text: "Nebyl čas" }, { text: "Nevím, jak na to" }, { text: "Výsledek nebyl dobrý" }, { text: "Nemám licenci" }, { text: "Nic" }],
+      thanks: "Díky. Podle odpovědí upravíme kurz i podporu po něm."
+    },
+    evidence: { strength: "principle", source: "Přenos do praxe a úroveň Ability v modelu ADKAR; Kirkpatrick L3. Přímé studie týdenních výzev chybí.", level: "L3 změna chování" },
+    panels: {
+      why: "Kurz pokračuje v běžné práci, kde se návyk skutečně tvoří. Odpovědi ukážou, co lidem brání a kde přidat podporu.",
+      today: "Neumíme. Po dokončení kurzu nevíme, jestli lidé naučené používají.",
+      dev: { stores: "Splněné úkoly po dnech a zvolené překážky.", evaluation: "Souhrn za skupinu: kolik lidí splnilo kolik úkolů a nejčastější překážky.", keyboard: "Zaškrtávací políčka a tlačítka.", effortNote: "Plánování po kurzu, připomínky a souhrny za skupinu." }
     }
   }
 ];
@@ -2297,7 +2672,407 @@ const AiFeedback = withSchema({
   ]
 });
 
-const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz, sortSteps: SortSteps, sortGroups: SortGroups, hotspot: Hotspot, compareOutputs: CompareOutputs, branching: Branching, calculator: Calculator, commitment: Commitment, oneTap: OneTap, certainty: Certainty, spaced: Spaced, modelAnswer: ModelAnswer, aiFeedback: AiFeedback };
+/* ---------- Otočná kartička ---------- */
+const Flashcards = withSchema({
+  renderLearner(root, cfg) {
+    const deck = cfg.cards.filter(c => c.front.trim());
+    if (!deck.length) { actShell(root, h("p", { class: "muted" }, "Přidejte v administraci kartu.")); return; }
+    const queue = deck.map((c, i) => i);
+    const firstTry = new Set(), seen = new Set();
+    const live = h("p", { class: "sr-only", "aria-live": "polite" });
+    const stage = h("div", { class: "fc-stage" });
+    const count = h("p", { class: "hs-count" });
+    function show() {
+      if (!queue.length) {
+        const head = h("p", { class: "res-score", tabindex: "-1" }, `Napoprvé umíte ${firstTry.size} z ${deck.length}`);
+        actShell(root, head, h("p", {}, cfg.outro), restart(() => Flashcards.renderLearner(root, cfg), "Projít znovu"));
+        focusLater(head); return;
+      }
+      const i = queue[0], c = deck[i];
+      count.textContent = nb(`Zbývá ${queue.length} ${plural(queue.length, "karta", "karty", "karet")}`);
+      const rate = h("div", { class: "row-gap fc-rate", hidden: true },
+        h("button", { type: "button", class: "btn navy", onclick: () => { if (!seen.has(i)) firstTry.add(i); seen.add(i); queue.shift(); show(); } }, "Umím"),
+        h("button", { type: "button", class: "btn", onclick: () => { seen.add(i); queue.shift(); if (cfg.repeatUnknown) queue.push(i); show(); } }, "Ještě ne"));
+      const card = h("button", { type: "button", class: "fc", "aria-pressed": "false", onclick: () => {
+        const on = card.getAttribute("aria-pressed") !== "true";
+        card.setAttribute("aria-pressed", on); rate.hidden = !on;
+        live.textContent = on ? nb(c.back) : "";
+      } },
+        h("span", { class: "fc-inner" },
+          h("span", { class: "fc-face fc-front" }, h("span", { class: "swipe-num" }, "Pojem"), h("span", { class: "fc-text" }, c.front), h("span", { class: "fc-hint" }, "Otočit")),
+          h("span", { class: "fc-face fc-back" }, h("span", { class: "swipe-num" }, "Vysvětlení"), h("span", { class: "fc-text fc-text-sm" }, c.back))));
+      stage.replaceChildren(card, rate);
+      focusLater(card);
+    }
+    actShell(root, h("p", {}, cfg.instruction), count, stage, live);
+    show();
+  },
+  admin: [
+    { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání" }, { type: "check", key: "repeatUnknown", label: "Neznámé karty zařadit znovu na konec" }, { type: "area", key: "outro", label: "Text na konci" }] },
+    { title: "Karty", fields: [{ type: "list", key: "cards", label: "Karty", summary: it => it.front, add: () => ({ front: "", back: "" }), addLabel: "Přidat kartu",
+      fields: [{ type: "text", key: "front", label: "Přední strana" }, { type: "area", key: "back", label: "Zadní strana" }] }] }
+  ]
+});
+
+/* ---------- Doplň do mezer ---------- */
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+const FillBlanks = withSchema({
+  renderLearner(root, cfg) {
+    const parts = cfg.text.split(/\{\{(.+?)\}\}/);
+    const blanks = [];
+    const bank = shuffled(parts.filter((p, i) => i % 2).map(p => p.split("|")[0].trim()));
+    const uid = "fb" + Math.random().toString(36).slice(2, 7);
+    const para = h("p", { class: "fill-text" }, parts.map((p, i) => {
+      if (i % 2 === 0) return p;
+      const answers = p.split("|").map(x => x.trim());
+      const k = blanks.length;
+      const ctl = cfg.mode === "select"
+        ? h("select", { class: "fill-in", "aria-label": `Mezera ${k + 1}` }, h("option", { value: "" }, "…"), bank.map(w => h("option", { value: w }, w)))
+        : h("input", { type: "text", class: "fill-in", "aria-label": `Mezera ${k + 1}`, size: Math.max(6, answers[0].length), autocomplete: "off", spellcheck: "false" });
+      const mark = h("span", { class: "fill-mark" });
+      blanks.push({ answers, ctl, mark });
+      return h("span", { class: "fill-slot" }, ctl, mark);
+    }));
+    const result = h("div", { class: "act-result" });
+    const go = h("button", { type: "button", class: "btn primary", onclick: check }, "Zkontrolovat");
+    function check() {
+      let ok = 0;
+      blanks.forEach(b => {
+        const good = b.answers.some(a => norm(a) === norm(b.ctl.value));
+        if (good) ok++;
+        b.ctl.classList.toggle("is-ok", good); b.ctl.classList.toggle("is-bad", !good);
+        b.mark.textContent = good ? " ✓" : ` ✗ ${b.answers[0]}`;
+        b.ctl.disabled = true;
+      });
+      go.hidden = true;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${blanks.length}`);
+      result.replaceChildren(head, h("p", {}, ok === blanks.length ? cfg.feedbackOk : cfg.feedbackBad), restart(() => FillBlanks.renderLearner(root, cfg)));
+      focusLater(head);
+    }
+    actShell(root, h("p", {}, cfg.instruction), para, h("div", {}, go), result);
+  },
+  admin: [
+    { title: "Text", help: "Mezeru zapíšete do dvojitých složených závorek, přijatelné varianty oddělte svislou čarou: {{přepis|záznam}}.", fields: [
+      { type: "area", key: "instruction", label: "Zadání" },
+      { type: "area", key: "text", label: "Text s mezerami", rows: 5 },
+      { type: "select", key: "mode", label: "Způsob doplnění", options: [["type", "Účastník píše"], ["select", "Vybírá z nabídky slov"]] }] },
+    { title: "Zpětná vazba", fields: [{ type: "area", key: "feedbackOk", label: "Vše správně" }, { type: "area", key: "feedbackBad", label: "Něco špatně" }] }
+  ]
+});
+
+/* ---------- Najdi chybu ---------- */
+const FindError = withSchema({
+  renderLearner(root, cfg) {
+    const marked = new Set();
+    const list = h("ol", { class: "fe-list" });
+    const result = h("div", { class: "act-result" });
+    const go = h("button", { type: "button", class: "btn primary", onclick: check }, "Zkontrolovat");
+    const btns = cfg.sentences.map((s, i) => h("button", { type: "button", class: "fe-s", "aria-pressed": "false", onclick: e => {
+      marked.has(i) ? marked.delete(i) : marked.add(i);
+      e.currentTarget.setAttribute("aria-pressed", marked.has(i));
+    } }, s.text));
+    list.replaceChildren(...btns.map(b => h("li", {}, b)));
+    function check() {
+      let hit = 0, miss = 0, wrong = 0;
+      cfg.sentences.forEach((s, i) => {
+        const b = btns[i]; b.disabled = true;
+        const m = marked.has(i);
+        if (s.error && m) hit++; else if (s.error) miss++; else if (m) wrong++;
+        b.classList.add(s.error ? (m ? "fe-hit" : "fe-miss") : (m ? "fe-wrong" : "fe-fine"));
+        if (s.error || m) b.parentNode.append(h("span", { class: "fe-why" }, (s.error ? (m ? "✓ Chyba nalezena. " : "✗ Tuhle chybu jste přehlédli. ") : "Tahle věta je v pořádku. ") + (s.why || "")));
+      });
+      go.hidden = true;
+      const total = cfg.sentences.filter(s => s.error).length;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Nalezeno ${hit} z ${total} chyb`);
+      result.replaceChildren(head, h("p", {}, hit === total && !wrong ? cfg.feedbackOk : cfg.feedbackBad), restart(() => FindError.renderLearner(root, cfg)));
+      focusLater(head);
+    }
+    actShell(root, h("p", {}, cfg.instruction),
+      h("details", { class: "fe-src" }, h("summary", {}, cfg.sourceTitle), h("p", {}, cfg.source)),
+      h("div", { class: "fe-ai" }, h("p", { class: "ai-head" }, h("span", { class: "ai-badge" }, "AI"), cfg.outputTitle), list),
+      h("div", {}, go), result);
+  },
+  admin: [
+    { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání" }, { type: "text", key: "sourceTitle", label: "Název podkladu" }, { type: "area", key: "source", label: "Podklad (pravda)", rows: 4 }, { type: "text", key: "outputTitle", label: "Název výstupu AI" }] },
+    { title: "Věty výstupu", fields: [{ type: "list", key: "sentences", label: "Věty", summary: it => it.text, meta: it => it.error ? "obsahuje chybu" : "v pořádku", add: () => ({ text: "", error: false, why: "" }), addLabel: "Přidat větu",
+      fields: [{ type: "area", key: "text", label: "Věta" }, { type: "check", key: "error", label: "Obsahuje chybu" }, { type: "area", key: "why", label: "Vysvětlení" }] }] },
+    { title: "Zpětná vazba", fields: [{ type: "area", key: "feedbackOk", label: "Vše nalezeno" }, { type: "area", key: "feedbackBad", label: "Něco chybí" }] }
+  ]
+});
+
+/* ---------- Před a po ---------- */
+const BeforeAfter = withSchema({
+  renderLearner(root, cfg) {
+    const id = "ba" + Math.random().toString(36).slice(2, 7);
+    const after = h("div", { class: "ba-pane ba-after" }, h("span", { class: "ba-tag" }, cfg.afterLabel), h("p", {}, cfg.after));
+    const range = h("input", { type: "range", id, class: "calc-range", min: 0, max: 100, value: 50, oninput: e => set(e.target.value) });
+    const set = v => { after.style.clipPath = `inset(0 0 0 ${v}%)`; range.setAttribute("aria-valuetext", `${100 - v} % verze ${cfg.afterLabel}`); };
+    set(50);
+    actShell(root, h("p", {}, cfg.instruction),
+      h("div", { class: "ba" }, h("div", { class: "ba-pane ba-before" }, h("span", { class: "ba-tag" }, cfg.beforeLabel), h("p", {}, cfg.before)), after),
+      h("label", { class: "sr-only", for: id }, "Posunout hranici mezi verzemi"), range,
+      h("div", { class: "calc-scale", "aria-hidden": "true" }, h("span", {}, "← " + cfg.afterLabel), h("span", {}, cfg.beforeLabel + " →")),
+      h("p", { class: "help" }, cfg.caption));
+  },
+  admin: [
+    { title: "Obsah", fields: [
+      { type: "area", key: "instruction", label: "Zadání" },
+      { type: "text", key: "beforeLabel", label: "Popisek Před" }, { type: "area", key: "before", label: "Obsah Před", rows: 4 },
+      { type: "text", key: "afterLabel", label: "Popisek Po" }, { type: "area", key: "after", label: "Obsah Po", rows: 4 },
+      { type: "area", key: "caption", label: "Popisek pod ukázkou" }] }
+  ]
+});
+
+/* ---------- Anketa se srovnáním ---------- */
+const PollCompare = withSchema({
+  renderLearner(root, cfg) {
+    const res = h("div", { "aria-live": "polite" });
+    const opts = h("div", { class: "br-choices" }, cfg.options.map((o, k) => h("button", { type: "button", class: "btn br-choice", onclick: () => vote(k) }, o.text)));
+    function vote(k) {
+      opts.querySelectorAll("button").forEach(b => { b.disabled = true; });
+      const counts = cfg.options.map((o, i) => (Number(o.seed) || 0) + (i === k ? 1 : 0));
+      const sum = counts.reduce((a, b) => a + b, 0) || 1;
+      res.replaceChildren(h("ul", { class: "poll" }, cfg.options.map((o, i) => {
+        const pct = Math.round(counts[i] / sum * 100);
+        return h("li", { class: i === k ? "is-you" : "" }, h("span", { class: "poll-label" }, o.text, i === k ? h("strong", {}, " · vy") : null),
+          h("span", { class: "poll-bar", "aria-hidden": "true" }, h("span", { style: { width: pct + "%" } })), h("span", { class: "poll-pct" }, pct + " %"));
+      })), h("p", { class: "help" }, nb(`Odpovědělo ${sum} kolegů. ${cfg.note}`)), h("p", {}, cfg.after));
+    }
+    actShell(root, h("p", { class: "calc-q" }, cfg.question), h("p", { class: "help" }, cfg.hint), opts, res);
+  },
+  admin: [
+    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka" }, { type: "text", key: "hint", label: "Nápověda před hlasováním" }, { type: "area", key: "after", label: "Text po zobrazení výsledků" }] },
+    { title: "Možnosti", help: "V portálu se čísla sčítají z odpovědí ostatních účastníků. Tady jsou ukázková.", fields: [
+      { type: "list", key: "options", label: "Možnosti", summary: it => it.text, meta: it => `ukázkově ${it.seed} odpovědí`, add: () => ({ text: "", seed: 0 }), addLabel: "Přidat možnost",
+        fields: [{ type: "text", key: "text", label: "Text" }, { type: "number", key: "seed", label: "Ukázkový počet odpovědí", min: 0, max: 1000 }] },
+      { type: "text", key: "note", label: "Poznámka k datům" }] },
+    { title: "Nastavení", fields: [{ type: "number", key: "minAnswers", label: "Výsledky ukázat až od počtu odpovědí", min: 1, max: 500 }] }
+  ]
+});
+
+/* ---------- Přiřaď dvojice ---------- */
+const MatchPairs = withSchema({
+  renderLearner(root, cfg) {
+    const pairs = cfg.pairs.filter(p => p.left.trim() && p.right.trim());
+    const rightOrder = shuffled(pairs.map((p, i) => i));
+    const link = {};            // left index -> right index
+    let sel = null;
+    const leftBtns = pairs.map((p, i) => h("button", { type: "button", class: "mp-item", "aria-pressed": "false", onclick: () => { sel = i; draw(); } }, h("span", { class: "mp-n" }), p.left));
+    const rightBtns = rightOrder.map(r => h("button", { type: "button", class: "mp-item", "data-r": r, onclick: () => {
+      if (sel == null) { live.textContent = nb("Nejdřív vyberte položku vlevo."); return; }
+      for (const k in link) if (link[k] === r) delete link[k];
+      link[sel] = r; live.textContent = nb(`${pairs[sel].left} = ${pairs[r].right}`); sel = null; draw();
+    } }, h("span", { class: "mp-n" }), pairs[r].right));
+    const live = h("p", { class: "sr-only", "aria-live": "polite" });
+    const go = h("button", { type: "button", class: "btn primary", disabled: true, onclick: check }, "Zkontrolovat");
+    const result = h("div", { class: "act-result" });
+    function draw() {
+      leftBtns.forEach((b, i) => { b.setAttribute("aria-pressed", sel === i); b.querySelector(".mp-n").textContent = link[i] != null ? i + 1 : ""; b.classList.toggle("is-linked", link[i] != null); });
+      rightBtns.forEach(b => { const r = Number(b.dataset.r); const l = Object.keys(link).find(k => link[k] === r); b.querySelector(".mp-n").textContent = l != null ? Number(l) + 1 : ""; b.classList.toggle("is-linked", l != null); });
+      go.disabled = Object.keys(link).length < pairs.length;
+    }
+    function check() {
+      let ok = 0;
+      leftBtns.forEach((b, i) => { const good = link[i] === i; if (good) ok++; b.classList.add(good ? "mp-ok" : "mp-bad"); b.disabled = true; if (!good) b.append(h("span", { class: "mp-fix" }, ` → ${pairs[i].right}`)); });
+      rightBtns.forEach(b => { b.disabled = true; });
+      go.hidden = true;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${pairs.length}`);
+      result.replaceChildren(head, h("p", {}, ok === pairs.length ? cfg.feedbackOk : cfg.feedbackBad), restart(() => MatchPairs.renderLearner(root, cfg)));
+      focusLater(head);
+    }
+    draw();
+    actShell(root, h("p", {}, cfg.instruction), h("div", { class: "mp" }, h("div", { class: "mp-col" }, leftBtns), h("div", { class: "mp-col" }, rightBtns)), h("div", {}, go), result, live);
+  },
+  admin: [
+    { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání" }] },
+    { title: "Dvojice", help: "Pravý sloupec účastník uvidí zamíchaný.", fields: [{ type: "list", key: "pairs", label: "Dvojice", summary: it => `${it.left} = ${it.right}`, min: 2, add: () => ({ left: "", right: "" }), addLabel: "Přidat dvojici",
+      fields: [{ type: "text", key: "left", label: "Vlevo" }, { type: "text", key: "right", label: "Vpravo" }] }] },
+    { title: "Zpětná vazba", fields: [{ type: "area", key: "feedbackOk", label: "Vše správně" }, { type: "area", key: "feedbackBad", label: "Něco špatně" }] }
+  ]
+});
+
+/* ---------- Interaktivní video ---------- */
+const InteractiveVideo = withSchema({
+  renderLearner(root, cfg) {
+    const scenes = cfg.scenes.filter(s => s.text.trim());
+    const total = scenes.reduce((a, s) => a + (Number(s.seconds) || 1), 0);
+    const qs = cfg.questions.slice().sort((a, b) => a.at - b.at);
+    const asked = new Set();
+    let t = 0, timer = null;
+    const screen = h("p", { class: "vid-text" });
+    const time = h("span", { class: "vid-time" });
+    const fill = h("span", { class: "vid-fill" });
+    const bar = h("span", { class: "vid-bar", "aria-hidden": "true" }, fill, qs.map(q => h("i", { class: "vid-dot", style: { left: `${Math.min(100, q.at / total * 100)}%` } })));
+    const overlay = h("div", { class: "vid-q", hidden: true });
+    const play = h("button", { type: "button", class: "btn btn-small on-dark", onclick: () => timer ? pause() : start() }, "▶ Přehrát");
+    const fmt = s => `0:${String(Math.floor(s)).padStart(2, "0")}`;
+    function render() {
+      let acc = 0, cur = scenes[scenes.length - 1];
+      for (const s of scenes) { acc += Number(s.seconds) || 1; if (t < acc) { cur = s; break; } }
+      screen.textContent = nb(cur.text);
+      time.textContent = `${fmt(t)} / ${fmt(total)}`;
+      fill.style.width = `${Math.min(100, t / total * 100)}%`;
+    }
+    function start() {
+      if (t >= total) { t = 0; asked.clear(); }
+      play.textContent = "❚❚ Pauza";
+      timer = setInterval(() => {
+        if (!screen.isConnected) { pause(); return; }
+        t = Math.min(total, t + 0.25);
+        const q = qs.find((x, i) => !asked.has(i) && t >= Number(x.at));
+        if (q) { asked.add(qs.indexOf(q)); pause(); ask(q); }
+        if (t >= total) { pause(); play.textContent = "↻ Znovu"; }
+        render();
+      }, reduceMotion() ? 250 : 250);
+    }
+    function pause() { clearInterval(timer); timer = null; play.textContent = "▶ Přehrát"; }
+    function ask(q) {
+      play.disabled = true;
+      const legend = h("p", { class: "vid-qtext", tabindex: "-1" }, q.text);
+      const fb = h("div", { role: "status" });
+      overlay.replaceChildren(legend, h("div", { class: "br-choices" }, q.options.map((o, k) => h("button", { type: "button", class: "btn br-choice", onclick: e => {
+        overlay.querySelectorAll(".br-choice").forEach(b => { b.disabled = true; });
+        const ok = k === Number(q.correct);
+        fb.replaceChildren(h("p", { class: "fb " + (ok ? "fb-ok" : "fb-bad") }, h("strong", {}, ok ? "✓ Správně. " : "✗ Ne tak docela. "), q.feedback),
+          h("button", { type: "button", class: "btn primary", onclick: () => { overlay.hidden = true; play.disabled = false; start(); play.focus(); } }, "Pokračovat ve videu"));
+      } }, o.text))), fb);
+      overlay.hidden = false;
+      focusLater(legend);
+    }
+    render();
+    actShell(root, h("p", {}, cfg.instruction),
+      h("div", { class: "vid" }, h("div", { class: "vid-screen" }, screen, overlay), h("div", { class: "vid-ctrl" }, play, bar, time)),
+      h("p", { class: "help" }, "Ukázka: místo videa běží titulky. V portálu to bude skutečné video, které se na značkách samo zastaví."));
+  },
+  admin: [
+    { title: "Video", help: "V portálu autor nahraje video. Tady ho zastupují scény s titulky.", fields: [
+      { type: "area", key: "instruction", label: "Zadání" },
+      { type: "list", key: "scenes", label: "Scény (titulky)", openFirst: false, summary: it => it.text, meta: it => `${it.seconds} s`, add: () => ({ text: "", seconds: 4 }), addLabel: "Přidat scénu",
+        fields: [{ type: "area", key: "text", label: "Text" }, { type: "number", key: "seconds", label: "Délka (s)", min: 1, max: 60 }] }] },
+    { title: "Otázky ve videu", fields: [{ type: "list", key: "questions", label: "Otázky", summary: it => it.text, meta: it => `v čase ${it.at} s`, add: () => ({ at: 5, text: "", options: [{ text: "" }, { text: "" }], correct: 0, feedback: "" }), addLabel: "Přidat otázku",
+      fields: [
+        { type: "number", key: "at", label: "Zastavit v čase (s)", min: 0, max: 600 },
+        { type: "area", key: "text", label: "Otázka" },
+        { type: "list", key: "options", label: "Odpovědi", openFirst: false, min: 2, summary: (it, i) => `${LETTERS[i]}: ${it.text}`, add: () => ({ text: "" }), fields: [{ type: "text", key: "text", label: "Text" }] },
+        { type: "select", key: "correct", label: "Správná odpověď", num: true, options: optionsFrom("options") },
+        { type: "area", key: "feedback", label: "Vysvětlení" }] }] }
+  ]
+});
+
+/* ---------- Osobní tahák ---------- */
+async function saveTextFile(filename, data, onMsg) {
+  const dl = await downloadsReady;
+  if (dl) {
+    try { await dl.save({ filename, data }); onMsg("Uloženo."); }
+    catch (e) { onMsg(e && e.code === "declined" ? "Ukládání jste zrušili." : "Soubor se tu nepodařilo uložit."); }
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([data], { type: "text/plain;charset=utf-8" }));
+  const a = h("a", { href: url, download: filename }); document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  onMsg("Soubor se stahuje.");
+}
+const CheatSheet = withSchema({
+  renderLearner(root, cfg) {
+    const uid = "cs" + Math.random().toString(36).slice(2, 7);
+    const inputs = cfg.fields.map((f, i) => h("textarea", { id: `${uid}${i}`, class: "in", rows: 2, placeholder: f.placeholder }));
+    const make = h("button", { type: "button", class: "btn primary", onclick: build }, "Vytvořit tahák");
+    function build() {
+      const rows = cfg.fields.map((f, i) => [f.label, inputs[i].value.trim() || f.suggestion]).filter(r => r[1]);
+      const msg = h("p", { class: "help", role: "status" });
+      const text = cfg.cardTitle + "\n\n" + rows.map(([l, v]) => `${l}\n${v}`).join("\n\n") + "\n";
+      const card = h("div", { class: "cs-card", tabindex: "-1" },
+        h("div", { class: "cs-top" }, h("img", { src: LOGO_NAVY, alt: "Digiskills", class: "notif-logo" }), h("span", {}, cfg.cardTitle)),
+        rows.map(([l, v]) => h("div", { class: "cs-row" }, h("p", { class: "cs-label" }, l), h("p", {}, v))));
+      actShell(root, card, h("div", { class: "row-gap" },
+        h("button", { type: "button", class: "btn primary", onclick: () => saveTextFile("muj-tahak.txt", text, t => { msg.textContent = nb(t); }) }, "Stáhnout tahák"),
+        h("button", { type: "button", class: "btn", onclick: () => CheatSheet.renderLearner(root, cfg) }, "Upravit")), msg);
+      focusLater(card);
+    }
+    actShell(root, h("p", {}, cfg.instruction), cfg.fields.map((f, i) => h("div", { class: "f" }, h("label", { for: `${uid}${i}` }, f.label), inputs[i])),
+      h("p", { class: "help" }, "Prázdné pole doplníme vzorem."), h("div", {}, make));
+  },
+  admin: [
+    { title: "Tahák", fields: [{ type: "area", key: "instruction", label: "Zadání" }, { type: "text", key: "cardTitle", label: "Nadpis taháku" }] },
+    { title: "Pole", fields: [{ type: "list", key: "fields", label: "Pole taháku", summary: it => it.label, add: () => ({ label: "", placeholder: "", suggestion: "" }), addLabel: "Přidat pole",
+      fields: [{ type: "text", key: "label", label: "Název" }, { type: "text", key: "placeholder", label: "Nápověda v poli" }, { type: "area", key: "suggestion", label: "Vzor, když účastník nic nenapíše" }] }] }
+  ]
+});
+
+/* ---------- Rozcestník podle úrovně ---------- */
+const LEVELS = ["Začátečník", "Pokročilý"];
+const AdaptivePath = withSchema({
+  renderLearner(root, cfg) {
+    const opts = h("div", { class: "br-choices" }, cfg.options.map(o => h("button", { type: "button", class: "btn br-choice", onclick: () => pick(Number(o.level)) }, o.text)));
+    function pick(lvl) {
+      const key = lvl ? "adv" : "beg";
+      const on = cfg.chapters.filter(c => c[key]);
+      const mins = on.reduce((a, c) => a + (Number(c.minutes) || 0), 0);
+      const all = cfg.chapters.reduce((a, c) => a + (Number(c.minutes) || 0), 0);
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Vaše cesta: ${mins} minut`);
+      actShell(root, head, h("p", { class: "muted" }, nb(`Úroveň ${LEVELS[lvl]}. Celý kurz má ${all} minut.`)),
+        h("ol", { class: "path" }, cfg.chapters.map(c => h("li", { class: c[key] ? "is-on" : "is-off" },
+          h("span", { class: "path-dot", "aria-hidden": "true" }, c[key] ? "●" : "○"), h("span", { class: "path-name" }, c.name),
+          h("span", { class: "path-min" }, c[key] ? `${c.minutes} min` : "přeskočíte")))),
+        restart(() => AdaptivePath.renderLearner(root, cfg), "Změnit odpověď"));
+      focusLater(head);
+    }
+    actShell(root, h("p", { class: "calc-q" }, cfg.question), opts);
+  },
+  admin: [
+    { title: "Vstupní otázka", fields: [{ type: "area", key: "question", label: "Otázka" },
+      { type: "list", key: "options", label: "Odpovědi", summary: it => it.text, meta: it => LEVELS[it.level], add: () => ({ text: "", level: 0 }), fields: [
+        { type: "text", key: "text", label: "Text" }, { type: "select", key: "level", label: "Úroveň", num: true, options: LEVELS.map((l, i) => [i, l]) }] }] },
+    { title: "Kapitoly", help: "U každé kapitoly zvolte, pro koho je.", fields: [{ type: "list", key: "chapters", label: "Kapitoly", summary: it => it.name, meta: it => [it.beg && "začátečníci", it.adv && "pokročilí"].filter(Boolean).join(" · ") || "nikdo",
+      add: () => ({ name: "", minutes: 5, beg: true, adv: true }), addLabel: "Přidat kapitolu",
+      fields: [{ type: "text", key: "name", label: "Název" }, { type: "number", key: "minutes", label: "Minut", min: 1, max: 60 }, { type: "check", key: "beg", label: "Pro začátečníky" }, { type: "check", key: "adv", label: "Pro pokročilé" }] }] }
+  ]
+});
+
+/* ---------- Týdenní výzva ---------- */
+const WeeklyChallenge = withSchema({
+  renderLearner(root, cfg) {
+    const uid = "wk" + Math.random().toString(36).slice(2, 7);
+    const done = new Set();
+    const fill = h("span", {});
+    const count = h("p", { class: "hs-count", "aria-live": "polite" });
+    const upd = () => {
+      fill.style.width = `${done.size / cfg.tasks.length * 100}%`;
+      count.textContent = nb(`Splněno ${done.size} z ${cfg.tasks.length}`);
+      finish.disabled = done.size === 0;
+    };
+    const finish = h("button", { type: "button", class: "btn primary", onclick: reflect }, "Uzavřít týden");
+    function reflect() {
+      const chosen = new Set();
+      const msg = h("div", { role: "status" });
+      const chips = h("div", { class: "chips chips-sm" }, cfg.obstacles.map(o => h("button", { type: "button", class: "chip", "aria-pressed": "false", onclick: e => {
+        chosen.has(o.text) ? chosen.delete(o.text) : chosen.add(o.text); e.currentTarget.setAttribute("aria-pressed", chosen.has(o.text));
+      } }, o.text)));
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Týden hotový: ${done.size} z ${cfg.tasks.length}`);
+      actShell(root, head, h("p", { class: "calc-q" }, cfg.question), chips,
+        h("div", {}, h("button", { type: "button", class: "btn primary", onclick: () => {
+          msg.replaceChildren(h("p", { class: "fb fb-ok" }, cfg.thanks), h("p", { class: "help" }, nb(chosen.size ? `Do souhrnu pro zadavatele půjde: ${[...chosen].join(", ")}.` : "Bez překážek. Skvělé.")));
+        } }, "Odeslat")), msg, restart(() => WeeklyChallenge.renderLearner(root, cfg), "Znovu od pondělí"));
+      focusLater(head);
+    }
+    actShell(root, h("p", { class: "calc-q" }, cfg.title), h("p", {}, cfg.instruction), count, h("span", { class: "q-bar wk-bar", "aria-hidden": "true" }, fill),
+      h("ul", { class: "wk" }, cfg.tasks.map((t, i) => h("li", {}, h("label", { class: "wk-item", for: `${uid}${i}` },
+        h("input", { type: "checkbox", id: `${uid}${i}`, onchange: e => { e.target.checked ? done.add(i) : done.delete(i); upd(); } }),
+        h("span", { class: "wk-day" }, t.day), h("span", {}, t.text))))),
+      h("div", {}, finish));
+    upd();
+  },
+  admin: [
+    { title: "Výzva", fields: [{ type: "text", key: "title", label: "Název" }, { type: "area", key: "instruction", label: "Zadání" }] },
+    { title: "Úkoly", fields: [{ type: "list", key: "tasks", label: "Úkoly na dny", summary: it => `${it.day}: ${it.text}`, add: () => ({ day: "", text: "" }), addLabel: "Přidat úkol",
+      fields: [{ type: "text", key: "day", label: "Den" }, { type: "area", key: "text", label: "Úkol" }] }] },
+    { title: "Reflexe na konci týdne", fields: [{ type: "text", key: "question", label: "Otázka" },
+      { type: "list", key: "obstacles", label: "Nabízené překážky", openFirst: false, summary: it => it.text, add: () => ({ text: "" }), fields: [{ type: "text", key: "text", label: "Text" }] },
+      { type: "area", key: "thanks", label: "Poděkování" }] }
+  ]
+});
+
+const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz, sortSteps: SortSteps, sortGroups: SortGroups, hotspot: Hotspot, compareOutputs: CompareOutputs, branching: Branching, calculator: Calculator, commitment: Commitment, oneTap: OneTap, certainty: Certainty, spaced: Spaced, modelAnswer: ModelAnswer, aiFeedback: AiFeedback, flashcards: Flashcards, fillBlanks: FillBlanks, findError: FindError, beforeAfter: BeforeAfter, pollCompare: PollCompare, matchPairs: MatchPairs, interactiveVideo: InteractiveVideo, cheatSheet: CheatSheet, adaptivePath: AdaptivePath, weeklyChallenge: WeeklyChallenge };
 
 /* =====================================================================
    STRÁNKA: filtry, karty, detail, výběr priorit
@@ -2542,6 +3317,7 @@ function infoPanels(a) {
    START
    ===================================================================== */
 fixStaticText(document.body);
+$("#n-act").textContent = ACTIVITIES.length;
 buildFilters();
 buildGrid();
 applyFilters();
