@@ -363,7 +363,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .rec .help { color: var(--breeze); }
 
 /* ---------- Kompaktní úvod ---------- */
-.hero-band { padding-block: 2.5rem 2.75rem; }
+.hero-band { padding-block: 2rem 2.25rem; }
 .hero-band h1 { color: var(--white); }
 .hero-band .lead { color: var(--breeze); }
 .stats { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: .75rem; }
@@ -390,6 +390,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .admin-fields > .adm-sec:first-child { border-top: 0; padding-top: 0; }
 .more-btn { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; min-height: 3rem; padding: .6rem 1.1rem; border: 1px solid var(--sky); border-radius: 999px; background: var(--white); color: var(--sky); font-weight: 700; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
 .more-btn:hover { background: var(--mint-soft); }
+.acard-btns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: .6rem; }
 .more-icon::before { content: "+"; display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--mint); font-size: 1.1rem; line-height: 1; }
 .more-btn[aria-expanded="true"] .more-icon::before { content: "−"; }
 .info-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); align-items: start; }
@@ -675,14 +676,8 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead"><span id="n-act">24</span> aktivit, které by náš portál mohl umět. Všechny si rovnou vyzkoušejte a vyberte, co chcete naprogramovat.</p>
-      <ul class="stats" aria-label="Co říká výzkum">
-        <li><b>d = 0,65</b><span>plán „když, tak“ pomáhá začít</span><small>Gollwitzer a Sheeran 2006</small></li>
-        <li><b>d = 0,85</b><span>opakování s odstupem drží znalost</span><small>Cepeda a kol. 2006</small></li>
-        <li><b>g = 0,61</b><span>otázka naučí víc než čtení</span><small>Adesope a kol. 2017</small></li>
-        <li><b>g = −0,33</b><span>zábava bez učebního cíle škodí</span><small>Sundararajan a Adesope 2020</small></li>
-      </ul>
-      <p class="scale-note">d, g = velikost efektu z metaanalýz: 0,2 malý, 0,5 střední, 0,8 velký.</p>
+      <p class="lead">Vyzkoušejte si aktivity a vyberte, co chcete v portálu mít.</p>
+
     </div>
   </section>
 
@@ -693,14 +688,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
         <div class="filter-group" role="group" aria-labelledby="fg-goal">
           <span class="filter-label" id="fg-goal">Cíl učení</span>
           <div class="chips" id="goal-chips"></div>
-        </div>
-        <div class="filter-group" role="group" aria-labelledby="fg-effort">
-          <span class="filter-label" id="fg-effort">Náročnost vývoje</span>
-          <div class="chips" id="effort-chips"></div>
-        </div>
-        <div class="filter-group" role="group" aria-labelledby="fg-rec">
-          <span class="filter-label" id="fg-rec">Rešerše</span>
-          <div class="chips" id="rec-chips"></div>
         </div>
         <div class="filter-status">
           <p id="count" aria-live="polite"></p>
@@ -3077,7 +3064,7 @@ const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz, sortSteps: 
 /* =====================================================================
    STRÁNKA: filtry, karty, detail, výběr priorit
    ===================================================================== */
-const state = { goals: new Set(), efforts: new Set(), recOnly: false, selected: [] };
+const state = { goals: new Set(), selected: [] };
 const refs = {};
 
 function goalTag(a) {
@@ -3095,21 +3082,13 @@ function pickButton(a, extraClass) {
 }
 
 function buildFilters() {
-  const goalBox = $("#goal-chips"), effortBox = $("#effort-chips");
+  const goalBox = $("#goal-chips");
   for (const key in GOALS) {
     const n = ACTIVITIES.filter(a => a.goal === key).length;
     goalBox.append(h("button", { type: "button", class: "chip", "aria-pressed": "false", style: { "--dot": `var(${GOALS[key].color})` },
       onclick: e => toggleFilter(state.goals, key, e.currentTarget) },
       h("span", { class: "dot", "aria-hidden": "true" }), GOALS[key].label, h("span", { class: "chip-n" }, `(${n})`)));
   }
-  for (const key in EFFORTS) {
-    const n = ACTIVITIES.filter(a => a.effort.includes(key)).length;
-    effortBox.append(h("button", { type: "button", class: "chip", "aria-pressed": "false", onclick: e => toggleFilter(state.efforts, key, e.currentTarget) },
-      key, h("span", { class: "chip-n" }, `(${n})`)));
-  }
-  const nRec = ACTIVITIES.filter(a => a.recommended).length;
-  $("#rec-chips").append(h("button", { type: "button", class: "chip", "aria-pressed": "false", onclick: e => { state.recOnly = !state.recOnly; e.currentTarget.setAttribute("aria-pressed", state.recOnly); applyFilters(); } },
-    "Jen doporučené rešerší", h("span", { class: "chip-n" }, `(${nRec})`)));
   $("#reset-filters").addEventListener("click", resetFilters);
 }
 function toggleFilter(set, key, btn) {
@@ -3118,20 +3097,20 @@ function toggleFilter(set, key, btn) {
   applyFilters();
 }
 function resetFilters() {
-  state.goals.clear(); state.efforts.clear(); state.recOnly = false;
+  state.goals.clear();
   document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
   applyFilters();
 }
 function applyFilters() {
   let n = 0;
   for (const a of ACTIVITIES) {
-    const show = (!state.goals.size || state.goals.has(a.goal)) && (!state.efforts.size || a.effort.some(e => state.efforts.has(e))) && (!state.recOnly || a.recommended);
+    const show = (!state.goals.size || state.goals.has(a.goal));
     refs[a.id].li.hidden = !show;
     if (show) n++;
   }
   $("#count").textContent = `Zobrazeno ${n} z ${ACTIVITIES.length} ${ACTIVITIES.length === 1 ? "aktivity" : "aktivit"}`;
   $("#empty").hidden = n > 0;
-  $("#reset-filters").hidden = !(state.goals.size || state.efforts.size || state.recOnly);
+  $("#reset-filters").hidden = !state.goals.size;
 }
 
 function buildGrid() {
@@ -3152,27 +3131,36 @@ function buildGrid() {
       h("div", { class: "admin" }, adminRoot));
     const moreId = "more-" + a.id;
     const more = h("div", { class: "acard-more", id: moreId, hidden: true }, infoPanels(a));
-    const label = h("span", {}, "Více info o této aktivitě");
-    const moreBtn = h("button", { type: "button", class: "more-btn", "aria-expanded": "false", "aria-controls": moreId, onclick: () => toggle() }, label, h("span", { class: "more-icon", "aria-hidden": "true" }));
+    const adminId = "adm-" + a.id;
+    adminPane.id = adminId;
+    const toggleBtn = (text, hideText, target, onChange) => {
+      const lbl = h("span", {}, text);
+      const btn = h("button", { type: "button", class: "more-btn", "aria-expanded": "false", "aria-controls": target.id, onclick: () => {
+        const open = btn.getAttribute("aria-expanded") !== "true";
+        btn.setAttribute("aria-expanded", open);
+        target.hidden = !open;
+        lbl.textContent = nb(open ? hideText : text);
+        onChange(open);
+      } }, lbl, h("span", { class: "more-icon", "aria-hidden": "true" }));
+      return btn;
+    };
+    const adminBtn = toggleBtn("Ukázat administraci", "Skrýt administraci", adminPane, open => {
+      li.classList.toggle("is-open", open);
+      if (open && !mounted) { mountAdmin(); mounted = true; }
+      if (open) li.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+    });
+    const moreBtn = toggleBtn("Více info o aktivitě", "Skrýt info", more, () => {});
     const li = h("li", { class: "acard", id: a.id, "data-id": a.id },
       h("div", { class: "acard-head" },
         h("div", { class: "acard-titles" },
-          h("div", { class: "tags" }, a.recommended && h("span", { class: "tag tag-rec" }, "Doporučeno rešerší"), goalTag(a), effortTag(a)),
+          h("div", { class: "tags" }, goalTag(a)),
           h("h3", { class: "card-title" }, a.title)),
         h("div", { class: "acard-pick" }, order, pickButton(a))),
       h("div", { class: "acard-stage" },
         h("div", { class: "portal" }, h("div", { class: "portal-bar" }, h("span", { class: "portal-course" }, a.course || "Kurz"), h("span", {}, "3 až 4 min")), learnerRoot),
         adminPane),
-      moreBtn, more);
-    function toggle(force) {
-      const open = force ?? moreBtn.getAttribute("aria-expanded") !== "true";
-      moreBtn.setAttribute("aria-expanded", open);
-      more.hidden = !open; adminPane.hidden = !open;
-      li.classList.toggle("is-open", open);
-      label.textContent = open ? "Skrýt info" : nb("Více info o této aktivitě");
-      if (open && !mounted) { mountAdmin(); mounted = true; }
-      if (open) li.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
-    }
+      h("div", { class: "acard-btns" }, adminBtn, moreBtn), more);
+    const toggle = () => {};
     refs[a.id] = { li, order, toggle };
     grid.append(li);
     comp.renderLearner(learnerRoot, cfg);
@@ -3209,7 +3197,7 @@ function syncPicks() {
       h("span", { class: "pick-n", "aria-hidden": "true" }, i + 1),
       h("div", { class: "pick-main" },
         h("span", { class: "pick-title" }, a.title),
-        h("span", { class: "pick-meta" }, `${GOALS[a.goal].label} · vývoj ${effortText(a)} · ${isReady(a) ? "ukázka hotová" : "ukázka se připravuje"}`)),
+        h("span", { class: "pick-meta" }, GOALS[a.goal].label)),
       h("div", { class: "pick-ctrl" },
         h("button", { type: "button", class: "btn btn-small iconbtn", "data-act": "up", disabled: i === 0, "aria-label": `Posunout výš: ${a.title}`, onclick: () => movePick(id, -1) }, "↑"),
         h("button", { type: "button", class: "btn btn-small iconbtn", "data-act": "down", disabled: i === sel.length - 1, "aria-label": `Posunout níž: ${a.title}`, onclick: () => movePick(id, 1) }, "↓"),
@@ -3230,13 +3218,12 @@ function syncPicks() {
 
 function buildBrief() {
   const date = new Date().toLocaleDateString("cs-CZ");
-  const out = [`Švédský stůl aktivit: vybrané priority (${date})`, "Pořadí určuje, co programovat jako první. Náročnost je odhad, ověří ji vývoj.", ""];
+  const out = [`Švédský stůl aktivit: vybrané priority (${date})`, "Pořadí určuje, co programovat jako první.", ""];
   state.selected.forEach((id, i) => {
     const a = byId(id), d = a.panels.dev;
     out.push(`${i + 1}. ${a.title}`);
     out.push(`   Co účastník dělá: ${a.oneLiner}`);
     out.push(`   Cíl učení: ${GOALS[a.goal].label}`);
-    out.push(`   Náročnost: ${effortText(a)}${d && d.effortNote ? ". " + d.effortNote : ""}`);
     out.push(`   Funkční ukázka: ${isReady(a) ? "ano, je na stránce" : "připravuje se"}`);
     out.push(`   Proč: ${a.panels.why}`);
     out.push(`   Důkazy: ${STRENGTH[a.evidence.strength].label}${a.recommended ? ", doporučeno rešerší" : ""}. Zdroj: ${a.evidence.source}`);
@@ -3253,10 +3240,10 @@ function buildBrief() {
   return out.join("\n");
 }
 function buildCsv() {
-  const rows = [["Pořadí", "Aktivita", "Co účastník dělá", "Cíl učení", "Náročnost (odhad)", "Funkční ukázka", "Síla důkazů", "Doporučeno rešerší", "Zdroj", "Kirkpatrick", "Co se ukládá", "Jak se vyhodnocuje", "Ovládání bez myši a dotyku"]];
+  const rows = [["Pořadí", "Aktivita", "Co účastník dělá", "Cíl učení", "Funkční ukázka", "Síla důkazů", "Doporučeno rešerší", "Zdroj", "Kirkpatrick", "Co se ukládá", "Jak se vyhodnocuje", "Ovládání bez myši a dotyku"]];
   state.selected.forEach((id, i) => {
     const a = byId(id), d = a.panels.dev || {};
-    rows.push([i + 1, a.title, a.oneLiner, GOALS[a.goal].label, effortText(a), isReady(a) ? "ano" : "připravuje se", STRENGTH[a.evidence.strength].label, a.recommended ? "ano" : "ne", a.evidence.source, a.evidence.level, d.stores || "", d.evaluation || "", d.keyboard || ""]);
+    rows.push([i + 1, a.title, a.oneLiner, GOALS[a.goal].label, isReady(a) ? "ano" : "připravuje se", STRENGTH[a.evidence.strength].label, a.recommended ? "ano" : "ne", a.evidence.source, a.evidence.level, d.stores || "", d.evaluation || "", d.keyboard || ""]);
   });
   const cell = v => { const s = String(v); return /[";\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   return "﻿" + rows.map(r => r.map(cell).join(";")).join("\r\n");
@@ -3309,15 +3296,13 @@ function infoPanels(a) {
       h("dl", { class: "dev" },
         h("dt", {}, "Co se ukládá"), h("dd", {}, d.stores),
         h("dt", {}, "Jak se vyhodnocuje"), h("dd", {}, d.evaluation),
-        h("dt", {}, "Bez myši a dotyku"), h("dd", {}, d.keyboard),
-        h("dt", {}, "Odhad náročnosti"), h("dd", {}, `${effortText(a)}. ${d.effortNote} Ověří vývoj.`))));
+        h("dt", {}, "Bez myši a dotyku"), h("dd", {}, d.keyboard))));
 }
 
 /* =====================================================================
    START
    ===================================================================== */
 fixStaticText(document.body);
-$("#n-act").textContent = ACTIVITIES.length;
 buildFilters();
 buildGrid();
 applyFilters();
@@ -3327,7 +3312,7 @@ $("#save-csv").addEventListener("click", saveCsv);
 $("#pickbar-link").addEventListener("click", e => { e.preventDefault(); const s = $("#vyber"); s.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); s.focus({ preventScroll: true }); });
 {
   const id = decodeURIComponent(location.hash.slice(1));
-  if (id && byId(id)) refs[id].toggle(true);
+  if (id && byId(id)) refs[id].li.scrollIntoView({ block: "start" });
 }
 </script>
 </body>
