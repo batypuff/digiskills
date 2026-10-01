@@ -655,6 +655,51 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .wk-day { font-weight: 800; font-style: italic; }
 .chip[aria-pressed="true"].chip { }
 
+/* Drag and drop */
+.dd-bank { display: flex; flex-wrap: wrap; gap: .45rem; min-height: 2.6rem; padding: .6rem; background: var(--breeze); border-radius: 14px; }
+.dd-chip { min-height: 2.4rem; padding: .35rem .85rem; font: inherit; font-size: .88rem; font-weight: 600; color: var(--sky); background: var(--white); border: 1px solid var(--sky); border-radius: 999px; cursor: grab; touch-action: none; user-select: none; }
+.dd-chip[aria-pressed="true"] { background: var(--mint); box-shadow: 0 0 0 2px var(--sky); }
+.dd-chip.is-dragging { position: relative; z-index: 5; cursor: grabbing; box-shadow: var(--shadow); }
+.dd-text { line-height: 2.6; }
+.dd-gap { display: inline-flex; align-items: center; min-height: 2.2rem; min-width: 5rem; padding: .1rem .7rem; margin: 0 .1rem; font: inherit; font-size: .9rem; font-weight: 700; color: var(--sky); background: var(--white); border: 2px dashed var(--line-strong); border-radius: 10px; cursor: pointer; vertical-align: middle; line-height: 1.3; }
+.dd-gap.is-target { border-color: var(--sky); background: var(--mint-soft); }
+.dd-gap.is-filled { border-style: solid; border-color: var(--sky); }
+.dd-gap.is-ok { background: var(--mint-soft); }
+.dd-gap.is-bad { background: var(--salmon-soft); border-color: var(--salmon); }
+.dd-gap:disabled { cursor: default; }
+/* Popiš obrázek: napodobenina Teams */
+.tm { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); min-height: 14rem; background: #F5F5F7; color: #1A1A1A; font-size: .75rem; }
+.tm-rail { display: grid; align-content: start; justify-items: center; gap: 1.1rem; padding: .9rem 0; background: #EBEBF0; }
+.tm-ico, .tm-cp { position: relative; display: inline-grid; place-items: center; }
+.tm-svg { width: 1.4rem; height: 1.4rem; color: #44475A; }
+.tm-main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tm-top { display: flex; justify-content: space-between; align-items: center; padding: .6rem .8rem; background: #fff; border-bottom: 1px solid #E1E3E8; }
+.tm-title { font-weight: 700; padding-left: 1.6rem; }
+.tm-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: .5rem; padding: .6rem; }
+.tm-video { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; }
+.tm-video i { display: block; min-height: 3.2rem; border-radius: 6px; background: #3B3E52; }
+.tm-side { position: relative; display: grid; align-content: start; padding: .5rem; background: #fff; border-radius: 6px; }
+.tm-lines { display: grid; gap: .35rem; }
+.tm-lines i { display: block; height: .4rem; border-radius: 3px; background: #E1E3E8; }
+.dd-pin { position: absolute; z-index: 2; min-width: 1.9rem; min-height: 1.9rem; padding: .1rem .45rem; border-radius: 999px; font-size: .78rem; background: var(--orange); color: var(--sky); border: 2px solid var(--sky); white-space: nowrap; }
+.dd-pin.is-filled { background: var(--white); }
+.dd-pin.is-target { background: var(--mint); }
+.tm-ico .dd-pin { left: 2.2rem; top: -.2rem; }
+.tm-cp .dd-pin { right: 1.5rem; top: -.35rem; }
+.tm-side .dd-pin { left: .4rem; bottom: .4rem; }
+/* Kvízy */
+.q-opt.q-right { background: var(--mint-soft); border-color: var(--sky); }
+.q-opt.q-wrong { background: var(--salmon-soft); }
+.q-why { grid-column: 1 / -1; font-size: .82rem; color: var(--ink); }
+.q-check { grid-template-columns: auto minmax(0, 1fr); }
+.q-check input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--sky); }
+.tf-st { font-style: italic; font-weight: 700; font-size: 1.15rem; }
+.tf-st:focus { outline: none; box-shadow: none; }
+.tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.num-row { display: flex; align-items: center; gap: .6rem; }
+.num-in { max-width: 9rem; font-size: 1.2rem; font-weight: 700; }
+.num-unit { font-weight: 700; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -1515,6 +1560,160 @@ const ACTIVITIES = [
       why: "Kurz pokračuje v běžné práci, kde se návyk skutečně tvoří. Odpovědi ukážou, co lidem brání a kde přidat podporu.",
       today: "Neumíme. Po dokončení kurzu nevíme, jestli lidé naučené používají.",
       dev: { stores: "Splněné úkoly po dnech a zvolené překážky.", evaluation: "Souhrn za skupinu: kolik lidí splnilo kolik úkolů a nejčastější překážky.", keyboard: "Zaškrtávací políčka a tlačítka.", effortNote: "Plánování po kurzu, připomínky a souhrny za skupinu." }
+    }
+  },
+  {
+    id: "pretahni-slova",
+    title: "Přetáhni slova do textu",
+    oneLiner: "Přetáhne slova ze zásobníku do mezer v promptu. Jde to i klikáním.",
+    goal: "remember",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Doplň prompt o cíl, kontext a formát",
+    component: "dragWords",
+    config: {
+      instruction: "Složte dobrý prompt. V zásobníku jsou i slova navíc.",
+      text: "{{Shrň}} vlákno o rozpočtu do {{tří odrážek}} pro {{kolegu, který nebyl v kopii}}. Uveď i {{termíny}}.",
+      extras: "Napiš něco, hezky, pro všechny",
+      feedbackOk: "Přesně tak. Prompt má cíl, formát, adresáta i to, na co se zaměřit.",
+      feedbackBad: "Skoro. Dobrý prompt říká, co udělat, v jaké podobě a pro koho."
+    },
+    evidence: { strength: "principle", source: "Vybavování a skládání odpovědi (Adesope a kol. 2017). Tažení musí mít alternativu bez tažení (WCAG 2.2, kritérium 2.5.7).", level: "L2 zapamatování" },
+    panels: {
+      why: "Účastník musí sám rozhodnout, které slovo kam patří, a slova navíc ho nutí přemýšlet. Klikací alternativa zajistí, že to zvládne i člověk bez myši.",
+      today: "U každé mezery jedna otázka s rozbalovací nabídkou.",
+      dev: { stores: "Které slovo je v které mezeře a správnost.", evaluation: "Porovnání s textem v {{závorkách}} z administrace, bez ohledu na velikost písmen a diakritiku.", keyboard: "Slova i mezery jsou tlačítka: vyberte slovo, pak mezeru. Klik na plnou mezeru slovo vrátí. Tažení je jen doplněk." }
+    }
+  },
+  {
+    id: "popis-obrazek",
+    title: "Popiš obrázek",
+    oneLiner: "Přetáhne štítky na očíslovaná místa ve snímku Teams.",
+    goal: "practice",
+    effort: ["M"],
+    course: "Microsoft 365 Copilot v Teams",
+    example: "Kde je v Teams chat, kalendář, Copilot a přepis",
+    component: "labelImage",
+    config: {
+      instruction: "Přiřaďte štítky k očíslovaným místům v okně Teams.",
+      labels: [
+        { text: "Chat", slot: "chat" },
+        { text: "Kalendář", slot: "calendar" },
+        { text: "Copilot", slot: "copilot" },
+        { text: "Přepis schůzky", slot: "transcript" },
+        { text: "Soubory", slot: "" }
+      ],
+      feedbackOk: "Výborně, v Teams se vyznáte.",
+      feedbackBad: "Podívejte se na opravené štítky. Přepis najdete během schůzky v panelu vpravo."
+    },
+    evidence: { strength: "principle", source: "Orientace v reálném rozhraní usnadňuje přenos do praxe. Přímé studie chybí. Tažení vyžaduje alternativu (WCAG 2.2, kritérium 2.5.7).", level: "L2 až L3, orientace v aplikaci" },
+    panels: {
+      why: "Účastník si spojí název funkce s místem, kde ji v aplikaci najde. Štítek navíc ho nutí rozlišovat, ne jen hádat.",
+      today: "Obrázek a pod ním otázky s rozbalovací nabídkou.",
+      dev: { stores: "Který štítek je na kterém místě a správnost.", evaluation: "Porovnání s místy přiřazenými v administraci. Štítky navíc nikam nepatří.", keyboard: "Štítky i čísla jsou tlačítka: vyberte štítek, pak číslo. V portálu autor místa označí kliknutím do nahraného obrázku." }
+    }
+  },
+  {
+    id: "jedna-odpoved",
+    title: "Jedna správná odpověď",
+    oneLiner: "Vybere jednu odpověď a u každé možnosti uvidí, proč je nebo není správná.",
+    goal: "understand",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot v Teams",
+    example: "Proč chybí shrnutí schůzky",
+    component: "singleChoice",
+    config: {
+      question: "Copilot vám v Teams nenabízí shrnutí schůzky, která skončila před hodinou. Co je nejpravděpodobnější příčina?",
+      options: [
+        { text: "Schůzka neměla zapnutý přepis", why: "Bez přepisu nemá Copilot po skončení schůzky z čeho čerpat." },
+        { text: "Schůzka byla moc krátká", why: "Délka schůzky tu nehraje roli." },
+        { text: "Shrnutí jde udělat jen v Outlooku", why: "Shrnutí schůzky najdete v Teams." },
+        { text: "Je potřeba počkat do druhého dne", why: "Pokud běžel přepis, bývá shrnutí k dispozici krátce po schůzce." }
+      ],
+      correct: 0,
+      attempts: 2,
+      shuffle: false
+    },
+    evidence: { strength: "strong", source: "Adesope a kol. 2017 (testovací efekt); Van der Kleij a kol. 2015: vysvětlující zpětná vazba funguje lépe než jen správně/špatně.", level: "L2 porozumění" },
+    panels: {
+      why: "Test sám o sobě učí, ale nejvíc tehdy, když účastník hned ví proč. Vysvětlení u každé možnosti opraví i omyly, které by jinak zůstaly.",
+      today: "Umíme, ale zpětná vazba je jen správně, nebo špatně. Vysvětlení u jednotlivých možností chybí.",
+      dev: { stores: "Zvolenou odpověď v každém pokusu a počet pokusů.", evaluation: "Porovnání se správnou odpovědí. Po vyčerpání pokusů se ukáže vysvětlení u všech možností.", keyboard: "Nativní přepínače, mezi možnostmi šipkami." }
+    }
+  },
+  {
+    id: "vice-odpovedi",
+    title: "Více správných odpovědí",
+    oneLiner: "Zaškrtne všechny správné možnosti a u každé dostane vysvětlení.",
+    goal: "understand",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot v praxi",
+    example: "Co patří do dobrého promptu",
+    component: "multiChoice",
+    config: {
+      question: "Co patří do dobrého promptu?",
+      hint: "Vyberte všechny možnosti, které platí.",
+      options: [
+        { text: "Co má Copilot udělat", correct: true, why: "Jasný cíl je základ." },
+        { text: "Pro koho a proč výstup potřebujete", correct: true, why: "Kontext změní tón i obsah výsledku." },
+        { text: "Jakou podobu má výstup mít", correct: true, why: "Délka a formát ušetří další kolo úprav." },
+        { text: "Co nejvíc zdvořilostních frází", correct: false, why: "Zdvořilost neuškodí, ale výsledek nezlepší." },
+        { text: "Hesla, kterými se přihlašujete", correct: false, why: "Hesla do promptu nikdy nepatří." }
+      ]
+    },
+    evidence: { strength: "medium", source: "Van der Kleij a kol. 2015, metaanalýza počítačové zpětné vazby: vysvětlení u odpovědí zvyšuje efekt.", level: "L2 porozumění" },
+    panels: {
+      why: "Účastník musí posoudit každou možnost zvlášť, ne jen najít jednu správnou. Hádání je tak těžší a vysvětlení pokryje i chybná přesvědčení.",
+      today: "Umíme výběr více odpovědí, ale bez vysvětlení u jednotlivých možností a bez bodování po možnostech.",
+      dev: { stores: "Zaškrtnuté možnosti a skóre.", evaluation: "Bod za každou správně zaškrtnutou i správně nezaškrtnutou možnost.", keyboard: "Nativní zaškrtávací políčka." }
+    }
+  },
+  {
+    id: "pravda-nepravda",
+    title: "Pravda, nebo nepravda",
+    oneLiner: "U série tvrzení rozhodne, jestli platí, a hned uvidí vysvětlení.",
+    goal: "remember",
+    effort: ["S"],
+    course: "Bezpečná práce v Microsoft 365",
+    example: "Mýty o Copilotovi",
+    component: "trueFalse",
+    config: {
+      statements: [
+        { text: "Copilot pracuje jen se soubory, ke kterým máte přístup.", isTrue: true, why: "Respektuje vaše oprávnění v Microsoft 365." },
+        { text: "Co Copilot napíše, je vždy fakticky správně.", isTrue: false, why: "AI může sebejistě uvést i vymyšlený údaj." },
+        { text: "Shrnutí schůzky v Teams potřebuje zapnutý přepis.", isTrue: true, why: "Po skončení schůzky Copilot čerpá z přepisu." },
+        { text: "Delší prompt je vždycky lepší.", isTrue: false, why: "Rozhoduje cíl, kontext a formát, ne délka." },
+        { text: "Návrh odpovědi od Copilota je dobré před odesláním upravit.", isTrue: true, why: "Za odeslaný text odpovídáte vy." }
+      ]
+    },
+    evidence: { strength: "principle", source: "Adesope a kol. 2017 (testovací efekt). U dvou možností je vysoká šance uhodnout, proto se hodí na rychlé opakování a vyvracení mýtů.", level: "L2 zapamatování" },
+    panels: {
+      why: "Rychlý formát na vyvrácení rozšířených omylů. Okamžité vysvětlení zajistí, že si účastník nezapamatuje špatnou verzi.",
+      today: "Test se dvěma možnostmi, každé tvrzení jako samostatná otázka.",
+      dev: { stores: "Odpověď a správnost u každého tvrzení.", evaluation: "Porovnání s nastavenou pravdivostí, skóre na konci.", keyboard: "Dvě tlačítka, další tvrzení dostane focus." }
+    }
+  },
+  {
+    id: "ciselna-odpoved",
+    title: "Číselná odpověď",
+    oneLiner: "Spočítá a napíše číslo. Portál uzná odpověď v toleranci a ukáže postup.",
+    goal: "practice",
+    effort: ["S"],
+    course: "Microsoft 365 Copilot v Teams",
+    example: "Kolik hodin ročně ušetří kratší zápisy",
+    component: "numericAnswer",
+    config: {
+      question: "Psaní zápisů vám zabere 30 minut týdně. Copilot čas zkrátí na polovinu. Kolik hodin ušetříte za 46 pracovních týdnů?",
+      unit: "hodin",
+      answer: 11.5,
+      tolerancePct: 10,
+      solution: "30 minut × 0,5 = 15 minut týdně. 15 × 46 = 690 minut, tedy 11,5 hodiny."
+    },
+    evidence: { strength: "principle", source: "Vlastní vytvoření odpovědi místo výběru z možností (generativní učení, Fiorella a Mayer 2015).", level: "L2 až L3, použití v praxi" },
+    panels: {
+      why: "Účastník nemůže tipnout z nabídky, musí počítat. Hodí se na úlohy, kde jde o odhad, kapacitu nebo úsporu.",
+      today: "Neumíme. Číslo jde napsat jen do formuláře s otevřenou odpovědí, který portál nevyhodnotí.",
+      dev: { stores: "Zadané číslo a správnost.", evaluation: "Uznává se hodnota v toleranci z administrace. Desetinná čárka i tečka.", keyboard: "Textové pole s číselnou klávesnicí na mobilu." }
     }
   }
 ];
@@ -3059,7 +3258,317 @@ const WeeklyChallenge = withSchema({
   ]
 });
 
-const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz, sortSteps: SortSteps, sortGroups: SortGroups, hotspot: Hotspot, compareOutputs: CompareOutputs, branching: Branching, calculator: Calculator, commitment: Commitment, oneTap: OneTap, certainty: Certainty, spaced: Spaced, modelAnswer: ModelAnswer, aiFeedback: AiFeedback, flashcards: Flashcards, fillBlanks: FillBlanks, findError: FindError, beforeAfter: BeforeAfter, pollCompare: PollCompare, matchPairs: MatchPairs, interactiveVideo: InteractiveVideo, cheatSheet: CheatSheet, adaptivePath: AdaptivePath, weeklyChallenge: WeeklyChallenge };
+/* ---------- Drag and drop: společné jádro ----------
+   Každé slovo jde přetáhnout myší nebo prstem, nebo vybrat kliknutím a pak kliknout na cíl.
+   Klik na obsazený cíl (bez vybraného slova) vrátí slovo do zásobníku. */
+function dragify(el, onDrop) {
+  let sx = 0, sy = 0, on = false, moved = false;
+  el.addEventListener("pointerdown", e => {
+    if (el.disabled || (e.pointerType === "mouse" && e.button !== 0)) return;
+    on = true; moved = false; sx = e.clientX; sy = e.clientY;
+    el.setPointerCapture(e.pointerId);
+  });
+  el.addEventListener("pointermove", e => {
+    if (!on) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (!moved && Math.hypot(dx, dy) < 6) return;
+    moved = true; el.classList.add("is-dragging");
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  const end = e => {
+    if (!on) return;
+    on = false;
+    if (!moved) return;
+    el.dataset.dragged = "1";
+    el.classList.remove("is-dragging");
+    el.style.visibility = "hidden";
+    const t = document.elementFromPoint(e.clientX, e.clientY)?.closest(".dd-gap");
+    el.style.visibility = ""; el.style.transform = "";
+    if (t) onDrop(t);
+    setTimeout(() => { delete el.dataset.dragged; }, 0);
+  };
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+}
+function dndBoard(words, gaps, live, onChange) {
+  const placed = gaps.map(() => null);
+  let sel = null;
+  const chips = words.map((w, i) => {
+    const b = h("button", { type: "button", class: "dd-chip", "aria-pressed": "false", onclick: () => {
+      if (b.dataset.dragged) return;
+      sel = sel === i ? null : i;
+      live.textContent = sel != null ? nb(`Vybráno: ${w.text}. Teď klikněte na místo.`) : "";
+      draw();
+    } }, w.text);
+    dragify(b, t => { const gi = gaps.findIndex(g => g.btn === t); if (gi >= 0) put(i, gi); });
+    return b;
+  });
+  gaps.forEach((g, gi) => g.btn.addEventListener("click", () => {
+    if (sel != null) put(sel, gi);
+    else if (placed[gi] != null) { live.textContent = nb(`${words[placed[gi]].text}: vráceno zpět.`); placed[gi] = null; draw(); }
+  }));
+  function put(wi, gi) {
+    const prev = placed.indexOf(wi);
+    if (prev >= 0) placed[prev] = null;
+    placed[gi] = wi; sel = null;
+    live.textContent = nb(`${words[wi].text}: umístěno na místo ${gi + 1}.`);
+    draw();
+  }
+  function draw() {
+    chips.forEach((c, i) => { c.hidden = placed.includes(i); c.setAttribute("aria-pressed", sel === i); });
+    gaps.forEach((g, gi) => {
+      const w = placed[gi];
+      g.label.textContent = w != null ? words[w].text : g.empty;
+      g.btn.setAttribute("aria-label", nb(`Místo ${gi + 1}: ${w != null ? words[w].text : "prázdné"}`));
+      g.btn.classList.toggle("is-filled", w != null);
+      g.btn.classList.toggle("is-target", sel != null);
+    });
+    onChange(placed);
+  }
+  draw();
+  return { chips, placed, lock() { chips.forEach(c => { c.disabled = true; }); gaps.forEach(g => { g.btn.disabled = true; }); } };
+}
+
+/* ---------- Přetáhni slova do textu ---------- */
+const DragWords = withSchema({
+  renderLearner(root, cfg) {
+    const parts = cfg.text.split(/\{\{(.+?)\}\}/);
+    const answers = parts.filter((p, i) => i % 2).map(p => p.split("|").map(x => x.trim()));
+    const extras = cfg.extras.split(",").map(x => x.trim()).filter(Boolean);
+    const words = shuffled([...answers.map(a => a[0]), ...extras]).map(text => ({ text }));
+    const live = h("p", { class: "sr-only", "aria-live": "polite" });
+    const gaps = [];
+    const para = h("p", { class: "dd-text" }, parts.map((p, i) => {
+      if (i % 2 === 0) return p;
+      const label = h("span", {});
+      const g = { btn: h("button", { type: "button", class: "dd-gap" }, label), label, empty: " ".repeat(10) };
+      gaps.push(g);
+      return g.btn;
+    }));
+    const go = h("button", { type: "button", class: "btn primary", disabled: true, onclick: check }, "Zkontrolovat");
+    const result = h("div", { class: "act-result" });
+    const board = dndBoard(words, gaps, live, placed => { go.disabled = placed.some(p => p == null); });
+    function check() {
+      let ok = 0;
+      gaps.forEach((g, gi) => {
+        const good = answers[gi].some(a => norm(a) === norm(words[board.placed[gi]].text));
+        if (good) ok++;
+        g.btn.classList.add(good ? "is-ok" : "is-bad");
+        if (!good) g.btn.after(h("span", { class: "fill-mark" }, ` → ${answers[gi][0]}`));
+      });
+      board.lock(); go.hidden = true;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${gaps.length}`);
+      result.replaceChildren(head, h("p", {}, ok === gaps.length ? cfg.feedbackOk : cfg.feedbackBad), restart(() => DragWords.renderLearner(root, cfg)));
+      focusLater(head);
+    }
+    actShell(root, h("p", {}, cfg.instruction), h("div", { class: "dd-bank", role: "group", "aria-label": "Slova k přetažení" }, board.chips), para,
+      h("p", { class: "kbd-hint" }, "Přetáhněte slovo, nebo na něj klikněte a pak klikněte na mezeru."), h("div", {}, go), result, live);
+  },
+  admin: [
+    { title: "Text", help: "Mezeru zapíšete do {{dvojitých složených závorek}}. Slova z mezer se objeví v zásobníku.", fields: [
+      { type: "area", key: "instruction", label: "Zadání" },
+      { type: "area", key: "text", label: "Text s mezerami", rows: 4 },
+      { type: "text", key: "extras", label: "Slova navíc do zásobníku (oddělte čárkou)" }] },
+    { title: "Zpětná vazba", fields: [{ type: "area", key: "feedbackOk", label: "Vše správně" }, { type: "area", key: "feedbackBad", label: "Něco špatně" }] }
+  ]
+});
+
+/* ---------- Popiš obrázek ---------- */
+const TM_SLOTS = { chat: "Ikona v levém panelu nahoře", calendar: "Ikona v levém panelu dole", copilot: "Tlačítko vpravo nahoře", transcript: "Panel vpravo vedle schůzky" };
+const ico = d => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); s.setAttribute("class", "tm-svg"); s.innerHTML = d; return s; };
+const ICONS = {
+  chat: '<path d="M4 5h16v10H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  calendar: '<rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="1.8"/>',
+  people: '<circle cx="12" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1-4 4-5 7-5s6 1 7 5" fill="none" stroke="currentColor" stroke-width="1.8"/>'
+};
+const LabelImage = withSchema({
+  renderLearner(root, cfg) {
+    const labels = cfg.labels.filter(l => l.text.trim());
+    const words = shuffled(labels.map(l => ({ text: l.text, slot: l.slot })));
+    const live = h("p", { class: "sr-only", "aria-live": "polite" });
+    const slots = Object.keys(TM_SLOTS);
+    const gaps = slots.map((s, i) => { const label = h("span", {}); return { slot: s, label, empty: String(i + 1), btn: h("button", { type: "button", class: "dd-gap dd-pin" }, label) }; });
+    const G = s => gaps.find(g => g.slot === s).btn;
+    const go = h("button", { type: "button", class: "btn primary", disabled: true, onclick: check }, "Zkontrolovat");
+    const result = h("div", { class: "act-result" });
+    const board = dndBoard(words, gaps, live, placed => { go.disabled = placed.some(p => p == null); });
+    const screen = h("div", { class: "tm", role: "group", "aria-label": "Okno Microsoft Teams se čtyřmi očíslovanými místy" },
+      h("div", { class: "tm-rail" },
+        h("span", { class: "tm-ico" }, ico(ICONS.chat), G("chat")),
+        h("span", { class: "tm-ico" }, ico(ICONS.people)),
+        h("span", { class: "tm-ico" }, ico(ICONS.calendar), G("calendar"))),
+      h("div", { class: "tm-main" },
+        h("div", { class: "tm-top" }, h("span", { class: "tm-title" }, "Porada týmu"), h("span", { class: "tm-cp" }, h("span", { class: "cp-icon", "aria-hidden": "true" }), G("copilot"))),
+        h("div", { class: "tm-body" },
+          h("div", { class: "tm-video", "aria-hidden": "true" }, h("i", {}), h("i", {}), h("i", {}), h("i", {})),
+          h("div", { class: "tm-side" }, h("span", { class: "tm-lines", "aria-hidden": "true" }, h("i", {}), h("i", {}), h("i", {}), h("i", {})), G("transcript")))));
+    function check() {
+      let ok = 0;
+      gaps.forEach((g, gi) => {
+        const w = words[board.placed[gi]];
+        const good = w.slot === g.slot;
+        if (good) ok++;
+        g.btn.classList.add(good ? "is-ok" : "is-bad");
+        if (!good) { const right = labels.find(l => l.slot === g.slot); g.label.textContent = nb(`${w.text} → ${right ? right.text : "?"}`); }
+      });
+      board.lock(); go.hidden = true;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${gaps.length}`);
+      result.replaceChildren(head, h("p", {}, ok === gaps.length ? cfg.feedbackOk : cfg.feedbackBad), restart(() => LabelImage.renderLearner(root, cfg)));
+      focusLater(head);
+    }
+    actShell(root, h("p", {}, cfg.instruction), h("div", { class: "dd-bank", role: "group", "aria-label": "Štítky k přetažení" }, board.chips),
+      h("div", { class: "ol-frame" }, screen),
+      h("p", { class: "kbd-hint" }, "Přetáhněte štítek na číslo, nebo na štítek klikněte a pak na číslo."), h("div", {}, go), result, live);
+  },
+  admin: [
+    { title: "Zadání", help: "V portálu autor nahraje obrázek a místa na něm označí kliknutím. Tady jsou místa předem daná.", fields: [{ type: "area", key: "instruction", label: "Zadání" }] },
+    { title: "Štítky", fields: [{ type: "list", key: "labels", label: "Štítky", summary: it => it.text, meta: it => it.slot ? TM_SLOTS[it.slot] : "navíc, nikam nepatří", add: () => ({ text: "", slot: "" }), addLabel: "Přidat štítek",
+      fields: [{ type: "text", key: "text", label: "Text štítku" }, { type: "select", key: "slot", label: "Patří na místo", options: [["", "nikam (štítek navíc)"], ...Object.entries(TM_SLOTS)] }] }] },
+    { title: "Zpětná vazba", fields: [{ type: "area", key: "feedbackOk", label: "Vše správně" }, { type: "area", key: "feedbackBad", label: "Něco špatně" }] }
+  ]
+});
+
+/* ---------- Jedna správná odpověď ---------- */
+const SingleChoice = withSchema({
+  renderLearner(root, cfg) {
+    const uid = "sc" + Math.random().toString(36).slice(2, 7);
+    const order = cfg.shuffle ? shuffled(cfg.options.map((o, i) => i)) : cfg.options.map((o, i) => i);
+    let left = Math.max(1, Number(cfg.attempts) || 1), pick = null;
+    const fb = h("div", { role: "status" });
+    const go = h("button", { type: "submit", class: "btn primary", disabled: true }, "Odpovědět");
+    const labels = order.map((oi, k) => h("label", { class: "q-opt", for: `${uid}${oi}` },
+      h("input", { type: "radio", name: uid, id: `${uid}${oi}`, onchange: () => { pick = oi; go.disabled = false; } }),
+      h("span", { class: "q-letter", "aria-hidden": "true" }, LETTERS[k]), h("span", {}, cfg.options[oi].text)));
+    const legend = h("legend", { class: "q-text" }, cfg.question);
+    const form = h("form", { class: "act", onsubmit: e => {
+      e.preventDefault();
+      if (pick == null) return;
+      const ok = pick === Number(cfg.correct);
+      left--;
+      if (!ok && left > 0) {
+        fb.replaceChildren(h("p", { class: "fb fb-bad" }, h("strong", {}, "✗ Ne. "), cfg.options[pick].why, ` Zkuste to znovu (${left} ${plural(left, "pokus", "pokusy", "pokusů")}).`));
+        labels[order.indexOf(pick)].classList.add("q-wrong");
+        labels[order.indexOf(pick)].querySelector("input").disabled = true;
+        labels[order.indexOf(pick)].querySelector("input").checked = false;
+        pick = null; go.disabled = true;
+        return;
+      }
+      form.querySelectorAll("input").forEach(x => { x.disabled = true; });
+      go.hidden = true;
+      labels.forEach((l, k) => { const oi = order[k]; l.classList.add(oi === Number(cfg.correct) ? "q-right" : "q-wrong"); l.append(h("span", { class: "q-why" }, cfg.options[oi].why)); });
+      const head = h("p", { class: "res-score", tabindex: "-1" }, ok ? "✓ Správně" : "✗ Tentokrát ne");
+      fb.replaceChildren(head, restart(() => SingleChoice.renderLearner(root, cfg)));
+      focusLater(head);
+    } }, h("fieldset", { class: "q-fs" }, legend, labels), h("div", {}, go), fb);
+    root.replaceChildren(form);
+  },
+  admin: [
+    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka" },
+      { type: "list", key: "options", label: "Odpovědi", summary: (it, i) => `${LETTERS[i]}: ${it.text}`, min: 2, add: () => ({ text: "", why: "" }), addLabel: "Přidat odpověď",
+        fields: [{ type: "text", key: "text", label: "Text odpovědi" }, { type: "area", key: "why", label: "Vysvětlení, proč je (ne)správná" }] },
+      { type: "select", key: "correct", label: "Správná odpověď", num: true, options: optionsFrom("options") }] },
+    { title: "Nastavení", fields: [{ type: "number", key: "attempts", label: "Počet pokusů", min: 1, max: 5 }, { type: "check", key: "shuffle", label: "Zamíchat pořadí odpovědí" }] }
+  ]
+});
+
+/* ---------- Více správných odpovědí ---------- */
+const MultiChoice = withSchema({
+  renderLearner(root, cfg) {
+    const uid = "mc" + Math.random().toString(36).slice(2, 7);
+    const fb = h("div", { role: "status" });
+    const boxes = cfg.options.map((o, i) => h("input", { type: "checkbox", id: `${uid}${i}` }));
+    const labels = cfg.options.map((o, i) => h("label", { class: "q-opt q-check", for: `${uid}${i}` }, boxes[i], h("span", {}, o.text)));
+    const go = h("button", { type: "submit", class: "btn primary" }, "Odpovědět");
+    const form = h("form", { class: "act", onsubmit: e => {
+      e.preventDefault();
+      let ok = 0;
+      cfg.options.forEach((o, i) => {
+        const good = boxes[i].checked === !!o.correct;
+        if (good) ok++;
+        boxes[i].disabled = true;
+        labels[i].classList.add(good ? "q-right" : "q-wrong");
+        labels[i].append(h("span", { class: "q-why" }, h("strong", {}, o.correct ? "Patří sem. " : "Nepatří sem. "), o.why));
+      });
+      go.hidden = true;
+      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně u ${ok} z ${cfg.options.length} možností`);
+      fb.replaceChildren(head, h("p", { class: "help" }, "Body se počítají za každou správně zaškrtnutou i správně nezaškrtnutou možnost."), restart(() => MultiChoice.renderLearner(root, cfg)));
+      focusLater(head);
+    } }, h("fieldset", { class: "q-fs" }, h("legend", { class: "q-text" }, cfg.question), h("p", { class: "help" }, cfg.hint), labels), h("div", {}, go), fb);
+    root.replaceChildren(form);
+  },
+  admin: [
+    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka" }, { type: "text", key: "hint", label: "Nápověda pod otázkou" },
+      { type: "list", key: "options", label: "Možnosti", summary: it => it.text, meta: it => it.correct ? "✓ správná" : "nesprávná", min: 2, add: () => ({ text: "", correct: false, why: "" }), addLabel: "Přidat možnost",
+        fields: [{ type: "text", key: "text", label: "Text" }, { type: "check", key: "correct", label: "Správná možnost" }, { type: "area", key: "why", label: "Vysvětlení" }] }] }
+  ]
+});
+
+/* ---------- Pravda, nebo nepravda ---------- */
+const TrueFalse = withSchema({
+  renderLearner(root, cfg) {
+    const items = cfg.statements.filter(s => s.text.trim());
+    let n = 0, ok = 0;
+    function show() {
+      if (n >= items.length) {
+        const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${items.length}`);
+        actShell(root, head, restart(() => TrueFalse.renderLearner(root, cfg)));
+        focusLater(head); return;
+      }
+      const s = items[n];
+      const fb = h("div", { role: "status" });
+      const st = h("p", { class: "tf-st", tabindex: "-1" }, s.text);
+      const btns = [["Pravda", true], ["Nepravda", false]].map(([t, v]) => h("button", { type: "button", class: "btn tf-btn", onclick: () => {
+        btns.forEach(b => { b.disabled = true; });
+        const good = v === !!s.isTrue;
+        if (good) ok++;
+        const next = h("button", { type: "button", class: "btn primary", onclick: () => { n++; show(); } }, n < items.length - 1 ? "Další tvrzení" : "Výsledek");
+        fb.replaceChildren(h("p", { class: "fb " + (good ? "fb-ok" : "fb-bad") }, h("strong", {}, `${good ? "✓ Správně." : "✗ Ne."} ${s.isTrue ? "Platí." : "Neplatí."} `), s.why), h("div", {}, next));
+        focusLater(next);
+      } }, t));
+      actShell(root, h("p", { class: "q-top" }, `Tvrzení ${n + 1} z ${items.length}`), st, h("div", { class: "tf-row" }, btns), fb);
+      if (n) focusLater(st);
+    }
+    show();
+  },
+  admin: [
+    { title: "Tvrzení", fields: [{ type: "list", key: "statements", label: "Tvrzení", summary: it => it.text, meta: it => it.isTrue ? "pravda" : "nepravda", add: () => ({ text: "", isTrue: true, why: "" }), addLabel: "Přidat tvrzení",
+      fields: [{ type: "area", key: "text", label: "Tvrzení" }, { type: "check", key: "isTrue", label: "Tvrzení platí" }, { type: "area", key: "why", label: "Vysvětlení" }] }] }
+  ]
+});
+
+/* ---------- Číselná odpověď ---------- */
+const NumericAnswer = withSchema({
+  renderLearner(root, cfg) {
+    const id = "nu" + Math.random().toString(36).slice(2, 7);
+    const input = h("input", { type: "text", id, class: "in num-in", inputmode: "decimal", autocomplete: "off", oninput: () => { go.disabled = !input.value.trim(); } });
+    const fb = h("div", { role: "status" });
+    const go = h("button", { type: "submit", class: "btn primary", disabled: true }, "Odpovědět");
+    const form = h("form", { class: "act", onsubmit: e => {
+      e.preventDefault();
+      const v = Number(input.value.replace(/\s/g, "").replace(",", "."));
+      const ans = Number(cfg.answer), tol = Math.abs(ans) * (Number(cfg.tolerancePct) || 0) / 100;
+      const good = Number.isFinite(v) && Math.abs(v - ans) <= tol;
+      input.disabled = true; go.hidden = true;
+      const fmt = x => x.toLocaleString("cs-CZ", { maximumFractionDigits: 2 });
+      const head = h("p", { class: "res-score", tabindex: "-1" }, good ? "✓ Správně" : `✗ Správně je ${fmt(ans)} ${cfg.unit}`);
+      fb.replaceChildren(head, h("p", { class: "help" }, nb(`Uznáváme odpověď v toleranci ± ${cfg.tolerancePct} %.`)), h("p", { class: "fb fb-ok" }, h("strong", {}, "Výpočet: "), cfg.solution), restart(() => NumericAnswer.renderLearner(root, cfg)));
+      focusLater(head);
+    } },
+      h("label", { class: "calc-q", for: id }, cfg.question),
+      h("div", { class: "num-row" }, input, h("span", { class: "num-unit" }, cfg.unit)),
+      h("div", {}, go), fb);
+    root.replaceChildren(form);
+  },
+  admin: [
+    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka", rows: 3 }, { type: "text", key: "unit", label: "Jednotka" }] },
+    { title: "Vyhodnocení", fields: [
+      { type: "number", key: "answer", label: "Správná hodnota", step: "any", min: -1000000, max: 1000000 },
+      { type: "number", key: "tolerancePct", label: "Tolerance (± %)", min: 0, max: 50 },
+      { type: "area", key: "solution", label: "Postup výpočtu" }] }
+  ]
+});
+
+const COMPONENTS = { swipe: SwipeActivity, profileQuiz: ProfileQuiz, sortSteps: SortSteps, sortGroups: SortGroups, hotspot: Hotspot, compareOutputs: CompareOutputs, branching: Branching, calculator: Calculator, commitment: Commitment, oneTap: OneTap, certainty: Certainty, spaced: Spaced, modelAnswer: ModelAnswer, aiFeedback: AiFeedback, flashcards: Flashcards, fillBlanks: FillBlanks, findError: FindError, beforeAfter: BeforeAfter, pollCompare: PollCompare, matchPairs: MatchPairs, interactiveVideo: InteractiveVideo, cheatSheet: CheatSheet, adaptivePath: AdaptivePath, weeklyChallenge: WeeklyChallenge, dragWords: DragWords, labelImage: LabelImage, singleChoice: SingleChoice, multiChoice: MultiChoice, trueFalse: TrueFalse, numericAnswer: NumericAnswer };
 
 /* =====================================================================
    STRÁNKA: filtry, karty, detail, výběr priorit
