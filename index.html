@@ -637,7 +637,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead"><b id="n-all">30</b> aktivit, které by portál mohl umět. Dnes jich portál <b id="n-none">7</b> neumí vůbec, <b id="n-workaround">21</b> jen náhražkou přes test nebo formulář a <b id="n-partial">2</b> bez vysvětlení u odpovědí.</p>
+      <p class="lead"><b id="n-all">30</b> aktivit, které by portál mohl umět. <b id="n-none">7</b> z nich dnes neumí vůbec, <b id="n-workaround">21</b> jen náhražkou přes test nebo formulář. Zbylé <b id="n-partial">2</b> umí, ale bez vysvětlení u odpovědí.</p>
       <ol class="steps" aria-label="Jak stránku použít">
         <li><span class="step-n" aria-hidden="true">1</span><span>Vyzkoušejte si aktivitu</span></li>
         <li><span class="step-n" aria-hidden="true">2</span><span>Označte <strong>Chci tohle</strong></span></li>
@@ -741,7 +741,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "principle", source: "Chi a Wylie 2014, rámec ICAP. Přímý výzkum rozhodování kartou chybí.", level: "L2 porozumění; odpovědi ukážou postoj účastníků k AI" },
     panels: {
-      why: "Rychlé rozhodnutí u každé karty nutí účastníka použít kritérium, ne jen číst seznam. Podle rámce ICAP tím přechází od pasivního čtení k aktivnímu zapojení, které vede k lepším výsledkům. Z odpovědí zároveň uvidíme, jestli účastník AI spíš přeceňuje, nebo podceňuje.",
+      why: "Rychlé rozhodnutí u každé karty nutí účastníka použít kritérium, ne jen číst seznam. Rámec ICAP tomu říká aktivní zapojení a lidé si z něj odnesou víc než z pasivního čtení. Z odpovědí navíc uvidíme, jestli AI spíš přeceňují, nebo podceňují.",
       today: "Řada otázek s rozbalovací nabídkou Udělám sám / Dám Copilotovi, nebo jedna otázka s výběrem více odpovědí. Vyhodnocení zná jen správně a špatně, sporné případy neumí a souhrn na konci chybí.",
       dev: {
         stores: "Pro každou kartu její ID, volbu (vlevo, nebo vpravo) a čas volby. Na konci počet shod s doporučením.",
@@ -776,7 +776,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "principle", source: "Fiorella a Mayer 2015, generativní učení. Přímý výzkum řazení chybí.", level: "L2 zapamatování postupu" },
     panels: {
-      why: "Seřadit kroky znamená postup si vybavit a uspořádat, ne jen přečíst. Takové vlastní uspořádání informací podle teorie generativního učení prohlubuje porozumění.",
+      why: "Seřadit kroky znamená postup si vybavit a poskládat, ne jen přečíst. Kdo si ho poskládá sám, pamatuje si ho líp než ten, kdo ho jen četl. Tak to popisuje teorie generativního učení.",
       today: "Řada otázek s rozbalovací nabídkou: krok 1 je…, krok 2 je… Nová verze musí vedle tažení umět i posun tlačítky nahoru a dolů, jinak je bariérou pro klávesnici a čtečky.",
       dev: {
         stores: "Výsledné pořadí, počet kontrol a čas.",
@@ -835,7 +835,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "principle", source: "Model ADKAR, fáze Awareness; metakognice. Studie o profilových testech chybí.", level: "L1 až L2, uvědomění vlastních návyků" },
     panels: {
-      why: "Otázky vedou účastníka k zamyšlení nad vlastními zvyky a ukážou mu, co (ne)dělá. Toto uvědomění je první krok ke změně (fáze Awareness v modelu ADKAR). Výsledek ho pošle tam, kde mu kurz pomůže nejvíc.",
+      why: "Šest otázek o telefonu a zprávách ukáže účastníkovi, co doopravdy dělá, ne co si myslí, že dělá. V modelu ADKAR je to fáze Awareness a bez ní změna nezačne. Profil ho pak pošle rovnou do kapitoly, která mu pomůže nejvíc.",
       today: "Test s výběrem odpovědi umí jen správně a špatně, body za odpovědi nesčítá. Obcházíme to větou „Máte nejvíc odpovědí C? Přečtěte si tuto část PDF.“ a účastník si výsledek počítá sám. Klient StopVision to bral jako standardní funkci.",
       dev: {
         stores: "Zvolenou odpověď u každé otázky, součet bodů, přiřazený profil a čas dokončení.",
@@ -872,7 +872,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "weak", source: "Fiorella a Mayer 2015, generativní učení. Důkazy pro třídění tažením jsou slabé až střední.", level: "L2 porozumění kritériím" },
     panels: {
-      why: "Třídění nutí hledat pravidlo, podle kterého položky patří k sobě, a to je náročnější než poznat správnou odpověď. Pozor: verze jen s tažením je bariéra pro klávesnici a čtečky, proto musí jít třídit i výběrem.",
+      why: "Třídění nutí hledat pravidlo, podle kterého položky patří k sobě, a to je těžší než poznat správnou odpověď. Pozor, verze jen s tažením je bariéra pro klávesnici a čtečky, proto musí jít třídit i výběrem.",
       today: "U každého promptu jedna otázka s rozbalovací nabídkou skupin. Nová verze musí vedle tažení umět i výběr skupiny kliknutím nebo klávesnicí.",
       dev: {
         stores: "Pro každou položku zvolenou skupinu, správnost a čas.",
@@ -911,7 +911,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "weak", source: "Situované učení, princip. Přímé studie chybí, zdroje jsou odborné blogy.", level: "L2 až L3, orientace v aplikaci" },
     panels: {
-      why: "Účastník hledá funkci na snímku, který vypadá jako jeho vlastní aplikace. Čím víc se cvičení podobá skutečnému prostředí, tím snáz se dovednost přenese do práce.",
+      why: "Účastník hledá funkci na snímku, který vypadá jako jeho vlastní Outlook. V pondělí pak klikne na stejné místo, protože už to jednou udělal.",
       today: "Obrázek a pod ním otázka s výběrem odpovědi (vpravo nahoře, na pásu karet…).",
       dev: {
         stores: "Pořadí kliknutí a jestli zasáhla správnou oblast.",
@@ -1018,7 +1018,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "weak", source: "Sebereferenční efekt; model ADKAR, fáze Desire. Přímé studie chybí.", level: "L1 motivace ke změně" },
     panels: {
-      why: "Obecné tvrzení o úspoře času se změní na číslo z vlastního týdne účastníka. Osobní relevance posiluje chuť něco změnit.",
+      why: "Obecné tvrzení o úspoře času se změní na číslo z vlastního týdne. „Ušetříte čas“ nikoho nezvedne ze židle, „11 hodin ročně“ možná ano.",
       today: "Neumíme. Účastník si může spočítat úsporu sám podle návodu v textu.",
       dev: {
         stores: "Nic, případně anonymně zadané číslo pro souhrn za firmu.",
@@ -1051,7 +1051,7 @@ const ACTIVITIES = [
     evidence: { strength: "strong", source: "Gollwitzer a Sheeran 2006, metaanalýza 94 studií: dosažení cíle d = 0,65.", level: "L3 změna chování" },
     recommended: true,
     panels: {
-      why: "Plán „když nastane situace X, udělám Y“ propojí úmysl s konkrétní chvílí v práci. Takové plány prokazatelně zvyšují šanci, že člověk opravdu začne. Připomínka po kurzu plán vrátí do hry ve chvíli, kdy se má stát.",
+      why: "Plán „když nastane situace X, udělám Y“ přiváže úmysl ke konkrétní chvíli v práci. Metaanalýza 94 studií takovým plánům naměřila d = 0,65, na poměry vzdělávání dospělých hodně. Připomínka po kurzu plán vrátí do hry přesně v tu chvíli.",
       today: "Formulář s otevřenou odpovědí. Připomínka nepřijde.",
       dev: {
         stores: "Text závazku (když, tak), zvolený den a odpověď na připomínku (hotovo, nebo odložit).",
@@ -1210,7 +1210,7 @@ const ACTIVITIES = [
     evidence: { strength: "medium", source: "Van der Kleij a kol. 2015, metaanalýza počítačové zpětné vazby. Výzkum zpětné vazby od generativní AI je zatím krátký.", level: "L2 dovednost" },
     recommended: true,
     panels: {
-      why: "Okamžitá zpětná vazba na vlastní práci patří k nejsilnějším motorům učení a v kurzu bez lektora dnes chybí. Je potřeba vyřešit náklady na volání AI, ochranu dat a hlídání kvality odpovědí.",
+      why: "Okamžitá reakce na vlastní práci je to, co kurzu bez lektora nejvíc chybí. Než to pustíme, musíme vyřešit náklady na volání AI, ochranu dat a hlídání kvality odpovědí.",
       today: "Formulář s otevřenou odpovědí bez zpětné vazby. Odpovědi nikdo nečte.",
       dev: {
         stores: "Text účastníka, odpověď AI a případně hodnocení její užitečnosti.",
@@ -1268,7 +1268,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "strong", source: "Adesope a kol. 2017, metaanalýza: testovací efekt g = 0,61. Vlastní vybavení předčí výběr z možností.", level: "L2 zapamatování" },
     panels: {
-      why: "Účastník musí slovo vylovit z paměti, ne jen poznat v nabídce. Takové vybavování chrání informaci před zapomenutím.",
+      why: "Účastník musí slovo vylovit z paměti, ne jen poznat v nabídce. Co jednou vyloví sám, tak rychle nezapomene.",
       today: "Otázka s výběrem odpovědi. Psaný text portál nevyhodnocuje.",
       dev: { stores: "Odpověď v každé mezeře a správnost.", evaluation: "Porovnání bez ohledu na velikost písmen a diakritiku, s povolenými variantami z administrace.", keyboard: "Mezery jsou běžná textová pole nebo rozbalovací nabídky.", effortNote: "Syntaxe {{…}} v editoru a jednoduché porovnání textu." }
     }
@@ -1300,7 +1300,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "medium", source: "Keith a Frese 2008, metaanalýza tréninku práce s chybou.", level: "L2 až L3, kritické čtení výstupů AI" },
     panels: {
-      why: "Hledání chyb učí kriticky číst výstup AI, což je jádro AI gramotnosti. Kdo chybu jednou najde sám, v práci ji snáz pozná.",
+      why: "Hledání chyb učí číst výstup AI s podezřením, a to je při práci s Copilotem dovednost číslo jedna. Kdo chybu jednou najde sám, v práci ji snáz pozná.",
       today: "Neumíme. Nejblíž je otázka „Která věta je chybná?“ s výběrem odpovědi.",
       dev: { stores: "Označené věty, nalezené a přehlédnuté chyby, falešné poplachy.", evaluation: "Každá věta má v administraci příznak chyby. Počítá se nalezené, přehlédnuté a označené navíc.", keyboard: "Věty jsou přepínací tlačítka.", effortNote: "Nová interakce s ukládáním výběru." }
     }
@@ -1665,9 +1665,9 @@ const ACTIVITIES = [
 
 const GOALS = {
   remember:   { label: "Zapamatovat si",    color: "--azure",  desc: "Vybavit si z paměti, ne znovu přečíst." },
-  understand: { label: "Pochopit",          color: "--blue",   desc: "Použít kritérium, najít rozdíl, odhalit chybu." },
+  understand: { label: "Pochopit",          color: "--blue",   desc: "Použít pravidlo na nový případ, ne jen ho znát." },
   practice:   { label: "Vyzkoušet v praxi", color: "--orange", desc: "Zkusit to v prostředí, které vypadá jako práce." },
-  habit:      { label: "Změnit návyk",      color: "--violet", desc: "Zamyslet se nad vlastními zvyky a dovést naučené do práce." },
+  habit:      { label: "Změnit návyk",      color: "--violet", desc: "Všimnout si vlastních zvyků a nezapomenout na kurz v pondělí v práci." },
   feedback:   { label: "Změřit dopad",      color: "--mint",   desc: "Zjistit, co kurz účastníkům dal, aniž by je to zdrželo." }
 };
 const STRENGTH = {
