@@ -40,7 +40,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-html:has(dialog[open]) { overflow: hidden; }
 body { margin: 0; background: var(--white); color: var(--ink); font: 16px/1.6 var(--font); }
 h1, h2, h3, h4 { font-family: var(--font); font-style: italic; font-weight: 700; line-height: 1.12; text-wrap: balance; margin: 0; color: var(--sky); }
 p { margin: 0; }
@@ -83,7 +82,7 @@ h1 { font-size: clamp(2.3rem, 1.3rem + 4vw, 4.2rem); font-weight: 800; line-heig
 .step-n { display: grid; place-items: center; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--mint); color: var(--sky); font-style: italic; font-weight: 800; font-size: .85rem; }
 
 /* ---------- Navigace podle cíle ---------- */
-.goal-nav { display: grid; gap: .45rem; padding-bottom: 2.5rem; }
+.goal-nav { display: grid; gap: .45rem; }
 .filter-label { font-weight: 700; font-size: .88rem; }
 @media (min-width: 760px) {
   .goal-nav { grid-template-columns: 10rem minmax(0, 1fr); align-items: start; }
@@ -172,8 +171,6 @@ footer p { color: var(--breeze); font-size: .88rem; max-width: 75ch; }
 .mode { display: flex; gap: .2rem; padding: .2rem; border-radius: 999px; background: rgb(255 255 255 / .14); }
 .mode-btn { border: 0; background: transparent; color: var(--white); font: inherit; font-weight: 700; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; padding: .35rem .8rem; border-radius: 999px; cursor: pointer; }
 .mode-btn[aria-pressed="true"] { background: var(--mint); color: var(--sky); }
-.mode-note { padding: .75rem 1.1rem 0; font-size: .85rem; font-weight: 600; color: var(--ink-2); }
-@media (min-width: 720px) { .mode-note { padding-inline: 1.9rem; } }
 .portal.is-today { background: #f3f5f8; }
 
 /* ---------- Dnes v portálu: napodobenina dnešního vzhledu ---------- */
@@ -258,12 +255,10 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 
 /* ---------- Rozbalovací panely ---------- */
 .evid { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; font-size: .84rem; }
-.evid-badge { display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .65rem; border-radius: 999px; font-weight: 700; font-size: .76rem; }
-.evid-badge::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--sky); }
-.ev-strong { background: var(--mint); }
-.ev-medium { background: var(--mint-soft); }
-.ev-principle { background: var(--violet-soft); }
-.ev-weak { background: var(--orange-soft); }
+.evid-badge { display: inline-flex; align-items: center; gap: .5rem; padding: .25rem .7rem; border-radius: 999px; background: var(--white); border: 1px solid var(--line); color: var(--sky); font-weight: 700; font-size: .76rem; }
+.evid-dots { display: inline-flex; gap: 3px; }
+.evid-dots i { width: .5rem; height: .5rem; border-radius: 50%; border: 1.5px solid var(--sky); }
+.evid-dots i.on { background: var(--sky); }
 .src { font-size: .84rem; color: var(--ink-2); }
 .dev { display: grid; gap: .7rem; margin: 0; }
 .dev dt { font-weight: 700; font-size: .84rem; }
@@ -373,26 +368,21 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .info-block p { font-size: .9rem; }
 .info-block .dev { font-size: .9rem; }
 
-/* ---------- Nápověda ---------- */
-dialog.help { width: min(100% - 32px, 600px); margin: auto; padding: 0; border: 0; border-radius: 24px; background: var(--white); color: var(--ink); box-shadow: 0 30px 60px -20px rgb(4 6 60 / .45); }
-dialog.help::backdrop { background: rgb(4 6 60 / .6); }
-.help-inner { display: grid; gap: 1.1rem; padding: 1.6rem; }
-@media (min-width: 720px) { .help-inner { padding: 2rem 2.25rem; } }
-.help-inner h2 { font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); }
-.help-lead { color: var(--ink-2); }
-.help-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
-.help-list li { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: .9rem; align-items: center; font-size: .95rem; }
-@media (max-width: 560px) { .help-list li { grid-template-columns: 1fr; gap: .35rem; } }
-.help-chip { justify-self: start; pointer-events: none; }
-.help-mode { display: inline-flex; gap: .2rem; padding: .2rem; border-radius: 999px; background: var(--sky); }
-.help-mode b { padding: .35rem .7rem; border-radius: 999px; color: var(--white); font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
-.help-mode b.on { background: var(--mint); color: var(--sky); }
-.help-tabs { display: inline-flex; flex-wrap: wrap; max-width: 100%; gap: .2rem; padding: .2rem; border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line-strong); }
-.help-tabs b { padding: .3rem .55rem; border-radius: 999px; color: var(--sky); font-size: .62rem; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
-.help-tabs b.on { background: var(--sky); color: var(--white); }
-.help-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
-.help-foot small { color: var(--ink-2); }
+/* ---------- Průvodce ---------- */
+.tour { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+.tour-spot { position: fixed; border-radius: 18px; box-shadow: 0 0 0 9999px rgb(4 6 60 / .55), 0 0 0 3px var(--mint); transition: left .2s, top .2s, width .2s, height .2s; }
+.tour-tip { position: fixed; z-index: 1; width: min(100vw - 32px, 340px); display: grid; gap: .7rem; padding: 1rem 1.1rem; border-radius: 16px; background: var(--white); color: var(--ink); box-shadow: 0 20px 50px -20px rgb(4 6 60 / .5); pointer-events: auto; }
+.tour-text { font-weight: 600; font-size: 1rem; }
+.tour-foot { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.tour-n { font-size: .78rem; font-weight: 700; color: var(--ink-2); margin-right: auto; }
+@media (prefers-reduced-motion: reduce) { .tour-spot { transition: none; } }
 
+/* ---------- Pět nahoře a zbytek ---------- */
+.katalog-head { display: grid; gap: .3rem; margin-bottom: 1.5rem; max-width: 70ch; }
+.katalog-head h2 { font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem); }
+.katalog-head p { color: var(--ink-2); }
+.more-wrap { display: flex; justify-content: center; padding-top: 2.25rem; }
+.rest { display: grid; gap: 2rem; padding-top: 3rem; }
 /* ---------- Společné prvky aktivit ---------- */
 .row-gap { display: flex; flex-wrap: wrap; gap: .5rem; }
 .fb { padding: .7rem .9rem; border-radius: 12px; font-size: .92rem; }
@@ -713,23 +703,32 @@ dialog.help::backdrop { background: rgb(4 6 60 / .6); }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead"><b id="n-all">30</b> aktivit, které by portál mohl umět. <b id="n-none">7</b> z nich dnes neumí vůbec, <b id="n-workaround">19</b> jen náhražkou přes test nebo formulář. Zbylé <b id="n-partial">4</b> umí napůl, bez vysvětlení.</p>
+      <p class="lead">Vyzkoušejte si aktivity, které by náš portál mohl umět, a dejte hlas těm, které chcete.</p>
       <ol class="steps" aria-label="Jak stránku použít">
-        <li><span class="step-n" aria-hidden="true">1</span><span>Vyzkoušejte si aktivitu</span></li>
-        <li><span class="step-n" aria-hidden="true">2</span><span>Klikněte na <strong>Chci tohle</strong></span></li>
-        <li><span class="step-n" aria-hidden="true">3</span><span>Podívejte se, co chtějí ostatní</span></li>
+        <li><span class="step-n" aria-hidden="true">1</span><span>Vyzkoušejte</span></li>
+        <li><span class="step-n" aria-hidden="true">2</span><span>Dejte hlas</span></li>
+        <li><span class="step-n" aria-hidden="true">3</span><span>Podívejte se na výsledky</span></li>
       </ol>
     </div>
   </section>
 
   <section class="band" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
     <div class="wrap">
-      <h2 id="katalog-title" class="sr-only">Aktivity</h2>
-      <nav class="goal-nav" aria-labelledby="fg-goal">
-        <span class="filter-label" id="fg-goal">Cíl učení</span>
-        <div class="chips" id="goal-chips"></div>
-      </nav>
-      <div class="sections" id="sections"></div>
+      <div class="katalog-head">
+        <h2 id="katalog-title">Začněte <span class="hl">{tady}</span></h2>
+        <p>Pět aktivit, na kterých je rozdíl vidět nejvíc.</p>
+      </div>
+      <ul class="grid" id="featured"></ul>
+      <div class="more-wrap" id="more-wrap">
+        <button type="button" class="btn navy" id="show-rest"><span>Prohlédnout dalších <span id="n-rest">25</span> aktivit</span></button>
+      </div>
+      <div class="rest" id="rest" hidden>
+        <nav class="goal-nav" aria-labelledby="fg-goal">
+          <span class="filter-label" id="fg-goal">Cíl učení</span>
+          <div class="chips" id="goal-chips"></div>
+        </nav>
+        <div class="sections" id="sections"></div>
+      </div>
     </div>
   </section>
 
@@ -762,22 +761,17 @@ dialog.help::backdrop { background: rgb(4 6 60 / .6); }
   </div>
 </footer>
 
-<dialog class="help" id="help" aria-labelledby="help-title">
-  <form method="dialog" class="help-inner">
-    <h2 id="help-title">Jak se tu <span class="hl">{zorientovat}</span></h2>
-    <p class="help-lead">Čtyři věci, které na stránce potkáte. Všechno ostatní je jen k přečtení.</p>
-    <ul class="help-list">
-      <li><span class="btn navy help-chip">Vyzkoušet</span><span>Otevře ukázku aktivity tak, jak by ji viděl účastník kurzu. Otevřená je vždy jen jedna, zavřete ji stejným tlačítkem.</span></li>
-      <li><span class="help-chip help-mode" aria-hidden="true"><b>Dnes v portálu</b><b class="on">Nově</b></span><span>Přepínač v hlavičce ukázky. <strong>Nově</strong> je nová aktivita, <strong>Dnes v portálu</strong> ukáže totéž tak, jak to umíme postavit dnes.</span></li>
-      <li><span class="btn help-chip"><span class="pick-check" aria-hidden="true"></span>Chci tohle</span><span>Váš hlas pro aktivitu. Dole na stránce se sčítá s hlasy ostatních, změnit ho můžete kdykoli.</span></li>
-      <li><span class="help-chip help-tabs" aria-hidden="true"><b class="on">Ukázka</b><b>Proč</b><b>Administrace</b><b>Vývoj</b></span><span>Záložky v otevřené kartě pro zvídavé: důkazy z výzkumu, jak aktivitu nastaví autor kurzu a poznámky pro vývoj.</span></li>
-    </ul>
-    <div class="help-foot">
-      <small>Nápovědu znovu otevřete odkazem nahoře.</small>
-      <button type="submit" class="btn primary" id="help-ok">Jasné, jdu na to</button>
+<div class="tour" id="tour" hidden>
+  <div class="tour-spot" id="tour-spot" aria-hidden="true"></div>
+  <div class="tour-tip" id="tour-tip" role="dialog" aria-label="Průvodce stránkou" aria-live="polite">
+    <p class="tour-text" id="tour-text"></p>
+    <div class="tour-foot">
+      <span class="tour-n" id="tour-n"></span>
+      <button type="button" class="linkbtn" id="tour-skip">Přeskočit</button>
+      <button type="button" class="btn primary btn-small" id="tour-go">Další</button>
     </div>
-  </form>
-</dialog>
+  </div>
+</div>
 
 <div class="pickbar" id="pickbar" hidden>
   <div class="pickbar-inner">
@@ -801,11 +795,13 @@ dialog.help::backdrop { background: rgb(4 6 60 / .6); }
    - config: obsah ukázky, stejná data vyplňuje administrace
    - evidence: síla důkazů (strong | medium | principle | weak), zdroj a úroveň Kirkpatricka
    - recommended: true = patří mezi 5 doporučení rešerše
+   - featured: true = patří do pětice nahoře, zbytek je za tlačítkem
    - panels: texty tří rozbalovacích panelů pod ukázkou
    ===================================================================== */
 const ACTIVITIES = [
   {
     id: "rozhodovani-kartou",
+    featured: true,
     title: "Rozhodování kartou",
     oneLiner: "Kartu po kartě rozhoduje, co udělá sám a co dá Copilotovi.",
     delta: { status: "workaround", today: "obyčejný test, jen správně a špatně, bez vysvětlení", next: "karty s gestem, sporné případy a souhrn na konci" },
@@ -883,6 +879,7 @@ const ACTIVITIES = [
   },
   {
     id: "sebehodnotici-test",
+    featured: true,
     title: "Sebehodnoticí test s profilem",
     oneLiner: "Šest otázek, tři profily a tip, kde v kurzu začít.",
     delta: { status: "partial", today: "test sečte body, ale neřekne, co znamenají", next: "profil podle bodů a doporučení, kde začít" },
@@ -1055,6 +1052,7 @@ const ACTIVITIES = [
   },
   {
     id: "vetveny-scenar",
+    featured: true,
     title: "Větvený scénář",
     oneLiner: "Ve třech krocích volí, jak naložit s urgentní žádostí, a vidí důsledky.",
     delta: { status: "none", today: "neumíme", next: "volby s důsledky a třemi různými konci" },
@@ -1125,6 +1123,7 @@ const ACTIVITIES = [
   },
   {
     id: "zavazek-s-pripominkou",
+    featured: true,
     title: "Závazek s připomínkou",
     oneLiner: "Doplní plán „když nastane X, udělám Y“ a portál mu ho připomene.",
     delta: { status: "workaround", today: "formulář, připomínka nepřijde", next: "plán „když, tak“ a připomínka e-mailem v daný den" },
@@ -1370,6 +1369,7 @@ const ACTIVITIES = [
   },
   {
     id: "hledani-chyby",
+    featured: true,
     title: "Hledání chyby",
     oneLiner: "Ve shrnutí od AI označí věty, které nesedí s podkladem.",
     delta: { status: "none", today: "neumíme", next: "označení chybných vět proti podkladu" },
@@ -1766,10 +1766,10 @@ const GOALS = {
   feedback:   { label: "Změřit dopad",      color: "--mint",   desc: "Zjistit, co kurz účastníkům dal, aniž by je to zdrželo." }
 };
 const STRENGTH = {
-  strong:    { label: "Silné důkazy",           cls: "ev-strong" },
-  medium:    { label: "Střední důkazy",         cls: "ev-medium" },
-  principle: { label: "Doložený princip",     cls: "ev-principle" },
-  weak:      { label: "Slabé důkazy",           cls: "ev-weak" }
+  strong:    { label: "Silné důkazy",     dots: 3 },
+  medium:    { label: "Střední důkazy",   dots: 2 },
+  weak:      { label: "Slabé důkazy",     dots: 1 },
+  principle: { label: "Doložený princip", dots: 0 }
 };
 
 /* =====================================================================
@@ -3739,30 +3739,24 @@ function pickButton(a, extraClass) {
     h("span", { class: "pick-check", "aria-hidden": "true" }), "Chci tohle");
 }
 
-function fillHero() {
-  const n = s => ACTIVITIES.filter(a => a.delta.status === s).length;
-  $("#n-all").textContent = ACTIVITIES.length;
-  $("#n-none").textContent = n("none");
-  $("#n-workaround").textContent = n("workaround");
-  $("#n-partial").textContent = n("partial");
+function evidMeter(a) {
+  const st = STRENGTH[a.evidence.strength];
+  return h("span", { class: "evid-badge", title: "Síla důkazů z rešerše: " + st.label },
+    h("span", { class: "evid-dots", "aria-hidden": "true" }, [1, 2, 3].map(i => h("i", { class: i <= st.dots ? "on" : "" }))), st.label);
 }
 
-function buildNav() {
-  const box = $("#goal-chips");
-  for (const key in GOALS) {
-    const n = ACTIVITIES.filter(a => a.goal === key).length;
-    if (!n) continue;
-    box.append(h("a", { class: "chip", href: "#cil-" + key, style: { "--dot": `var(${GOALS[key].color})` } },
-      h("span", { class: "dot", "aria-hidden": "true" }), GOALS[key].label, " ", h("span", { class: "chip-n" }, `(${n})`)));
-  }
-}
-
+/* Pět aktivit nahoře, zbytek v sekcích podle cíle za tlačítkem. */
 function buildSections() {
-  const host = $("#sections");
+  const featured = ACTIVITIES.filter(a => a.featured), rest = ACTIVITIES.filter(a => !a.featured);
+  $("#featured").append(...featured.map(buildCard));
+  $("#n-rest").textContent = rest.length;
+  const chips = $("#goal-chips"), host = $("#sections");
   for (const key in GOALS) {
-    const g = GOALS[key], list = ACTIVITIES.filter(a => a.goal === key);
+    const g = GOALS[key], list = rest.filter(a => a.goal === key);
     if (!list.length) continue;
     const id = "cil-" + key;
+    chips.append(h("a", { class: "chip", href: "#" + id, style: { "--dot": `var(${g.color})` } },
+      h("span", { class: "dot", "aria-hidden": "true" }), g.label, " ", h("span", { class: "chip-n" }, `(${list.length})`)));
     host.append(h("section", { class: "goal-sec", id, "aria-labelledby": id + "-title", tabindex: "-1", style: { "--goal": `var(${g.color})` } },
       h("div", { class: "goal-head" },
         h("h2", { id: id + "-title" }, h("span", { class: "goal-dot", "aria-hidden": "true" }), g.label, " ",
@@ -3770,10 +3764,15 @@ function buildSections() {
         h("p", {}, g.desc)),
       h("ul", { class: "grid" }, list.map(buildCard))));
   }
+  $("#show-rest").addEventListener("click", () => { showRest(); $("#rest").querySelector("a, button").focus({ preventScroll: true }); });
+}
+function showRest() {
+  $("#rest").hidden = false;
+  $("#more-wrap").hidden = true;
 }
 
 function buildCard(a) {
-  const comp = COMPONENTS[a.component], st = STRENGTH[a.evidence.strength];
+  const comp = COMPONENTS[a.component];
   let cfg = clone(a.config);
   const learnerRoot = h("div", { class: "portal-body" });
   const oldRoot = h("div", { class: "portal-body", hidden: true });
@@ -3790,12 +3789,11 @@ function buildCard(a) {
   /* Přepínač Dnes / Nově v hlavičce ukázky. Dnešní verze se vykreslí až při prvním přepnutí. */
   const modeBtn = (label, mode) => h("button", { type: "button", class: "mode-btn", "aria-pressed": "false", onclick: () => setMode(mode) }, label);
   const bToday = modeBtn("Dnes v portálu", "today"), bNew = modeBtn("Nově", "new");
-  const note = h("p", { class: "mode-note", hidden: true });
   const portal = h("div", { class: "portal" },
     h("div", { class: "portal-bar" }, h("span", { class: "portal-course" }, a.course || "Kurz"),
       h("div", { class: "mode-wrap" }, h("span", { class: "mode-label", id: "mode-label-" + a.id }, "Zobrazit"),
         h("div", { class: "mode", role: "group", "aria-labelledby": "mode-label-" + a.id }, bToday, bNew))),
-    note, learnerRoot, oldRoot);
+    learnerRoot, oldRoot);
   const setMode = mode => {
     const today = mode === "today";
     bToday.setAttribute("aria-pressed", String(today));
@@ -3803,8 +3801,6 @@ function buildCard(a) {
     learnerRoot.hidden = today;
     oldRoot.hidden = !today;
     portal.classList.toggle("is-today", today);
-    note.hidden = !today;
-    note.textContent = today ? nb(`Takhle to vypadá dnes: ${a.delta.today}.`) : "";
     if (today && !oldMounted) { renderToday(oldRoot, a, cfg); oldMounted = true; }
   };
   setMode("new");
@@ -3828,7 +3824,11 @@ function buildCard(a) {
   };
   const tabs = h("div", { class: "ctabs", role: "tablist", "aria-label": "Části karty" },
     TABS.map(([k, label, panel]) => tabBtns[k] = h("button", { type: "button", class: "ctab", role: "tab", "aria-selected": "false", "aria-controls": panel.id, onclick: () => setTab(k) }, label)));
-  const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true }, tabs, stage, whyPanel, devPanel,
+  const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true },
+    h("dl", { class: "delta" },
+      h("div", {}, h("dt", {}, "Dnes"), h("dd", {}, a.delta.today)),
+      h("div", {}, h("dt", {}, "Nově"), h("dd", {}, a.delta.next))),
+    tabs, stage, whyPanel, devPanel,
     h("button", { type: "button", class: "linkbtn close-bottom", onclick: () => closeCard(a.id) }, "Zavřít ukázku"));
   const li = h("li", { class: "acard", id: a.id, "data-id": a.id },
     h("div", { class: "acard-head" },
@@ -3836,11 +3836,8 @@ function buildCard(a) {
         h("div", { class: "tags" }, goalTag(a)),
         h("h3", { class: "card-title" }, a.title),
         h("p", { class: "card-text" }, a.oneLiner))),
-    h("dl", { class: "delta" },
-      h("div", {}, h("dt", {}, "Dnes"), h("dd", {}, a.delta.today)),
-      h("div", {}, h("dt", {}, "Nově"), h("dd", {}, a.delta.next))),
     h("div", { class: "acard-foot" },
-      h("div", { class: "acard-meta" }, h("span", { class: "evid-badge " + st.cls }, st.label), votes),
+      h("div", { class: "acard-meta" }, evidMeter(a), votes),
       h("div", { class: "acard-actions" }, tryBtn, pickButton(a))),
     openArea);
   const setOpen = open => {
@@ -3851,7 +3848,7 @@ function buildCard(a) {
     if (open && !demoMounted) { comp.renderLearner(learnerRoot, cfg); demoMounted = true; }
     if (open) setTab("demo"); else { stage.hidden = true; }
   };
-  refs[a.id] = { li, votes, tryBtn, setOpen };
+  refs[a.id] = { li, votes, tryBtn, setOpen, setMode };
   return li;
 }
 
@@ -4038,10 +4035,10 @@ async function saveCsv() {
 
 /* ---------- Záložky Proč to funguje a Pro vývoj ---------- */
 function whyBlocks(a) {
-  const P = a.panels, st = STRENGTH[a.evidence.strength];
+  const P = a.panels;
   return [
     h("div", { class: "info-block" }, h("h4", {}, "Proč to funguje"), h("p", {}, P.why),
-      h("div", { class: "evid" }, h("span", { class: "evid-badge " + st.cls }, st.label)),
+      h("div", { class: "evid" }, evidMeter(a)),
       h("p", { class: "src" }, a.evidence.source),
       h("p", { class: "src" }, "Kirkpatrick: " + a.evidence.level)),
     h("div", { class: "info-block" }, h("h4", {}, "Jak to děláme dnes"), h("p", {}, P.today))
@@ -4056,36 +4053,94 @@ function devBlock(a) {
       h("dt", {}, "Bez myši a dotyku"), h("dd", {}, d.keyboard)));
 }
 
-/* ---------- Nápověda při prvním otevření ---------- */
-const HELP_KEY = "svedsky-stul-napoveda";
-function initHelp() {
-  const dlg = $("#help");
-  if (!dlg || typeof dlg.showModal !== "function") return;
-  const open = () => { if (!dlg.open) dlg.showModal(); };
-  dlg.addEventListener("close", () => { try { localStorage.setItem(HELP_KEY, "1"); } catch (e) {} });
-  $("#nav-help").addEventListener("click", open);
+/* ---------- Průvodce: čtyři kroky přímo na stránce ----------
+   Zvýrazní skutečný prvek na první kartě a sám ho ovládá. */
+const TOUR_KEY = "svedsky-stul-pruvodce";
+const tour = { on: false, step: 0, id: null, raf: 0 };
+function tourSteps() {
+  const id = tour.id, r = refs[id];
+  return [
+    { el: () => r.tryBtn, text: "Tlačítko Vyzkoušet otevře ukázku aktivity.", go: "Otevřít ukázku", act: () => openCard(id) },
+    { el: () => r.li.querySelector(".mode"), text: "Přepínač ukáže, jak to umíme dnes a jak by to vypadalo nově.", go: "Ukázat Dnes", act: () => r.setMode("today") },
+    { el: () => r.li.querySelector(".acard-actions [data-pick]"), text: "Líbí se vám? Dejte hlas. Hlasy všech se sčítají dole.", go: "Další" },
+    { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak to nastaví autor kurzu.", go: "Hotovo" }
+  ];
+}
+function tourStart() {
+  const first = ACTIVITIES.find(a => a.featured) || ACTIVITIES[0];
+  if (state.open && state.open !== first.id) closeCard(state.open);
+  tour.id = first.id; tour.step = 0; tour.on = true;
+  $("#tour").hidden = false;
+  tourShow();
+}
+function tourShow() {
+  const steps = tourSteps(), s = steps[tour.step], el = s.el();
+  if (!el) return tourEnd();
+  $("#tour-text").textContent = nb(s.text);
+  $("#tour-n").textContent = `${tour.step + 1} / ${steps.length}`;
+  $("#tour-go").textContent = s.go;
+  el.scrollIntoView({ behavior: "auto", block: "center" });
+  tourPlace(el);
+  $("#tour-go").focus({ preventScroll: true });
+}
+function tourPlace(el) {
+  const r = el.getBoundingClientRect(), pad = 8;
+  Object.assign($("#tour-spot").style, { left: (r.left - pad) + "px", top: (r.top - pad) + "px", width: (r.width + 2 * pad) + "px", height: (r.height + 2 * pad) + "px" });
+  const tip = $("#tour-tip"), tw = tip.offsetWidth, th = tip.offsetHeight;
+  const left = Math.min(Math.max(16, r.left), innerWidth - tw - 16);
+  let top = r.bottom + pad + 12;
+  if (top + th > innerHeight - 16) top = r.top - pad - 12 - th;
+  if (top < 16) top = 16;
+  Object.assign(tip.style, { left: left + "px", top: top + "px" });
+}
+function tourNext() {
+  const steps = tourSteps(), s = steps[tour.step];
+  if (s.act) s.act();
+  tour.step++;
+  if (tour.step >= steps.length) return tourEnd();
+  requestAnimationFrame(() => requestAnimationFrame(tourShow));
+}
+function tourEnd() {
+  if (!tour.on) return;
+  tour.on = false;
+  $("#tour").hidden = true;
+  try { localStorage.setItem(TOUR_KEY, "1"); } catch (e) {}
+  const r = refs[tour.id];
+  if (r) { r.setMode("new"); r.tryBtn.focus({ preventScroll: true }); }
+}
+function initTour() {
+  $("#tour-go").addEventListener("click", tourNext);
+  $("#tour-skip").addEventListener("click", tourEnd);
+  $("#nav-help").addEventListener("click", tourStart);
+  document.addEventListener("keydown", e => { if (tour.on && e.key === "Escape") tourEnd(); });
+  const follow = () => {
+    if (!tour.on) return;
+    cancelAnimationFrame(tour.raf);
+    tour.raf = requestAnimationFrame(() => { const el = tourSteps()[tour.step].el(); if (el) tourPlace(el); });
+  };
+  addEventListener("scroll", follow, { passive: true });
+  addEventListener("resize", follow);
   let seen = false;
-  try { seen = localStorage.getItem(HELP_KEY) === "1"; } catch (e) {}
-  if (!seen && !location.hash) open();
+  try { seen = localStorage.getItem(TOUR_KEY) === "1"; } catch (e) {}
+  if (!seen && !location.hash) tourStart();
 }
 
 /* =====================================================================
    START
    ===================================================================== */
 fixStaticText(document.body);
-fillHero();
-buildNav();
 buildSections();
 state.selected = loadLocalPicks();
 syncPicks();
 initVotes();
-initHelp();
+initTour();
 $("#copy-brief").addEventListener("click", copyBrief);
 $("#save-csv").addEventListener("click", saveCsv);
 $("#pickbar-link").addEventListener("click", e => { e.preventDefault(); const s = $("#vyber"); s.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); s.focus({ preventScroll: true }); });
 {
   const id = decodeURIComponent(location.hash.slice(1));
-  if (id && byId(id)) openCard(id);
+  if (id && byId(id)) { if (!byId(id).featured) showRest(); openCard(id); }
+  else if (id && document.getElementById(id) && $("#rest").contains(document.getElementById(id))) { showRest(); document.getElementById(id).scrollIntoView(); }
 }
 </script>
 </body>
