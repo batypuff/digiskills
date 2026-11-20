@@ -59,11 +59,10 @@ button { font: inherit; }
 .band-breeze { background: var(--breeze); }
 .band-dark { background: var(--sky); color: var(--white); }
 .band-dark h2, .band-dark h3 { color: var(--white); }
-body.has-picks footer.band-dark { padding-bottom: 7rem; }
 
 /* ---------- Navigace ---------- */
 .nav { background: var(--white); border-bottom: 1px solid var(--line); }
-.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.25rem; }
+.nav .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; min-height: 4.25rem; padding-block: .5rem; }
 .brand { display: flex; align-items: center; gap: .9rem; min-width: 0; }
 .brand img { height: 26px; width: auto; display: block; }
 .brand-label { font-size: .8rem; font-weight: 600; color: var(--ink-2); padding-left: .9rem; border-left: 1px solid var(--line); white-space: nowrap; }
@@ -77,9 +76,6 @@ body.has-picks footer.band-dark { padding-bottom: 7rem; }
 h1 { font-size: clamp(2.3rem, 1.3rem + 4vw, 4.2rem); font-weight: 800; line-height: 1.05; }
 .lead { font-size: 1.15rem; max-width: 60ch; }
 .lead b { font-style: italic; font-weight: 800; color: var(--mint); font-variant-numeric: tabular-nums; }
-.steps { list-style: none; margin: .25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
-.steps li { display: inline-flex; align-items: center; gap: .6rem; padding: .4rem 1rem .4rem .4rem; border-radius: 999px; background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .18); font-size: .9rem; font-weight: 600; }
-.step-n { display: grid; place-items: center; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--mint); color: var(--sky); font-style: italic; font-weight: 800; font-size: .85rem; }
 
 /* ---------- Čipy (používají je ukázky) ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
@@ -128,15 +124,14 @@ h1 { font-size: clamp(2.3rem, 1.3rem + 4vw, 4.2rem); font-weight: 800; line-heig
 .pick-ctrl { display: flex; gap: .3rem; }
 @media (max-width: 560px) { .pick-row { grid-template-columns: 2.5rem minmax(0, 1fr); } .pick-ctrl { grid-column: 2; } }
 .pick-empty { padding: 1.1rem; border: 1px dashed var(--line-strong); border-radius: 16px; color: var(--ink-2); background: var(--white); }
+.owner-tools { display: grid; gap: .8rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.owner-note { font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
 .pick-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .say { font-size: .9rem; font-weight: 700; min-height: 1.4em; }
 .brief-preview summary { cursor: pointer; font-weight: 700; font-size: .9rem; }
 .brief-text { margin: .75rem 0 0; padding: 1rem; max-height: 24rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: .82rem/1.55 var(--font-mono); background: var(--white); border: 1px solid var(--line); border-radius: 12px; }
 .copy-fallback { width: 100%; min-height: 10rem; font: .82rem/1.5 var(--font-mono); padding: .75rem; border: 1px solid var(--line-strong); border-radius: var(--r-input); background: var(--white); color: var(--ink); }
 
-.pickbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; padding: .65rem 16px calc(.65rem + env(safe-area-inset-bottom, 0px)); background: var(--sky); color: var(--white); border-top: 2px solid var(--mint); }
-.pickbar-inner { max-width: 1180px; margin-inline: auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: 700; font-size: .92rem; }
-.pickbar .btn { min-height: 2.4rem; }
 
 /* ---------- Patička ---------- */
 footer .wrap { display: grid; gap: 1.25rem; }
@@ -311,7 +306,12 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .rec .help { color: var(--breeze); }
 
 /* ---------- Kompaktní úvod ---------- */
-.hero-band { padding-block: 2rem 2.25rem; }
+.hero-band { padding-block: 2rem 3rem; }
+.hero .compare { margin-top: .75rem; }
+.hero-band .compare .portal { color: var(--ink); }
+.hero-band .compare .portal h2, .hero-band .compare .portal h3 { color: var(--sky); }
+.hero-band .compare-cap { color: var(--breeze); }
+.hero-band .compare-cap b { color: var(--white); }
 .hero-band h1 { color: var(--white); }
 .hero-band .lead { color: var(--breeze); }
 
@@ -319,11 +319,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 1.25rem; align-items: start; }
 .acard { min-width: 0; display: grid; gap: 1rem; padding: 1.25rem; background: var(--breeze); border-left: 5px solid var(--goal, var(--sky)); border-radius: 24px; scroll-margin-top: 1rem; }
 .card-text { color: var(--ink-2); font-size: .93rem; }
-.delta { display: grid; gap: .3rem; margin: 0; font-size: .88rem; }
-.delta div { display: grid; grid-template-columns: 3.1rem minmax(0, 1fr); gap: .5rem; align-items: baseline; }
-.delta dt { font-size: .7rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; color: var(--ink-2); }
-.delta dd { margin: 0; }
-.delta div:last-child dd { font-weight: 600; }
 .acard-foot { display: grid; gap: .75rem; justify-items: start; }
 .acard-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; width: 100%; }
 .votes { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
@@ -711,7 +706,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
     </div>
     <nav class="nav-links" aria-label="Rychlé odkazy">
       <button type="button" class="nav-link" id="nav-help">Nápověda</button>
-      <a class="nav-link" href="#vyber">Hlasování</a>
       <a class="nav-link" href="#rozhodnuti">Rozhodnutí</a>
     </nav>
   </div>
@@ -721,21 +715,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead">Vyzkoušejte si aktivity, které by náš portál mohl umět, a dejte hlas těm, které chcete.</p>
-      <ol class="steps" aria-label="Jak stránku použít">
-        <li><span class="step-n" aria-hidden="true">1</span><span>Vyzkoušejte</span></li>
-        <li><span class="step-n" aria-hidden="true">2</span><span>Dejte hlas</span></li>
-        <li><span class="step-n" aria-hidden="true">3</span><span>Podívejte se na výsledky</span></li>
-      </ol>
-    </div>
-  </section>
-
-  <section class="band band-breeze" id="porovnani" aria-labelledby="porovnani-title" tabindex="-1">
-    <div class="wrap">
-      <div class="katalog-head">
-        <h2 id="porovnani-title">Stejné téma, <span class="hl">{dvakrát}</span></h2>
-        <p>Vlevo to, co portál umí dnes. Vpravo totéž jako nová aktivita. Obojí si můžete vyzkoušet.</p>
-      </div>
+      <p class="lead">Vyzkoušejte si aktivity, které by náš portál mohl umět, a dejte hlas těm, které chcete. Tady je jedna, vlevo jak ji umíme dnes, vpravo nově.</p>
       <div class="compare" id="compare"></div>
     </div>
   </section>
@@ -760,21 +740,24 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-breeze" id="vyber" aria-labelledby="vyber-title" tabindex="-1">
     <div class="wrap picks">
       <h2 id="vyber-title" style="font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem)">Co chceme <span class="hl">{nejvíc}</span></h2>
-      <p>Jeden klik na Chci tohle je jeden hlas. Hlasy všech se sčítají tady a svůj hlas změníte kdykoli.</p>
+      <p>Chci tohle je hlas. Hlasy všech se sčítají tady, svůj změníte kdykoli.</p>
       <p class="vote-sum" id="vote-sum"></p>
       <ol class="pick-list" id="pick-list"></ol>
       <p class="pick-empty" id="pick-empty">Zatím nikdo nehlasoval. U aktivity klikněte na <strong>Chci tohle</strong>.</p>
       <p class="vote-notice" id="vote-notice" hidden></p>
-      <div class="pick-actions">
-        <button type="button" class="btn primary" id="copy-brief">Zkopírovat zadání pro vývoj</button>
-        <button type="button" class="btn" id="save-csv">Stáhnout CSV</button>
+      <div class="owner-tools" id="owner-tools" hidden>
+        <p class="owner-note">Jen pro vlastníka stránky.</p>
+        <div class="pick-actions">
+          <button type="button" class="btn primary" id="copy-brief">Zkopírovat zadání pro vývoj</button>
+          <button type="button" class="btn" id="save-csv">Stáhnout CSV</button>
+        </div>
+        <p class="say" id="say" role="status"></p>
+        <textarea class="copy-fallback" id="copy-fallback" aria-label="Zadání pro vývoj ke zkopírování" readonly hidden></textarea>
+        <details class="brief-preview" id="brief-preview" hidden>
+          <summary>Náhled zadání pro vývoj</summary>
+          <pre class="brief-text" id="brief-text"></pre>
+        </details>
       </div>
-      <p class="say" id="say" role="status"></p>
-      <textarea class="copy-fallback" id="copy-fallback" aria-label="Zadání pro vývoj ke zkopírování" readonly hidden></textarea>
-      <details class="brief-preview" id="brief-preview" hidden>
-        <summary>Náhled zadání pro vývoj</summary>
-        <pre class="brief-text" id="brief-text"></pre>
-      </details>
     </div>
   </section>
 
@@ -792,7 +775,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark" id="rozhodnuti" aria-labelledby="ask-title" tabindex="-1">
     <div class="wrap ask">
       <h2 id="ask-title" style="font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem)">Co od vás <span class="hl">{potřebujeme}</span></h2>
-      <p class="lead">Rozhodnutí o prvním balíčku: tři aktivity, které nejvíc změní kurzy a dají se postavit jako první. Odhad náročnosti ověří vývoj.</p>
+      <p class="lead">Tři aktivity do prvního balíčku. Odhad práce ověří vývoj.</p>
       <ol class="ask-list" id="ask-list"></ol>
       <p class="ask-deadline" id="ask-deadline"></p>
       <div class="ask-actions">
@@ -823,12 +806,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   </div>
 </div>
 
-<div class="pickbar" id="pickbar" hidden>
-  <div class="pickbar-inner">
-    <span id="pickbar-text"></span>
-    <a href="#vyber" class="btn on-dark" id="pickbar-link">Zobrazit hlasování</a>
-  </div>
-</div>
 
 
 <script>
@@ -1819,7 +1796,7 @@ const STRENGTH = {
   strong:    { label: "Silné důkazy",     dots: 3 },
   medium:    { label: "Střední důkazy",   dots: 2 },
   weak:      { label: "Slabé důkazy",     dots: 1 },
-  principle: { label: "Doložený princip", dots: 0 }
+  principle: { label: "Jen princip",       dots: 0 }
 };
 
 /* =====================================================================
@@ -3825,7 +3802,8 @@ function buildCard(a) {
   const adminPane = h("div", { class: "acard-admin", id: "adm-" + a.id, hidden: true },
     h("div", { class: "pane-head" }, h("p", { class: "pane-label" }, "Administrace portálu"), reset),
     h("p", { class: "admin-note" }, "Takhle aktivitu nastaví autor kurzu. Změny se hned projeví v ukázce."),
-    h("div", { class: "admin" }, adminRoot));
+    h("div", { class: "admin" }, adminRoot),
+    devBlock(a));
   /* Přepínač Dnes / Nově v hlavičce ukázky. Dnešní verze se vykreslí až při prvním přepnutí. */
   const modeBtn = (label, mode) => h("button", { type: "button", class: "mode-btn", "aria-pressed": "false", onclick: () => setMode(mode) }, label);
   const bToday = modeBtn("Dnes v portálu", "today"), bNew = modeBtn("Nově", "new");
@@ -3851,8 +3829,7 @@ function buildCard(a) {
   const votes = h("span", { class: "votes", id: "votes-" + a.id });
   /* Záložky: Ukázka, Proč to funguje, Administrace (ukázka a vedle ní nastavení), Pro vývoj */
   const whyPanel = h("div", { class: "info-grid", id: "why-" + a.id, role: "tabpanel", hidden: true }, whyBlocks(a));
-  const devPanel = h("div", { class: "info-grid", id: "dev-" + a.id, role: "tabpanel", hidden: true }, devBlock(a));
-  const TABS = [["demo", "Ukázka", stage], ["why", "Proč to funguje", whyPanel], ["admin", "Administrace", stage], ["dev", "Pro vývoj", devPanel]];
+  const TABS = [["demo", "Ukázka", stage], ["why", "Proč to funguje", whyPanel], ["admin", "Nastavení a vývoj", stage]];
   const tabBtns = {};
   const setTab = key => {
     for (const [k, , panel] of TABS) { tabBtns[k].setAttribute("aria-selected", String(k === key)); panel.hidden = true; }
@@ -3865,10 +3842,7 @@ function buildCard(a) {
   const tabs = h("div", { class: "ctabs", role: "tablist", "aria-label": "Části karty" },
     TABS.map(([k, label, panel]) => tabBtns[k] = h("button", { type: "button", class: "ctab", role: "tab", "aria-selected": "false", "aria-controls": panel.id, onclick: () => setTab(k) }, label)));
   const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true },
-    h("dl", { class: "delta" },
-      h("div", {}, h("dt", {}, "Dnes"), h("dd", {}, a.delta.today)),
-      h("div", {}, h("dt", {}, "Nově"), h("dd", {}, a.delta.next))),
-    tabs, stage, whyPanel, devPanel,
+    tabs, stage, whyPanel,
     h("button", { type: "button", class: "linkbtn close-bottom", onclick: () => closeCard(a.id) }, "Zavřít ukázku"));
   const li = h("li", { class: "acard", id: a.id, "data-id": a.id, style: { "--goal": `var(${GOALS[a.goal].color})` } },
     h("div", { class: "acard-head" },
@@ -3951,13 +3925,14 @@ async function pushVote() {
   if (vote.dirty) { vote.dirty = false; pushVote(); }
 }
 async function initVotes() {
-  const off = () => voteNotice("Hlasy ostatních se sčítají jen na sdílené stránce na claude.ai. Tady zůstane váš výběr v tomto prohlížeči.");
+  const off = () => { $("#owner-tools").hidden = false; voteNotice("Hlasy ostatních se sčítají jen na sdílené stránce na claude.ai. Tady zůstane váš výběr v tomto prohlížeči."); };
   if (!(window.claude && typeof window.claude.use === "function")) return off();
   const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
   if (!db) return off();
   vote.db = db;
   vote.uid = user ? await user.id() : null;
   vote.isOwner = user ? await user.isOwner() : false;
+  $("#owner-tools").hidden = !vote.isOwner;
   initDecision();
   db.collection("votes").onSnapshot(snap => {
     const counts = {};
@@ -4005,7 +3980,7 @@ function syncPicks() {
         h("span", { class: "pick-bar", "aria-hidden": "true" }, h("i", { style: { width: `${Math.round(n / max * 100)}%` } }))),
       h("div", { class: "pick-ctrl" }, pickButton(a, "btn-small")))));
   document.querySelectorAll("[data-pick]").forEach(b => b.setAttribute("aria-pressed", sel.includes(b.dataset.pick)));
-  const voters = state.voters, mine = sel.length;
+  const voters = state.voters;
   $("#vote-sum").textContent = state.shared && reveal && voters ? `Hlasovalo ${voters} ${plural(voters, "člověk", "lidé", "lidí")}.` : "";
   const any = rank.length > 0;
   $("#pick-empty").hidden = any;
@@ -4016,9 +3991,6 @@ function syncPicks() {
   $("#save-csv").disabled = !any;
   $("#brief-preview").hidden = !any;
   $("#brief-text").textContent = any ? buildBrief() : "";
-  $("#pickbar").hidden = mine === 0;
-  document.body.classList.toggle("has-picks", mine > 0);
-  $("#pickbar-text").textContent = `Můj hlas: ${mine} ${plural(mine, "aktivita", "aktivity", "aktivit")}`;
   $("#copy-fallback").hidden = true;
   $("#say").textContent = "";
 }
@@ -4189,7 +4161,7 @@ function tourSteps() {
     { el: () => r.tryBtn, text: "Tlačítko Vyzkoušet otevře ukázku aktivity.", go: "Otevřít ukázku", act: () => openCard(id) },
     { el: () => r.li.querySelector(".mode"), text: "Přepínač ukáže, jak to umíme dnes a jak by to vypadalo nově.", go: "Ukázat Dnes", act: () => r.setMode("today") },
     { el: () => r.li.querySelector(".acard-actions [data-pick]"), text: "Líbí se vám? Dejte hlas. Hlasy všech se sčítají dole.", go: "Další" },
-    { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak to nastaví autor kurzu.", go: "Hotovo" }
+    { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak se to nastaví.", go: "Hotovo" }
   ];
 }
 function tourStart(id, step) {
@@ -4262,7 +4234,6 @@ initVotes();
 initTour();
 $("#copy-brief").addEventListener("click", copyBrief);
 $("#save-csv").addEventListener("click", saveCsv);
-$("#pickbar-link").addEventListener("click", e => { e.preventDefault(); const s = $("#vyber"); s.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); s.focus({ preventScroll: true }); });
 {
   const id = decodeURIComponent(location.hash.slice(1));
   if (id && byId(id)) { if (!byId(id).featured) showRest(); openCard(id); }
