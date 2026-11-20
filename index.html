@@ -383,6 +383,35 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .katalog-head p { color: var(--ink-2); }
 .more-wrap { display: flex; justify-content: center; padding-top: 2.25rem; }
 .rest { display: grid; gap: 2rem; padding-top: 3rem; }
+
+/* ---------- Dnes a Nově vedle sebe ---------- */
+.compare { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) { .compare { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.compare-col { display: grid; gap: .75rem; min-width: 0; }
+.compare-cap { font-size: .95rem; color: var(--ink-2); }
+.compare-cap b { color: var(--ink); }
+
+/* ---------- Co od vás potřebujeme ---------- */
+.ask { display: grid; gap: 1.25rem; }
+.ask .lead { color: var(--breeze); }
+.ask-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.ask-item { display: grid; gap: .35rem; padding: 1rem 1.1rem; border-radius: 16px; background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .16); }
+.ask-item h3 { font-size: 1.05rem; color: var(--white); }
+.ask-item p { font-size: .9rem; color: var(--breeze); }
+.ask-item .effort { font-size: .74rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--mint); }
+.ask-deadline { font-weight: 700; color: var(--white); }
+.ask-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.ask-actions .btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--mint); }
+.ask .say { color: var(--mint); }
+
+/* ---------- Srovnání s konkurencí ---------- */
+.cmp-wrap { overflow-x: auto; }
+.cmp { border-collapse: collapse; width: 100%; min-width: 520px; font-size: .92rem; }
+.cmp th, .cmp td { padding: .6rem .8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.cmp th { font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.cmp td.yes { color: var(--ink); font-weight: 700; }
+.cmp td.no { color: var(--salmon); font-weight: 700; }
+.cmp-src { font-size: .84rem; color: var(--ink-2); }
 /* ---------- Společné prvky aktivit ---------- */
 .row-gap { display: flex; flex-wrap: wrap; gap: .5rem; }
 .fb { padding: .7rem .9rem; border-radius: 12px; font-size: .92rem; }
@@ -695,6 +724,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
     <nav class="nav-links" aria-label="Rychlé odkazy">
       <button type="button" class="nav-link" id="nav-help">Nápověda</button>
       <a class="nav-link" href="#vyber">Hlasování</a>
+      <a class="nav-link" href="#rozhodnuti">Rozhodnutí</a>
     </nav>
   </div>
 </header>
@@ -709,6 +739,16 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
         <li><span class="step-n" aria-hidden="true">2</span><span>Dejte hlas</span></li>
         <li><span class="step-n" aria-hidden="true">3</span><span>Podívejte se na výsledky</span></li>
       </ol>
+    </div>
+  </section>
+
+  <section class="band band-breeze" id="porovnani" aria-labelledby="porovnani-title" tabindex="-1">
+    <div class="wrap">
+      <div class="katalog-head">
+        <h2 id="porovnani-title">Stejné téma, <span class="hl">{dvakrát}</span></h2>
+        <p>Vlevo to, co portál umí dnes. Vpravo totéž jako nová aktivita. Obojí si můžete vyzkoušet.</p>
+      </div>
+      <div class="compare" id="compare"></div>
     </div>
   </section>
 
@@ -750,6 +790,31 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
         <summary>Náhled zadání pro vývoj</summary>
         <pre class="brief-text" id="brief-text"></pre>
       </details>
+    </div>
+  </section>
+
+  <section class="band" id="konkurence" aria-labelledby="konkurence-title" tabindex="-1" hidden>
+    <div class="wrap">
+      <div class="katalog-head">
+        <h2 id="konkurence-title">Co umí <span class="hl">{konkurence}</span></h2>
+        <p>Jen ověřené údaje. Kde si nejsme jistí, necháváme pole prázdné.</p>
+      </div>
+      <div class="cmp-wrap"><table class="cmp" id="cmp"></table></div>
+      <p class="cmp-src" id="cmp-src"></p>
+    </div>
+  </section>
+
+  <section class="band band-dark" id="rozhodnuti" aria-labelledby="ask-title" tabindex="-1">
+    <div class="wrap ask">
+      <h2 id="ask-title" style="font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem)">Co od vás <span class="hl">{potřebujeme}</span></h2>
+      <p class="lead">Rozhodnutí o prvním balíčku: tři aktivity, které nejvíc změní kurzy a dají se postavit jako první. Odhad náročnosti ověří vývoj.</p>
+      <ol class="ask-list" id="ask-list"></ol>
+      <p class="ask-deadline" id="ask-deadline"></p>
+      <div class="ask-actions">
+        <button type="button" class="btn primary" id="ask-yes" data-choice="yes" aria-pressed="false">Jdeme do toho</button>
+        <button type="button" class="btn on-dark" id="ask-talk" data-choice="talk" aria-pressed="false">Chci to probrat</button>
+      </div>
+      <p class="say" id="ask-say" role="status"></p>
     </div>
   </section>
 </main>
@@ -3858,6 +3923,8 @@ function openCard(id) {
   state.open = id;
   refs[id].setOpen(true);
   refs[id].li.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" });
+  /* Průvodce se spustí až při prvním otevření karty, od přepínače dál. */
+  if (!tour.on && !tourSeen()) requestAnimationFrame(() => requestAnimationFrame(() => { if (state.open === id) tourStart(id, 1); }));
 }
 function closeCard(id) {
   if (state.open === id) state.open = null;
@@ -3869,8 +3936,17 @@ function closeCard(id) {
    Každý hlasující má v db jeden dokument votes/<id> se seznamem aktivit.
    Všichni čtou celou sbírku a sčítají. Mimo claude.ai zůstane výběr jen
    v tomto prohlížeči (localStorage). */
+/* Hlasy se ukážou, až hlasuje aspoň tolik lidí. Vlastník stránky je vidí vždy. */
+const VOTE_MIN = 5;
+/* První balíček a termín rozhodnutí. Změnit tady. */
+const PACKAGE = ["sebehodnotici-test", "rozhodovani-kartou", "zavazek-s-pripominkou"];
+const ASK_DEADLINE = "Rozhodnutí potřebujeme do 5. prosince.";
+const EFFORT_LABEL = { S: "malá práce pro vývoj", M: "střední práce pro vývoj", L: "větší práce pro vývoj" };
+/* Srovnání s konkurencí: doplnit jen ověřené údaje. Sekce se ukáže, až tu něco je.
+   names: názvy sloupců, rows: { title, us, them: [true | false | null, ...] }, source: odkud údaje jsou. */
+const COMPETITORS = { names: [], rows: [], source: "" };
 const VOTE_KEY = "svedsky-stul-hlas";
-const vote = { db: null, uid: null, busy: false, dirty: false, mineOnServer: false };
+const vote = { db: null, uid: null, busy: false, dirty: false, mineOnServer: false, isOwner: false };
 function loadLocalPicks() {
   try { const v = JSON.parse(localStorage.getItem(VOTE_KEY) || "[]"); return Array.isArray(v) ? v.filter(id => typeof id === "string" && byId(id)) : []; }
   catch (e) { return []; }
@@ -3906,6 +3982,8 @@ async function initVotes() {
   if (!db) return off();
   vote.db = db;
   vote.uid = user ? await user.id() : null;
+  vote.isOwner = user ? await user.isOwner() : false;
+  initDecision();
   db.collection("votes").onSnapshot(snap => {
     const counts = {};
     let voters = 0, mine = null;
@@ -3935,12 +4013,14 @@ function ranking() {
 }
 function syncPicks() {
   const sel = state.selected;
+  /* Sdílené hlasy se ukážou až od VOTE_MIN hlasujících, aby nikdo neviděl nulu. */
+  const reveal = !state.shared || vote.isOwner || state.voters >= VOTE_MIN;
   for (const a of ACTIVITIES) {
     const n = voteCount(a.id);
     refs[a.id].li.classList.toggle("is-picked", sel.includes(a.id));
-    refs[a.id].votes.textContent = n ? hlasy(n) : "zatím bez hlasu";
+    refs[a.id].votes.textContent = reveal && n ? hlasy(n) : "";
   }
-  const rank = ranking(), max = rank.length ? rank[0].n : 1;
+  const rank = reveal ? ranking() : [], max = rank.length ? rank[0].n : 1;
   $("#pick-list").replaceChildren(...rank.map(({ a, n }, i) =>
     h("li", { class: "pick-row", "data-id": a.id },
       h("span", { class: "pick-n", "aria-hidden": "true" }, i + 1),
@@ -3951,9 +4031,12 @@ function syncPicks() {
       h("div", { class: "pick-ctrl" }, pickButton(a, "btn-small")))));
   document.querySelectorAll("[data-pick]").forEach(b => b.setAttribute("aria-pressed", sel.includes(b.dataset.pick)));
   const voters = state.voters, mine = sel.length;
-  $("#vote-sum").textContent = state.shared ? (voters ? `Hlasovalo ${voters} ${plural(voters, "člověk", "lidé", "lidí")}.` : "Zatím nikdo nehlasoval, buďte první.") : "";
+  $("#vote-sum").textContent = state.shared && reveal && voters ? `Hlasovalo ${voters} ${plural(voters, "člověk", "lidé", "lidí")}.` : "";
   const any = rank.length > 0;
   $("#pick-empty").hidden = any;
+  $("#pick-empty").textContent = nb(state.shared && !reveal
+    ? `Výsledky se ukážou, až bude hlasovat ${VOTE_MIN} lidí. Zatím ${voters}. Váš hlas se počítá hned.`
+    : "Zatím nikdo nehlasoval. U aktivity klikněte na Chci tohle.");
   $("#copy-brief").disabled = !any;
   $("#save-csv").disabled = !any;
   $("#brief-preview").hidden = !any;
@@ -4053,10 +4136,78 @@ function devBlock(a) {
       h("dt", {}, "Bez myši a dotyku"), h("dd", {}, d.keyboard)));
 }
 
+/* ---------- Dnes a Nově vedle sebe pod úvodem ---------- */
+function buildCompare() {
+  const a = ACTIVITIES.find(x => x.featured) || ACTIVITIES[0];
+  const comp = COMPONENTS[a.component], cfg = clone(a.config);
+  const oldRoot = h("div", { class: "portal-body" }), newRoot = h("div", { class: "portal-body" });
+  const col = (label, body, cap, today) => h("div", { class: "compare-col" },
+    h("div", { class: "portal" + (today ? " is-today" : "") }, h("div", { class: "portal-bar" }, h("span", { class: "portal-course" }, a.course), h("span", {}, label)), body),
+    h("p", { class: "compare-cap" }, h("b", {}, label + ": "), cap));
+  $("#compare").append(
+    col("Dnes v portálu", oldRoot, a.delta.today + ".", true),
+    col("Nově", newRoot, a.delta.next + ".", false));
+  renderToday(oldRoot, a, cfg);
+  comp.renderLearner(newRoot, clone(a.config));
+}
+
+/* ---------- Co od vás potřebujeme ---------- */
+const decision = { db: null, uid: null, busy: false };
+function buildAsk() {
+  $("#ask-list").replaceChildren(...PACKAGE.map(byId).filter(Boolean).map(a => {
+    const lvl = a.effort[a.effort.length - 1];
+    return h("li", { class: "ask-item" },
+      h("span", { class: "effort" }, EFFORT_LABEL[lvl] || ""),
+      h("h3", {}, a.title),
+      h("p", {}, a.oneLiner));
+  }));
+  $("#ask-deadline").textContent = nb(ASK_DEADLINE);
+  const say = msg => { $("#ask-say").textContent = nb(msg); };
+  const mark = choice => document.querySelectorAll("[data-choice]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.choice === choice)));
+  document.querySelectorAll("[data-choice]").forEach(b => b.addEventListener("click", async () => {
+    const choice = b.dataset.choice;
+    mark(choice);
+    if (!vote.db || !vote.uid) { say("Tady se odpověď neuloží. Odpovězte prosím Veronice na e-mail: " + (choice === "yes" ? "jdeme do toho" : "chci to probrat") + "."); return; }
+    if (decision.busy) return;
+    decision.busy = true;
+    try {
+      await vote.db.doc("decisions/" + vote.uid).set({ choice, at: new Date().toISOString() });
+      say(choice === "yes" ? "Díky. Veronika vaši odpověď uvidí a ozve se s dalším krokem." : "Díky. Veronika se vám ozve a domluvíte si termín.");
+    } catch (e) {
+      say("Odpověď se teď nepodařilo uložit. Odpovězte prosím Veronice na e-mail.");
+    }
+    decision.busy = false;
+  }));
+}
+async function initDecision() {
+  if (!vote.db || !vote.uid) return;
+  try {
+    const snap = await vote.db.doc("decisions/" + vote.uid).get();
+    const d = snap.exists ? snap.data() : null;
+    if (d && (d.choice === "yes" || d.choice === "talk")) {
+      document.querySelectorAll("[data-choice]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.choice === d.choice)));
+      $("#ask-say").textContent = nb("Vaše odpověď je uložená. Změnit ji můžete kdykoli.");
+    }
+  } catch (e) {}
+}
+
+/* ---------- Srovnání s konkurencí: jen s ověřenými údaji ---------- */
+function buildCompetitors() {
+  const C = COMPETITORS;
+  if (!C.names.length || !C.rows.length) return;
+  const cell = v => v === true ? h("td", { class: "yes" }, "ano") : v === false ? h("td", { class: "no" }, "ne") : h("td", {}, "");
+  $("#cmp").replaceChildren(
+    h("thead", {}, h("tr", {}, h("th", {}, "Aktivita"), h("th", {}, "Náš portál"), C.names.map(n => h("th", {}, n)))),
+    h("tbody", {}, C.rows.map(r => h("tr", {}, h("td", {}, r.title), cell(r.us), C.names.map((n, i) => cell(r.them[i]))))));
+  $("#cmp-src").textContent = nb(C.source || "");
+  $("#konkurence").hidden = false;
+}
+
 /* ---------- Průvodce: čtyři kroky přímo na stránce ----------
    Zvýrazní skutečný prvek na první kartě a sám ho ovládá. */
 const TOUR_KEY = "svedsky-stul-pruvodce";
 const tour = { on: false, step: 0, id: null, raf: 0 };
+function tourSeen() { try { return localStorage.getItem(TOUR_KEY) === "1"; } catch (e) { return false; } }
 function tourSteps() {
   const id = tour.id, r = refs[id];
   return [
@@ -4066,10 +4217,10 @@ function tourSteps() {
     { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak to nastaví autor kurzu.", go: "Hotovo" }
   ];
 }
-function tourStart() {
-  const first = ACTIVITIES.find(a => a.featured) || ACTIVITIES[0];
+function tourStart(id, step) {
+  const first = (id && refs[id]) ? byId(id) : (ACTIVITIES.find(a => a.featured) || ACTIVITIES[0]);
   if (state.open && state.open !== first.id) closeCard(state.open);
-  tour.id = first.id; tour.step = 0; tour.on = true;
+  tour.id = first.id; tour.step = step || 0; tour.on = true;
   $("#tour").hidden = false;
   tourShow();
 }
@@ -4111,7 +4262,7 @@ function tourEnd() {
 function initTour() {
   $("#tour-go").addEventListener("click", tourNext);
   $("#tour-skip").addEventListener("click", tourEnd);
-  $("#nav-help").addEventListener("click", tourStart);
+  $("#nav-help").addEventListener("click", () => tourStart());
   document.addEventListener("keydown", e => { if (tour.on && e.key === "Escape") tourEnd(); });
   const follow = () => {
     if (!tour.on) return;
@@ -4120,9 +4271,6 @@ function initTour() {
   };
   addEventListener("scroll", follow, { passive: true });
   addEventListener("resize", follow);
-  let seen = false;
-  try { seen = localStorage.getItem(TOUR_KEY) === "1"; } catch (e) {}
-  if (!seen && !location.hash) tourStart();
 }
 
 /* =====================================================================
@@ -4130,6 +4278,9 @@ function initTour() {
    ===================================================================== */
 fixStaticText(document.body);
 buildSections();
+buildCompare();
+buildAsk();
+buildCompetitors();
 state.selected = loadLocalPicks();
 syncPicks();
 initVotes();
