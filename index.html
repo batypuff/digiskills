@@ -81,25 +81,13 @@ h1 { font-size: clamp(2.3rem, 1.3rem + 4vw, 4.2rem); font-weight: 800; line-heig
 .steps li { display: inline-flex; align-items: center; gap: .6rem; padding: .4rem 1rem .4rem .4rem; border-radius: 999px; background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .18); font-size: .9rem; font-weight: 600; }
 .step-n { display: grid; place-items: center; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--mint); color: var(--sky); font-style: italic; font-weight: 800; font-size: .85rem; }
 
-/* ---------- Navigace podle cíle ---------- */
-.goal-nav { display: grid; gap: .45rem; }
-.filter-label { font-weight: 700; font-size: .88rem; }
-@media (min-width: 760px) {
-  .goal-nav { grid-template-columns: 10rem minmax(0, 1fr); align-items: start; }
-  .goal-nav .filter-label { padding-top: .6rem; }
-}
+/* ---------- Čipy (používají je ukázky) ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
 .chip { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.6rem; padding: .35rem 1rem; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--white); color: var(--sky); font-size: .88rem; font-weight: 600; text-decoration: none; }
 .chip:hover { background: var(--breeze); }
 
-/* ---------- Sekce podle cíle ---------- */
-.sections { display: grid; gap: 3.5rem; }
-.goal-sec { display: grid; gap: 1.25rem; scroll-margin-top: 1rem; }
-.goal-head { display: grid; gap: .3rem; max-width: 70ch; }
-.goal-head h2 { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.1rem); }
-.goal-dot { width: .85rem; height: .85rem; border-radius: 50%; background: var(--goal); flex: none; }
-.goal-n { font-style: normal; font-weight: 600; font-size: .85rem; color: var(--ink-2); }
-.goal-head p { color: var(--ink-2); }
+/* ---------- Druhá část seznamu ---------- */
+.rest-title { font-size: 1.35rem; }
 .chip-n { font-size: .78rem; opacity: .75; font-variant-numeric: tabular-nums; }
 .dot { width: .65rem; height: .65rem; border-radius: 50%; background: var(--dot, var(--ink-2)); flex: none; }
 
@@ -382,7 +370,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .katalog-head h2 { font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem); }
 .katalog-head p { color: var(--ink-2); }
 .more-wrap { display: flex; justify-content: center; padding-top: 2.25rem; }
-.rest { display: grid; gap: 2rem; padding-top: 3rem; }
+.rest { display: grid; gap: 1.25rem; padding-top: 2.5rem; }
 
 /* ---------- Dnes a Nově vedle sebe ---------- */
 .compare { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); align-items: start; }
@@ -755,19 +743,16 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band" id="katalog" aria-labelledby="katalog-title" tabindex="-1">
     <div class="wrap">
       <div class="katalog-head">
-        <h2 id="katalog-title">Začněte <span class="hl">{tady}</span></h2>
-        <p>Pět aktivit, na kterých je rozdíl vidět nejvíc.</p>
+        <h2 id="katalog-title">Vyzkoušejte si <span class="hl">{aktivity}</span></h2>
+        <p>Pět, na kterých je rozdíl vidět nejvíc, je nahoře. Dalších 25 najdete pod tlačítkem.</p>
       </div>
       <ul class="grid" id="featured"></ul>
       <div class="more-wrap" id="more-wrap">
-        <button type="button" class="btn navy" id="show-rest"><span>Prohlédnout dalších <span id="n-rest">25</span> aktivit</span></button>
+        <button type="button" class="btn navy" id="show-rest"><span>Ukázat dalších <span id="n-rest">25</span> aktivit</span></button>
       </div>
       <div class="rest" id="rest" hidden>
-        <nav class="goal-nav" aria-labelledby="fg-goal">
-          <span class="filter-label" id="fg-goal">Cíl učení</span>
-          <div class="chips" id="goal-chips"></div>
-        </nav>
-        <div class="sections" id="sections"></div>
+        <h3 class="rest-title" id="rest-title" tabindex="-1">Dalších <span id="n-rest-2">25</span> aktivit</h3>
+        <ul class="grid" id="rest-grid"></ul>
       </div>
     </div>
   </section>
@@ -3810,26 +3795,16 @@ function evidMeter(a) {
     h("span", { class: "evid-dots", "aria-hidden": "true" }, [1, 2, 3].map(i => h("i", { class: i <= st.dots ? "on" : "" }))), st.label);
 }
 
-/* Pět aktivit nahoře, zbytek v sekcích podle cíle za tlačítkem. */
+/* Pět aktivit nahoře, zbylých 25 ve stejné mřížce za tlačítkem, seřazených podle cíle učení. */
 function buildSections() {
-  const featured = ACTIVITIES.filter(a => a.featured), rest = ACTIVITIES.filter(a => !a.featured);
+  const order = Object.keys(GOALS);
+  const featured = ACTIVITIES.filter(a => a.featured);
+  const rest = ACTIVITIES.filter(a => !a.featured).sort((x, y) => order.indexOf(x.goal) - order.indexOf(y.goal));
   $("#featured").append(...featured.map(buildCard));
+  $("#rest-grid").append(...rest.map(buildCard));
   $("#n-rest").textContent = rest.length;
-  const chips = $("#goal-chips"), host = $("#sections");
-  for (const key in GOALS) {
-    const g = GOALS[key], list = rest.filter(a => a.goal === key);
-    if (!list.length) continue;
-    const id = "cil-" + key;
-    chips.append(h("a", { class: "chip", href: "#" + id, style: { "--dot": `var(${g.color})` } },
-      h("span", { class: "dot", "aria-hidden": "true" }), g.label, " ", h("span", { class: "chip-n" }, `(${list.length})`)));
-    host.append(h("section", { class: "goal-sec", id, "aria-labelledby": id + "-title", tabindex: "-1", style: { "--goal": `var(${g.color})` } },
-      h("div", { class: "goal-head" },
-        h("h2", { id: id + "-title" }, h("span", { class: "goal-dot", "aria-hidden": "true" }), g.label, " ",
-          h("span", { class: "goal-n" }, `${list.length} ${plural(list.length, "aktivita", "aktivity", "aktivit")}`)),
-        h("p", {}, g.desc)),
-      h("ul", { class: "grid" }, list.map(buildCard))));
-  }
-  $("#show-rest").addEventListener("click", () => { showRest(); $("#rest").querySelector("a, button").focus({ preventScroll: true }); });
+  $("#n-rest-2").textContent = rest.length;
+  $("#show-rest").addEventListener("click", () => { showRest(); $("#rest-title").focus({ preventScroll: true }); });
 }
 function showRest() {
   $("#rest").hidden = false;
@@ -3895,7 +3870,7 @@ function buildCard(a) {
       h("div", {}, h("dt", {}, "Nově"), h("dd", {}, a.delta.next))),
     tabs, stage, whyPanel, devPanel,
     h("button", { type: "button", class: "linkbtn close-bottom", onclick: () => closeCard(a.id) }, "Zavřít ukázku"));
-  const li = h("li", { class: "acard", id: a.id, "data-id": a.id },
+  const li = h("li", { class: "acard", id: a.id, "data-id": a.id, style: { "--goal": `var(${GOALS[a.goal].color})` } },
     h("div", { class: "acard-head" },
       h("div", { class: "acard-titles" },
         h("div", { class: "tags" }, goalTag(a)),
@@ -4291,7 +4266,6 @@ $("#pickbar-link").addEventListener("click", e => { e.preventDefault(); const s 
 {
   const id = decodeURIComponent(location.hash.slice(1));
   if (id && byId(id)) { if (!byId(id).featured) showRest(); openCard(id); }
-  else if (id && document.getElementById(id) && $("#rest").contains(document.getElementById(id))) { showRest(); document.getElementById(id).scrollIntoView(); }
 }
 </script>
 </body>
