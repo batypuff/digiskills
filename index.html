@@ -104,33 +104,8 @@ h1 { font-size: clamp(2.3rem, 1.3rem + 4vw, 4.2rem); font-weight: 800; line-heig
 .btn.on-dark { background: transparent; border-color: var(--white); color: var(--white); }
 .btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
 .btn-small { min-height: 2.3rem; padding: .35rem .95rem; font-size: .72rem; }
-.btn.pick[aria-pressed="true"] { background: var(--mint); border-color: var(--sky); }
-.pick-check::before { content: "+"; font-size: 1rem; line-height: 1; }
-.btn.pick[aria-pressed="true"] .pick-check::before { content: "✓"; }
 
 /* ---------- Výběr priorit ---------- */
-.picks { display: grid; gap: 1.1rem; }
-.picks > p { max-width: 70ch; }
-.pick-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
-.pick-row { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; gap: .4rem .9rem; align-items: center; padding: .75rem 1rem; background: var(--white); border-radius: 16px; box-shadow: var(--shadow); }
-.pick-n { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--mint); font-style: italic; font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-.pick-main { display: grid; min-width: 0; }
-.pick-title { font-weight: 700; }
-.pick-meta { font-size: .8rem; color: var(--ink-2); }
-.pick-bar { display: block; height: .45rem; margin-top: .4rem; border-radius: 999px; background: var(--line); overflow: hidden; }
-.pick-bar i { display: block; height: 100%; background: var(--sky); border-radius: 999px; }
-.vote-sum { font-weight: 700; }
-.vote-notice { font-size: .88rem; color: var(--ink-2); padding: .8rem 1rem; border-radius: 12px; background: var(--white); border: 1px dashed var(--line-strong); max-width: 70ch; }
-.pick-ctrl { display: flex; gap: .3rem; }
-@media (max-width: 560px) { .pick-row { grid-template-columns: 2.5rem minmax(0, 1fr); } .pick-ctrl { grid-column: 2; } }
-.pick-empty { padding: 1.1rem; border: 1px dashed var(--line-strong); border-radius: 16px; color: var(--ink-2); background: var(--white); }
-.owner-tools { display: grid; gap: .8rem; padding-top: 1rem; border-top: 1px solid var(--line); }
-.owner-note { font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
-.pick-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
-.say { font-size: .9rem; font-weight: 700; min-height: 1.4em; }
-.brief-preview summary { cursor: pointer; font-weight: 700; font-size: .9rem; }
-.brief-text { margin: .75rem 0 0; padding: 1rem; max-height: 24rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: .82rem/1.55 var(--font-mono); background: var(--white); border: 1px solid var(--line); border-radius: 12px; }
-.copy-fallback { width: 100%; min-height: 10rem; font: .82rem/1.5 var(--font-mono); padding: .75rem; border: 1px solid var(--line-strong); border-radius: var(--r-input); background: var(--white); color: var(--ink); }
 
 
 /* ---------- Patička ---------- */
@@ -320,13 +295,17 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .acard { min-width: 0; display: grid; gap: 1rem; padding: 1.25rem; background: var(--breeze); border-left: 5px solid var(--goal, var(--sky)); border-radius: 24px; scroll-margin-top: 1rem; }
 .card-text { color: var(--ink-2); font-size: .93rem; }
 .acard-foot { display: grid; gap: .75rem; justify-items: start; }
-.acard-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; width: 100%; }
-.votes { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
-.acard.is-picked .votes { color: var(--sky); }
+.acard-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; width: 100%; }
+.acard-mini { gap: .55rem; padding: .95rem 1.1rem; }
+.acard-mini .card-title { font-size: 1.05rem; }
+.acard-mini .card-text { font-size: .88rem; }
+.acard-mini .acard-actions .btn { flex: 0 0 auto; min-height: 2.4rem; font-size: .72rem; }
+.tag-want { background: var(--mint) !important; }
+.uses { font-size: .92rem; color: var(--ink-2); }
+.uses b { color: var(--ink); }
 .acard-actions { display: flex; flex-wrap: wrap; gap: .5rem; width: 100%; }
 .acard-actions .btn { flex: 1 1 8rem; }
 .acard.is-open .acard-actions .btn { flex: 0 0 auto; }
-.acard.is-picked { box-shadow: inset 0 0 0 2px var(--sky); }
 .acard.is-open { grid-column: 1 / -1; }
 .acard:not(.has-admin) .acard-stage .portal { max-width: 760px; }
 .acard-head { display: grid; }
@@ -374,27 +353,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .compare-cap { font-size: .95rem; color: var(--ink-2); }
 .compare-cap b { color: var(--ink); }
 
-/* ---------- Co od vás potřebujeme ---------- */
-.ask { display: grid; gap: 1.25rem; }
-.ask .lead { color: var(--breeze); }
-.ask-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
-.ask-item { display: grid; gap: .35rem; padding: 1rem 1.1rem; border-radius: 16px; background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .16); }
-.ask-item h3 { font-size: 1.05rem; color: var(--white); }
-.ask-item p { font-size: .9rem; color: var(--breeze); }
-.ask-item .effort { font-size: .74rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--mint); }
-.ask-deadline { font-weight: 700; color: var(--white); }
-.ask-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
-.ask-actions .btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--mint); }
-.ask .say { color: var(--mint); }
-
-/* ---------- Srovnání s konkurencí ---------- */
-.cmp-wrap { overflow-x: auto; }
-.cmp { border-collapse: collapse; width: 100%; min-width: 520px; font-size: .92rem; }
-.cmp th, .cmp td { padding: .6rem .8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.cmp th { font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
-.cmp td.yes { color: var(--ink); font-weight: 700; }
-.cmp td.no { color: var(--salmon); font-weight: 700; }
-.cmp-src { font-size: .84rem; color: var(--ink-2); }
 /* ---------- Společné prvky aktivit ---------- */
 .row-gap { display: flex; flex-wrap: wrap; gap: .5rem; }
 .fb { padding: .7rem .9rem; border-radius: 12px; font-size: .92rem; }
@@ -599,7 +557,11 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .poll-pct { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Přiřaď dvojice */
-.mp { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: .6rem; }
+.mp { position: relative; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: .6rem 2.5rem; }
+.mp-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.mp-lines line { stroke: var(--sky); stroke-width: 2.5; stroke-linecap: round; }
+.mp-lines line.ok { stroke: var(--sky); }
+.mp-lines line.bad { stroke: var(--salmon); stroke-dasharray: 5 5; }
 .mp-col { display: grid; gap: .45rem; align-content: start; }
 .mp-item { display: flex; align-items: center; gap: .5rem; min-height: 2.8rem; padding: .45rem .7rem; font: inherit; font-size: .88rem; text-align: left; color: var(--sky); background: var(--white); border: 1px solid var(--line-strong); border-radius: 12px; cursor: pointer; }
 .mp-item[aria-pressed="true"] { border: 2px solid var(--sky); background: var(--mint-soft); }
@@ -706,7 +668,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
     </div>
     <nav class="nav-links" aria-label="Rychlé odkazy">
       <button type="button" class="nav-link" id="nav-help">Nápověda</button>
-      <a class="nav-link" href="#rozhodnuti">Rozhodnutí</a>
     </nav>
   </div>
 </header>
@@ -715,7 +676,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
   <section class="band band-dark hero-band">
     <div class="wrap hero">
       <h1>Švédský stůl <span class="hl">{aktivit}</span></h1>
-      <p class="lead">Vyzkoušejte si aktivity, které by náš portál mohl umět, a dejte hlas těm, které chcete. Tady je jedna, vlevo jak ji umíme dnes, vpravo nově.</p>
+      <p class="lead">Vyzkoušejte si aktivity, které by náš portál mohl umět. Tady je jedna, vlevo jak ji umíme dnes, vpravo nově.</p>
       <div class="compare" id="compare"></div>
     </div>
   </section>
@@ -724,7 +685,7 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
     <div class="wrap">
       <div class="katalog-head">
         <h2 id="katalog-title">Vyzkoušejte si <span class="hl">{aktivity}</span></h2>
-        <p>Pět, na kterých je rozdíl vidět nejvíc, je nahoře. Dalších 25 najdete pod tlačítkem.</p>
+        <p>Šest nahoře má plnou kartu, dalších 24 je stručně pod tlačítkem. Pořadí nic neznamená, vybírat budeme spolu.</p>
       </div>
       <ul class="grid" id="featured"></ul>
       <div class="more-wrap" id="more-wrap">
@@ -737,54 +698,6 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
     </div>
   </section>
 
-  <section class="band band-breeze" id="vyber" aria-labelledby="vyber-title" tabindex="-1">
-    <div class="wrap picks">
-      <h2 id="vyber-title" style="font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem)">Co chceme <span class="hl">{nejvíc}</span></h2>
-      <p>Chci tohle je hlas. Hlasy všech se sčítají tady, svůj změníte kdykoli.</p>
-      <p class="vote-sum" id="vote-sum"></p>
-      <ol class="pick-list" id="pick-list"></ol>
-      <p class="pick-empty" id="pick-empty">Zatím nikdo nehlasoval. U aktivity klikněte na <strong>Chci tohle</strong>.</p>
-      <p class="vote-notice" id="vote-notice" hidden></p>
-      <div class="owner-tools" id="owner-tools" hidden>
-        <p class="owner-note">Jen pro vlastníka stránky.</p>
-        <div class="pick-actions">
-          <button type="button" class="btn primary" id="copy-brief">Zkopírovat zadání pro vývoj</button>
-          <button type="button" class="btn" id="save-csv">Stáhnout CSV</button>
-        </div>
-        <p class="say" id="say" role="status"></p>
-        <textarea class="copy-fallback" id="copy-fallback" aria-label="Zadání pro vývoj ke zkopírování" readonly hidden></textarea>
-        <details class="brief-preview" id="brief-preview" hidden>
-          <summary>Náhled zadání pro vývoj</summary>
-          <pre class="brief-text" id="brief-text"></pre>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <section class="band" id="konkurence" aria-labelledby="konkurence-title" tabindex="-1" hidden>
-    <div class="wrap">
-      <div class="katalog-head">
-        <h2 id="konkurence-title">Co umí <span class="hl">{konkurence}</span></h2>
-        <p>Jen ověřené údaje. Kde si nejsme jistí, necháváme pole prázdné.</p>
-      </div>
-      <div class="cmp-wrap"><table class="cmp" id="cmp"></table></div>
-      <p class="cmp-src" id="cmp-src"></p>
-    </div>
-  </section>
-
-  <section class="band band-dark" id="rozhodnuti" aria-labelledby="ask-title" tabindex="-1">
-    <div class="wrap ask">
-      <h2 id="ask-title" style="font-size: clamp(1.8rem, 1.2rem + 2.2vw, 2.8rem)">Co od vás <span class="hl">{potřebujeme}</span></h2>
-      <p class="lead">Tři aktivity do prvního balíčku. Odhad práce ověří vývoj.</p>
-      <ol class="ask-list" id="ask-list"></ol>
-      <p class="ask-deadline" id="ask-deadline"></p>
-      <div class="ask-actions">
-        <button type="button" class="btn primary" id="ask-yes" data-choice="yes" aria-pressed="false">Jdeme do toho</button>
-        <button type="button" class="btn on-dark" id="ask-talk" data-choice="talk" aria-pressed="false">Chci to probrat</button>
-      </div>
-      <p class="say" id="ask-say" role="status"></p>
-    </div>
-  </section>
 </main>
 
 <footer class="band band-dark">
@@ -822,7 +735,9 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
    - config: obsah ukázky, stejná data vyplňuje administrace
    - evidence: síla důkazů (strong | medium | principle | weak), zdroj a úroveň Kirkpatricka
    - recommended: true = patří mezi 5 doporučení rešerše
-   - featured: true = patří do pětice nahoře, zbytek je za tlačítkem
+   - featured: true = plná karta nahoře, zbytek je stručně za tlačítkem
+   - uses: kde všude se aktivita hodí (řádek v otevřené kartě)
+   - wanted: štítek, že o aktivitu stál klient
    - panels: texty tří rozbalovacích panelů pod ukázkou
    ===================================================================== */
 const ACTIVITIES = [
@@ -831,6 +746,7 @@ const ACTIVITIES = [
     featured: true,
     title: "Rozhodování kartou",
     oneLiner: "Kartu po kartě rozhoduje, co udělá sám a co dá Copilotovi.",
+    uses: "chci / nechci, pravda / nepravda, řeším / neřeším, znám / neznám. Jedna aktivita na mnoho témat.",
     delta: { status: "workaround", today: "obyčejný test, jen správně a špatně, bez vysvětlení", next: "karty s gestem, sporné případy a souhrn na konci" },
     goal: "understand",
     effort: ["M"],
@@ -913,7 +829,8 @@ const ACTIVITIES = [
     goal: "habit",
     effort: ["S"],
     course: "Digitální wellbeing",
-    example: "Digitální wellbeing (dotaz klienta StopVision)",
+    example: "Digitální wellbeing",
+    wanted: "Klient by to ocenil",
     component: "profileQuiz",
     config: {
       title: "Jak jste na tom s digitálním wellbeingem?",
@@ -955,7 +872,7 @@ const ACTIVITIES = [
     evidence: { strength: "principle", source: "Model ADKAR, fáze Awareness; metakognice. Studie o profilových testech chybí.", level: "L1 až L2, uvědomění vlastních návyků" },
     panels: {
       why: "Šest otázek o telefonu a zprávách ukáže účastníkovi, co doopravdy dělá, ne co si myslí, že dělá. V modelu ADKAR je to fáze Awareness a bez ní změna nezačne. Profil ho pak pošle rovnou do kapitoly, která mu pomůže nejvíc.",
-      today: "Test umí správně a špatně a body sečte. Co součet znamená, už neřekne, profil ani kapitolu nepřiřadí. Klient StopVision to bral jako standardní funkci.",
+      today: "Test umí správně a špatně a body sečte. Co součet znamená, už neřekne, profil ani kapitolu nepřiřadí. Klient Top Vision to bral jako samozřejmost.",
       dev: {
         stores: "Zvolenou odpověď u každé otázky, součet bodů, přiřazený profil a čas dokončení.",
         evaluation: "Každá odpověď má v administraci body. Po poslední otázce se sečtou a součet se porovná s rozsahy profilů. Administrace hlídá, aby rozsahy pokryly všechny možné součty a nepřekrývaly se.",
@@ -966,36 +883,43 @@ const ACTIVITIES = [
   },
   {
     id: "trideni-do-skupin",
+    featured: true,
     title: "Třídění do skupin",
-    oneLiner: "Roztřídí osm promptů do tří skupin, vysvětlení dostane hned.",
-    delta: { status: "workaround", today: "obyčejný test, jen správně a špatně, bez vysvětlení", next: "třídění tažením nebo klikem, vysvětlení hned" },
+    oneLiner: "Roztřídí aplikace, které používá, a kurz mu řekne, kde začít.",
+    uses: "co používám / nepoužívám, co mě brzdí / co zvládám, můj úkol / úkol pro Copilota. S vyhodnocením, nebo jen jako sebehodnocení.",
+    delta: { status: "workaround", today: "test s výběrem odpovědi, kurz se podle něj nezmění", next: "třídění tažením nebo klikem a kurz, který poradí, kde začít" },
     goal: "understand",
     effort: ["M"],
-    example: "Prompty: dobrý, chybí kontext, chybí formát výstupu",
+    example: "Aplikace, které používám. Druhá varianta s vyhodnocením: prompty, kterým chybí kontext nebo formát.",
     component: "sortGroups",
     course: "Microsoft 365 Copilot v praxi",
     config: {
-      instruction: "Zařaďte každý prompt do správné skupiny.",
+      instruction: "Přetáhněte každou aplikaci do skupiny podle toho, jak ji používáte. Kurz vám pak poradí, kde začít.",
       shuffle: false,
-      groups: [{ name: "Dobrý prompt" }, { name: "Chybí kontext" }, { name: "Chybí formát výstupu" }],
+      selfSort: true,
+      groups: [
+        { name: "Používám denně", note: "Tady vám Copilot ušetří nejvíc času. Začněte kapitolami:" },
+        { name: "Občas", note: "Tyhle kapitoly si projděte, až budete mít chvíli:" },
+        { name: "Nepoužívám", note: "Tyhle kapitoly klidně přeskočte:" }
+      ],
       items: [
-        { text: "Napiš něco o projektu.", group: 1, why: "Copilot neví, o jaký projekt jde, pro koho text je ani k čemu poslouží." },
-        { text: "Shrň tento e-mail do 3 odrážek pro vedoucí, která nebyla na poradě.", group: 0, why: "Má kontext (pro koho), cíl i formát (3 odrážky)." },
-        { text: "Připrav odpověď klientovi, který se ptá na zpoždění dodávky tiskáren.", group: 2, why: "Kontext je jasný, ale chybí délka a tón odpovědi." },
-        { text: "Uprav to, ať je to lepší.", group: 1, why: "Co je „to“ a co znamená „lepší“? Chybí situace i kritérium." },
-        { text: "Z tohoto zápisu vytvoř tabulku úkolů se sloupci úkol, kdo, termín.", group: 0, why: "Jasný zdroj, cíl i přesný formát výstupu." },
-        { text: "Shrň přiloženou výroční zprávu pro nové kolegy.", group: 2, why: "Ví, co a pro koho, ale ne jak dlouhé a v jaké podobě shrnutí má být." },
-        { text: "Napiš pozvánku na školení.", group: 1, why: "Chybí téma, termín, místo i komu je pozvánka určená." },
-        { text: "Navrhni program 45minutové porady o spuštění nového webu pro tým 8 lidí, v bodech s časy.", group: 0, why: "Kontext, rozsah i formát jsou jasně dané." }
+        { text: "Outlook", group: 0, why: "" },
+        { text: "Teams", group: 0, why: "" },
+        { text: "Word", group: 0, why: "" },
+        { text: "Excel", group: 1, why: "" },
+        { text: "PowerPoint", group: 1, why: "" },
+        { text: "OneNote", group: 1, why: "" },
+        { text: "Loop", group: 2, why: "" },
+        { text: "SharePoint", group: 2, why: "" }
       ]
     },
     evidence: { strength: "weak", source: "Fiorella a Mayer 2015, generativní učení. Důkazy pro třídění tažením jsou slabé až střední.", level: "L2 porozumění kritériím" },
     panels: {
-      why: "Třídění nutí hledat pravidlo, podle kterého položky patří k sobě, a to je těžší než poznat správnou odpověď. Pozor, verze jen s tažením je bariéra pro klávesnici a čtečky, proto musí jít třídit i výběrem.",
-      today: "Obyčejný test, u každého promptu otázka, do které skupiny patří. Jen správně a špatně, bez vysvětlení. Nová verze musí vedle tažení umět i výběr skupiny kliknutím nebo klávesnicí.",
+      why: "Třídění nutí rozhodnout u každé položky zvlášť. Když se třídí bez správné odpovědi, účastník sám řekne, co používá, a kurz ho pošle na kapitoly, které mu k něčemu budou. S vyhodnocením se hodí na hledání pravidla, třeba u promptů. Verze jen s tažením je bariéra pro klávesnici a čtečky, proto musí jít třídit i klikem.",
+      today: "Obyčejný test nebo otevřená odpověď. Kurz se podle toho, co účastník používá, nijak nezmění. Nová verze musí vedle tažení umět i výběr skupiny kliknutím nebo klávesnicí.",
       dev: {
-        stores: "Pro každou položku zvolenou skupinu, správnost a čas.",
-        evaluation: "Okamžitě po zařazení se porovná se skupinou z administrace a ukáže vysvětlení. Na konci počet správně zařazených.",
+        stores: "Pro každou položku zvolenou skupinu, u vyhodnocované verze i správnost, a čas.",
+        evaluation: "Dvě verze. Sebehodnocení: nic se nehodnotí, na konci se u každé skupiny ukáže text z administrace a položky, které tam účastník dal. S vyhodnocením: po zařazení se porovná se skupinou z administrace a ukáže vysvětlení.",
         keyboard: "Skupiny jsou tlačítka, položka se zařadí kliknutím nebo Enterem. Tažení je jen doplněk.",
         effortNote: "Nová interakce s ukládáním odpovědí."
       }
@@ -1079,7 +1003,6 @@ const ACTIVITIES = [
   },
   {
     id: "vetveny-scenar",
-    featured: true,
     title: "Větvený scénář",
     oneLiner: "Ve třech krocích volí, jak naložit s urgentní žádostí, a vidí důsledky.",
     delta: { status: "none", today: "neumíme", next: "volby s důsledky a třemi různými konci" },
@@ -1152,33 +1075,34 @@ const ACTIVITIES = [
     id: "zavazek-s-pripominkou",
     featured: true,
     title: "Závazek s připomínkou",
-    oneLiner: "Doplní plán „když nastane X, udělám Y“ a portál mu ho připomene.",
-    delta: { status: "workaround", today: "formulář, připomínka nepřijde", next: "plán „když, tak“ a připomínka e-mailem v daný den" },
+    oneLiner: "Plán „až přijde X, udělám Y“ a připomínka přesně v tu chvíli.",
+    delta: { status: "workaround", today: "formulář, připomínka nepřijde", next: "plán „až nastane X, udělám Y“ a připomínka ve chvíli, kdy ho máte splnit" },
     goal: "habit",
     effort: ["M", "L"],
-    example: "Kdy poprvé vyzkouším shrnutí e-mailů",
+    example: "Až v pondělí otevřu poštu po víkendu, nechám Copilota shrnout nejdelší vlákno.",
     component: "commitment",
     course: "Microsoft 365 Copilot v Outlooku",
     config: {
-      intro: "Doplňte svůj plán. Konkrétní situace funguje líp než obecné předsevzetí.",
-      whenSuggestions: [{ text: "mi ráno přijde víc než 20 e-mailů" }, { text: "se vrátím z dovolené" }, { text: "dostanu dlouhé vlákno, ve kterém se ztrácím" }],
-      thenSuggestions: [{ text: "nechám Copilota shrnout nejdelší vlákno" }, { text: "požádám Copilota o seznam úkolů z pošty" }, { text: "napíšu odpověď s pomocí Copilota a upravím ji" }],
-      channel: "E-mail",
-      subject: "Váš plán z kurzu: dnes je ten den",
+      intro: "Vyberte chvíli, která v práci opravdu nastane, a co v ní s Copilotem zkusíte. Připomínka přijde přesně v tu chvíli, ne kdykoli během dne.",
+      whenSuggestions: [{ text: "v pondělí ráno otevřu poštu po víkendu" }, { text: "se vrátím z dovolené a čeká mě plná schránka" }, { text: "mi přijde vlákno s víc než deseti odpověďmi" }],
+      thenSuggestions: [{ text: "nechám Copilota shrnout nejdelší vlákno" }, { text: "požádám Copilota o seznam úkolů z pošty" }, { text: "nechám Copilota navrhnout odpověď a upravím ji" }],
+      channel: "Notifikace v aplikaci",
+      subject: "Teď je ta chvíle",
+      nudge: "Otevřete nejdelší vlákno a klikněte na Shrnout. Zabere to minutu.",
       repeatDays: 7,
       doneText: "Skvělé. Za týden se zeptáme, jestli se z toho stává zvyk.",
-      snoozeText: "Dobře, připomeneme zítra v 8:00."
+      snoozeText: "Dobře, připomeneme to příště, až to nastane."
     },
     evidence: { strength: "strong", source: "Gollwitzer a Sheeran 2006, metaanalýza 94 studií: dosažení cíle d = 0,65.", level: "L3 změna chování" },
     recommended: true,
     panels: {
-      why: "Plán „když nastane situace X, udělám Y“ přiváže úmysl ke konkrétní chvíli v práci. Metaanalýza 94 studií takovým plánům naměřila d = 0,65, na poměry vzdělávání dospělých hodně. Připomínka po kurzu plán vrátí do hry přesně v tu chvíli.",
+      why: "Plán „až nastane X, udělám Y“ přiváže úmysl ke konkrétní chvíli v práci. Metaanalýza 94 studií takovým plánům naměřila d = 0,65, na poměry vzdělávání dospělých hodně. Celé to stojí na načasování: připomínka musí přijít ve chvíli, kdy se plán má splnit, ne kdykoli ve středu. Pak člověk neřekne „aha, někdy“, ale otevře vlákno a zkusí to.",
       today: "Formulář s otevřenou odpovědí. Připomínka nepřijde.",
       dev: {
         stores: "Text závazku (když, tak), zvolený den a odpověď na připomínku (hotovo, nebo odložit).",
         evaluation: "Nehodnotí se. Odpovědi na připomínky dávají data o přenosu do praxe (Kirkpatrick L3).",
         keyboard: "Běžná pole a tlačítka, návrhy se vkládají kliknutím nebo Enterem.",
-        effortNote: "Potřebuje plánovač e-mailů nebo notifikací, proto M až L."
+        effortNote: "Plná verze potřebuje plánovač notifikací, proto M až L. Levnější varianta: portál vygeneruje pozvánku do kalendáře (.ics) s textem závazku na zvolený den a čas, připomínku pak zařídí Outlook. To je S."
       }
     }
   },
@@ -1396,7 +1320,6 @@ const ACTIVITIES = [
   },
   {
     id: "hledani-chyby",
-    featured: true,
     title: "Hledání chyby",
     oneLiner: "Ve shrnutí od AI označí věty, které nesedí s podkladem.",
     delta: { status: "none", today: "neumíme", next: "označení chybných vět proti podkladu" },
@@ -1454,9 +1377,11 @@ const ACTIVITIES = [
   },
   {
     id: "anketa-se-srovnanim",
+    featured: true,
     title: "Anketa se srovnáním",
-    oneLiner: "Odpoví na otázku a hned vidí, jak odpověděli kolegové.",
-    delta: { status: "none", today: "neumíme, odpovědi ostatních se nezobrazují", next: "odpověď a hned srovnání s kolegy" },
+    oneLiner: "Odpoví a hned vidí, že stejný problém řeší půlka lidí z kurzu.",
+    uses: "odhad před výkladem, dilema bez správné odpovědi, co vás nejvíc brzdí. Srovnání se všemi, kdo kurz prošli, napříč firmami.",
+    delta: { status: "none", today: "neumíme, odpovědi ostatních se nezobrazují", next: "odpověď a hned srovnání s lidmi, kteří kurz prošli" },
     goal: "habit",
     effort: ["M"],
     course: "Digitální wellbeing",
@@ -1466,22 +1391,25 @@ const ACTIVITIES = [
       question: "Kolik času denně trávíte v e-mailové poště?",
       hint: "Odpovězte odhadem, výsledky ostatních uvidíte hned potom.",
       options: [{ text: "Méně než 30 minut", seed: 12 }, { text: "30 až 60 minut", seed: 31 }, { text: "1 až 2 hodiny", seed: 38 }, { text: "Víc než 2 hodiny", seed: 19 }],
-      note: "Ukázková data.",
-      after: "V další kapitole si ukážeme, jak čas v poště zkrátit.",
+      sameText: "Nejste v tom sami. Stejně odpovědělo {pct} % lidí, kteří tímhle kurzem prošli.",
+      note: "Ukázková data. V portálu se sčítají odpovědi všech, kdo kurz prošli, napříč firmami.",
+      after: "V další kapitole si ukážeme, jak to vyřešili oni.",
       minAnswers: 20
     },
     evidence: { strength: "principle", source: "Deci a Ryan, teorie sebeurčení; predikce před výkladem. Přímé studie chybí.", level: "L1 zapojení; souhrn za firmu" },
     panels: {
-      why: "Účastník si nejdřív udělá vlastní odhad a pak ho porovná s ostatními. To vzbudí zvědavost na výklad. Firma navíc získá souhrn odpovědí.",
+      why: "Účastník si nejdřív udělá vlastní odhad a pak ho porovná s lidmi, kteří kurz prošli. Zjistí, že v tom není sám, a chce vědět, jak to vyřešili ostatní. Firma navíc získá souhrn odpovědí.",
       today: "Neumíme. Odpovědi ostatních se účastníkům nezobrazují.",
       dev: { stores: "Odpověď každého účastníka, anonymně.", evaluation: "Procenta ze všech odpovědí v kurzu. Výsledky se ukážou až od nastaveného počtu odpovědí.", keyboard: "Možnosti jsou tlačítka, výsledky jsou i v číslech.", effortNote: "Souhrn odpovědí za víc účastníků." }
     }
   },
   {
     id: "dvojice",
+    featured: true,
     title: "Dvojice",
-    oneLiner: "Spojí každou aplikaci s úkolem, se kterým v ní Copilot pomůže.",
-    delta: { status: "workaround", today: "obyčejný test s jednou nebo více správnými odpověďmi", next: "spojování klikem, bez tažení" },
+    oneLiner: "Spojí čarou aplikaci s úkolem, se kterým v ní Copilot pomůže.",
+    uses: "pojem a definice, aplikace a úkol, problém a řešení, funkce a místo, kde ji najdete.",
+    delta: { status: "workaround", today: "obyčejný test s jednou nebo více správnými odpověďmi", next: "spojování klikem, čára mezi dvojicí, bez tažení" },
     goal: "remember",
     effort: ["S"],
     course: "Microsoft 365 Copilot v praxi",
@@ -1501,7 +1429,7 @@ const ACTIVITIES = [
     },
     evidence: { strength: "principle", source: "Adesope a kol. 2017, metaanalýza: testovací efekt. Verze jen s tažením je riziko pro přístupnost.", level: "L2 zapamatování" },
     panels: {
-      why: "Spojování nutí účastníka přemýšlet o vztahu mezi pojmy, ne jen o jednom z nich. Díky klikání místo tažení to jde i z klávesnice.",
+      why: "Spojování nutí účastníka přemýšlet o vztahu mezi pojmy, ne jen o jednom z nich. Pro vývoj je to levná věc, která na obrazovce vypadá dobře. Díky klikání místo tažení to jde i z klávesnice.",
       today: "Obyčejný test s jednou správnou odpovědí nebo s výběrem více odpovědí.",
       dev: { stores: "Vytvořené dvojice a správnost.", evaluation: "Porovnání s dvojicemi z administrace.", keyboard: "Obě strany jsou tlačítka: vyberte vlevo, pak vpravo. Žádné tažení.", effortNote: "Nový typ zobrazení." }
     }
@@ -2425,21 +2353,29 @@ const SortGroups = withSchema({
       card.addEventListener("pointerup", end);
       card.addEventListener("pointercancel", end);
     }
+    const self = !!cfg.selfSort;   // sebehodnocení: žádná správná skupina, na konci souhrn podle skupin
     function place(gi, viaButton) {
       const it = order[placed.length];
       if (!it) return;
-      const ok = Number(it.group) === gi;
+      const ok = self ? true : Number(it.group) === gi;
       placed.push({ it, gi, ok });
-      zones[gi].list.append(h("li", { class: ok ? "st-ok" : "st-diff" }, h("span", { class: "res-st" }, ok ? "✓" : "✗"), " ", it.text));
+      zones[gi].list.append(self ? h("li", {}, it.text) : h("li", { class: ok ? "st-ok" : "st-diff" }, h("span", { class: "res-st" }, ok ? "✓" : "✗"), " ", it.text));
       zones.forEach((z, k) => { z.btn.querySelector(".grp-zone-count").textContent = z.list.children.length ? `(${z.list.children.length})` : ""; });
-      live.replaceChildren(h("p", { class: ok ? "fb fb-ok" : "fb fb-bad" }, h("strong", {}, ok ? "Správně. " : `Patří do: ${groups[it.group]?.name || "?"}. `), it.why || ""));
+      if (!self) live.replaceChildren(h("p", { class: ok ? "fb fb-ok" : "fb fb-bad" }, h("strong", {}, ok ? "Správně. " : `Patří do: ${groups[it.group]?.name || "?"}. `), it.why || ""));
       drawCurrent();
       if (viaButton && placed.length < order.length) focusLater(zones[gi].btn);
     }
     function finish() {
-      const ok = placed.filter(p => p.ok).length;
-      const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně zařazeno ${ok} z ${order.length}`);
-      current.replaceChildren(head, restart(() => SortGroups.renderLearner(root, cfg)));
+      let head;
+      if (self) {
+        head = h("p", { class: "res-score", tabindex: "-1" }, "Hotovo. Takhle to pro vás vypadá:");
+        const sum = groups.map((g, gi) => { const mine = placed.filter(p => p.gi === gi).map(p => p.it.text); return mine.length ? h("p", { class: "fb fb-ok" }, h("strong", {}, (g.note || g.name + ":") + " "), mine.join(", ")) : null; });
+        current.replaceChildren(head, ...sum.filter(Boolean), restart(() => SortGroups.renderLearner(root, cfg)));
+      } else {
+        const ok = placed.filter(p => p.ok).length;
+        head = h("p", { class: "res-score", tabindex: "-1" }, `Správně zařazeno ${ok} z ${order.length}`);
+        current.replaceChildren(head, restart(() => SortGroups.renderLearner(root, cfg)));
+      }
       zones.forEach(z => { z.btn.disabled = true; });
       focusLater(head);
     }
@@ -2447,8 +2383,8 @@ const SortGroups = withSchema({
     drawCurrent();
   },
   admin: [
-    { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání pro účastníka" }, { type: "check", key: "shuffle", label: "Zamíchat pořadí položek" }] },
-    { title: "Skupiny", fields: [{ type: "list", key: "groups", label: "Skupiny", summary: it => it.name, min: 2, add: () => ({ name: "" }), addLabel: "Přidat skupinu", fields: [{ type: "text", key: "name", label: "Název skupiny" }] }] },
+    { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání pro účastníka" }, { type: "check", key: "shuffle", label: "Zamíchat pořadí položek" }, { type: "check", key: "selfSort", label: "Bez správných odpovědí (sebehodnocení, na konci souhrn podle skupin)" }] },
+    { title: "Skupiny", fields: [{ type: "list", key: "groups", label: "Skupiny", summary: it => it.name, min: 2, add: () => ({ name: "", note: "" }), addLabel: "Přidat skupinu", fields: [{ type: "text", key: "name", label: "Název skupiny" }, { type: "area", key: "note", label: "Text na konci pro tuto skupinu (jen u sebehodnocení)" }] }] },
     { title: "Položky", fields: [{ type: "list", key: "items", label: "Položky ke třídění", summary: it => it.text, add: () => ({ text: "", group: 0, why: "" }), addLabel: "Přidat položku",
       meta: (it) => "", fields: [
         { type: "area", key: "text", label: "Text položky" },
@@ -2671,20 +2607,21 @@ const Commitment = withSchema({
     function preview() {
       const status = h("p", { class: "help", role: "status" });
       const card = h("div", { class: "notif", tabindex: "-1" },
-        h("div", { class: "notif-top" }, h("img", { src: LOGO_NAVY, alt: "", class: "notif-logo" }), h("span", {}, `${cfg.channel} · ${day} 8:00`)),
+        h("div", { class: "notif-top" }, h("img", { src: LOGO_NAVY, alt: "", class: "notif-logo" }), h("span", {}, `${cfg.channel} · ${day}, ve chvíli, kdy to nastane`)),
         h("p", { class: "notif-subj" }, cfg.subject),
-        h("p", { class: "notif-body" }, `Když ${when.value.trim()}, tak ${then.value.trim()}.`),
+        h("p", { class: "notif-body" }, nb(`Slíbili jste si: až ${when.value.trim()}, ${then.value.trim()}.`)),
+        cfg.nudge ? h("p", { class: "notif-body" }, nb(cfg.nudge)) : null,
         h("div", { class: "row-gap" },
           h("button", { type: "button", class: "btn btn-small navy", onclick: () => { status.textContent = nb(cfg.doneText); } }, "Hotovo"),
           h("button", { type: "button", class: "btn btn-small", onclick: () => { status.textContent = nb(cfg.snoozeText); } }, "Připomenout zítra")),
         status);
-      actShell(root, h("p", { class: "muted" }, nb(`Takhle vám portál připomene závazek v ${day === "středa" ? "středu" : day === "pátek" ? "pátek" : day}:`)), card, restart(() => Commitment.renderLearner(root, cfg), "Upravit závazek"));
+      actShell(root, h("p", { class: "muted" }, nb(`Takhle přijde připomínka v ${day === "středa" ? "středu" : day === "pátek" ? "pátek" : day}, přesně ve chvíli, kdy plán máte splnit:`)), card, restart(() => Commitment.renderLearner(root, cfg), "Upravit závazek"));
       focusLater(card);
     }
     actShell(root, h("p", {}, cfg.intro),
       h("div", { class: "f" }, h("label", { for: uid + "w" }, "Když…"), when, chips(cfg.whenSuggestions, when)),
       h("div", { class: "f" }, h("label", { for: uid + "t" }, "…tak…"), then, chips(cfg.thenSuggestions, then)),
-      h("div", { class: "f" }, h("p", { class: "f-legend" }, "Kdy vám to připomenout?"), dayBox),
+      h("div", { class: "f" }, h("p", { class: "f-legend" }, "Který den to nejspíš nastane?"), dayBox),
       h("div", {}, save));
   },
   admin: [
@@ -2695,6 +2632,7 @@ const Commitment = withSchema({
     { title: "Připomínka", fields: [
       { type: "select", key: "channel", label: "Kanál", options: [["E-mail", "E-mail"], ["Notifikace v aplikaci", "Notifikace v aplikaci"]] },
       { type: "text", key: "subject", label: "Předmět připomínky" },
+      { type: "area", key: "nudge", label: "Výzva v připomínce (co má člověk teď udělat)" },
       { type: "number", key: "repeatDays", label: "Zopakovat po (dnech), 0 = neopakovat", min: 0, max: 60 },
       { type: "text", key: "doneText", label: "Reakce na Hotovo" },
       { type: "text", key: "snoozeText", label: "Reakce na Připomenout zítra" }] }
@@ -3087,12 +3025,13 @@ const PollCompare = withSchema({
         const pct = Math.round(counts[i] / sum * 100);
         return h("li", { class: i === k ? "is-you" : "" }, h("span", { class: "poll-label" }, o.text, i === k ? h("strong", {}, " · vy") : null),
           h("span", { class: "poll-bar", "aria-hidden": "true" }, h("span", { style: { width: pct + "%" } })), h("span", { class: "poll-pct" }, pct + " %"));
-      })), h("p", { class: "help" }, nb(`Odpovědělo ${sum} kolegů. ${cfg.note}`)), h("p", {}, cfg.after));
+      })), cfg.sameText ? h("p", { class: "fb fb-ok" }, nb(cfg.sameText.replace("{pct}", Math.round(counts[k] / sum * 100)))) : null,
+      h("p", { class: "help" }, nb(`Odpovědělo ${sum} lidí. ${cfg.note}`)), h("p", {}, cfg.after));
     }
     actShell(root, h("p", { class: "calc-q" }, cfg.question), h("p", { class: "help" }, cfg.hint), opts, res);
   },
   admin: [
-    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka" }, { type: "text", key: "hint", label: "Nápověda před hlasováním" }, { type: "area", key: "after", label: "Text po zobrazení výsledků" }] },
+    { title: "Otázka", fields: [{ type: "area", key: "question", label: "Otázka" }, { type: "text", key: "hint", label: "Nápověda před hlasováním" }, { type: "text", key: "sameText", label: "Věta ke shodě, {pct} = procento stejných odpovědí" }, { type: "area", key: "after", label: "Text po zobrazení výsledků" }] },
     { title: "Možnosti", help: "V portálu se čísla sčítají z odpovědí ostatních účastníků. Tady jsou ukázková.", fields: [
       { type: "list", key: "options", label: "Možnosti", summary: it => it.text, meta: it => `ukázkově ${it.seed} odpovědí`, add: () => ({ text: "", seed: 0 }), addLabel: "Přidat možnost",
         fields: [{ type: "text", key: "text", label: "Text" }, { type: "number", key: "seed", label: "Ukázkový počet odpovědí", min: 0, max: 1000 }] },
@@ -3117,22 +3056,49 @@ const MatchPairs = withSchema({
     const live = h("p", { class: "sr-only", "aria-live": "polite" });
     const go = h("button", { type: "button", class: "btn primary", disabled: true, onclick: check }, "Zkontrolovat");
     const result = h("div", { class: "act-result" });
+    /* Čáry mezi spojenými dvojicemi: SVG přes mřížku, přepočítá se po každé změně a při změně velikosti. */
+    const SVG = "http://www.w3.org/2000/svg";
+    const lines = document.createElementNS(SVG, "svg");
+    lines.setAttribute("class", "mp-lines"); lines.setAttribute("aria-hidden", "true");
+    const grid = h("div", { class: "mp" }, h("div", { class: "mp-col" }, leftBtns), h("div", { class: "mp-col" }, rightBtns));
+    grid.append(lines);
+    let checked = false;
+    function drawLines() {
+      const g = grid.getBoundingClientRect();
+      lines.setAttribute("viewBox", `0 0 ${g.width} ${g.height}`);
+      lines.replaceChildren();
+      for (const l in link) {
+        const a = leftBtns[l].getBoundingClientRect(), rb = rightBtns.find(b => Number(b.dataset.r) === link[l]);
+        if (!rb) continue;
+        const b = rb.getBoundingClientRect();
+        if (b.left <= a.right) continue;
+        const line = document.createElementNS(SVG, "line");
+        line.setAttribute("x1", a.right - g.left); line.setAttribute("y1", a.top + a.height / 2 - g.top);
+        line.setAttribute("x2", b.left - g.left); line.setAttribute("y2", b.top + b.height / 2 - g.top);
+        if (checked) line.setAttribute("class", Number(l) === link[l] ? "ok" : "bad");
+        lines.append(line);
+      }
+    }
+    if (window.ResizeObserver) new ResizeObserver(() => drawLines()).observe(grid);
     function draw() {
       leftBtns.forEach((b, i) => { b.setAttribute("aria-pressed", sel === i); b.querySelector(".mp-n").textContent = link[i] != null ? i + 1 : ""; b.classList.toggle("is-linked", link[i] != null); });
       rightBtns.forEach(b => { const r = Number(b.dataset.r); const l = Object.keys(link).find(k => link[k] === r); b.querySelector(".mp-n").textContent = l != null ? Number(l) + 1 : ""; b.classList.toggle("is-linked", l != null); });
       go.disabled = Object.keys(link).length < pairs.length;
+      requestAnimationFrame(drawLines);
     }
     function check() {
       let ok = 0;
+      checked = true;
       leftBtns.forEach((b, i) => { const good = link[i] === i; if (good) ok++; b.classList.add(good ? "mp-ok" : "mp-bad"); b.disabled = true; if (!good) b.append(h("span", { class: "mp-fix" }, ` → ${pairs[i].right}`)); });
       rightBtns.forEach(b => { b.disabled = true; });
       go.hidden = true;
+      requestAnimationFrame(drawLines);
       const head = h("p", { class: "res-score", tabindex: "-1" }, `Správně ${ok} z ${pairs.length}`);
       result.replaceChildren(head, h("p", {}, ok === pairs.length ? cfg.feedbackOk : cfg.feedbackBad), restart(() => MatchPairs.renderLearner(root, cfg)));
       focusLater(head);
     }
     draw();
-    actShell(root, h("p", {}, cfg.instruction), h("div", { class: "mp" }, h("div", { class: "mp-col" }, leftBtns), h("div", { class: "mp-col" }, rightBtns)), h("div", {}, go), result, live);
+    actShell(root, h("p", {}, cfg.instruction), grid, h("div", {}, go), result, live);
   },
   admin: [
     { title: "Zadání", fields: [{ type: "area", key: "instruction", label: "Zadání" }] },
@@ -3654,7 +3620,9 @@ const TODAY = {
   swipe: c => ({ kind: "quiz", questions: take(c.cards, 4).map(k => q1(`${k.text}. Co uděláte?`, [c.leftLabel, c.rightLabel], k.answer === "left" ? 0 : 1)) }),
   sortSteps: () => ({ kind: "none" }),
   profileQuiz: c => ({ kind: "quiz", scoring: "points", intro: c.intro, questions: c.questions.map(qq => q1(qq.text, qq.answers)) }),
-  sortGroups: c => ({ kind: "quiz", questions: take(c.items, 4).map(it => q1(`Do které skupiny patří prompt „${it.text}“?`, c.groups.map(g => g.name), it.group)) }),
+  sortGroups: c => c.selfSort
+    ? ({ kind: "quiz", scoring: "survey", intro: c.instruction, questions: take(c.items, 4).map(it => q1(`${it.text}: jak často používáte?`, c.groups.map(g => g.name))) })
+    : ({ kind: "quiz", questions: take(c.items, 4).map(it => q1(`Do které skupiny patří „${it.text}“?`, c.groups.map(g => g.name), it.group)) }),
   hotspot: () => ({ kind: "quiz", media: "Snímek obrazovky: Outlook", questions: [q1("Kde v Outlooku najdete Copilota?", ["Vpravo nahoře v horní liště", "V seznamu složek", "V nastavení Outlooku", "V seznamu zpráv"], 0)] }),
   compareOutputs: c => ({ kind: "quiz", blocks: [{ title: "Varianta A", text: c.outputA }, { title: "Varianta B", text: c.outputB }], questions: [q1(c.question, ["Varianta A", "Varianta B"], c.better === "A" ? 0 : 1)] }),
   branching: () => ({ kind: "none" }),
@@ -3755,16 +3723,8 @@ function renderToday(root, a, cfg) {
 /* =====================================================================
    STRÁNKA: úvod, sekce podle cíle, sbalené karty, hlasování
    ===================================================================== */
-const state = { open: null, selected: [], counts: {}, voters: 0, shared: false };
+const state = { open: null };
 const refs = {};
-
-function goalTag(a) {
-  return h("span", { class: "tag", style: { "--dot": `var(${GOALS[a.goal].color})` } }, h("span", { class: "dot", "aria-hidden": "true" }), GOALS[a.goal].label);
-}
-function pickButton(a, extraClass) {
-  return h("button", { type: "button", class: "btn pick" + (extraClass ? " " + extraClass : ""), "aria-pressed": "false", "data-pick": a.id, onclick: () => togglePick(a.id) },
-    h("span", { class: "pick-check", "aria-hidden": "true" }), "Chci tohle");
-}
 
 function evidMeter(a) {
   const st = STRENGTH[a.evidence.strength];
@@ -3772,13 +3732,11 @@ function evidMeter(a) {
     h("span", { class: "evid-dots", "aria-hidden": "true" }, [1, 2, 3].map(i => h("i", { class: i <= st.dots ? "on" : "" }))), st.label);
 }
 
-/* Pět aktivit nahoře, zbylých 25 ve stejné mřížce za tlačítkem, seřazených podle cíle učení. */
+/* Šest plných karet nahoře, zbylé stručně za tlačítkem. Pořadí je jen pro prezentaci. */
 function buildSections() {
-  const order = Object.keys(GOALS);
-  const featured = ACTIVITIES.filter(a => a.featured);
-  const rest = ACTIVITIES.filter(a => !a.featured).sort((x, y) => order.indexOf(x.goal) - order.indexOf(y.goal));
-  $("#featured").append(...featured.map(buildCard));
-  $("#rest-grid").append(...rest.map(buildCard));
+  const featured = ACTIVITIES.filter(a => a.featured), rest = ACTIVITIES.filter(a => !a.featured);
+  $("#featured").append(...featured.map(a => buildCard(a, false)));
+  $("#rest-grid").append(...rest.map(a => buildCard(a, true)));
   $("#n-rest").textContent = rest.length;
   $("#n-rest-2").textContent = rest.length;
   $("#show-rest").addEventListener("click", () => { showRest(); $("#rest-title").focus({ preventScroll: true }); });
@@ -3788,7 +3746,7 @@ function showRest() {
   $("#more-wrap").hidden = true;
 }
 
-function buildCard(a) {
+function buildCard(a, compact) {
   const comp = COMPONENTS[a.component];
   let cfg = clone(a.config);
   const learnerRoot = h("div", { class: "portal-body" });
@@ -3826,7 +3784,6 @@ function buildCard(a) {
   const tryLbl = h("span", {}, "Vyzkoušet");
   const tryBtn = h("button", { type: "button", class: "btn navy", "aria-expanded": "false", "aria-controls": "open-" + a.id,
     onclick: () => (state.open === a.id ? closeCard(a.id) : openCard(a.id)) }, tryLbl);
-  const votes = h("span", { class: "votes", id: "votes-" + a.id });
   /* Záložky: Ukázka, Proč to funguje, Administrace (ukázka a vedle ní nastavení), Pro vývoj */
   const whyPanel = h("div", { class: "info-grid", id: "why-" + a.id, role: "tabpanel", hidden: true }, whyBlocks(a));
   const TABS = [["demo", "Ukázka", stage], ["why", "Proč to funguje", whyPanel], ["admin", "Nastavení a vývoj", stage]];
@@ -3842,17 +3799,17 @@ function buildCard(a) {
   const tabs = h("div", { class: "ctabs", role: "tablist", "aria-label": "Části karty" },
     TABS.map(([k, label, panel]) => tabBtns[k] = h("button", { type: "button", class: "ctab", role: "tab", "aria-selected": "false", "aria-controls": panel.id, onclick: () => setTab(k) }, label)));
   const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true },
+    a.uses && h("p", { class: "uses" }, h("b", {}, "Hodí se i na: "), a.uses),
     tabs, stage, whyPanel,
     h("button", { type: "button", class: "linkbtn close-bottom", onclick: () => closeCard(a.id) }, "Zavřít ukázku"));
-  const li = h("li", { class: "acard", id: a.id, "data-id": a.id, style: { "--goal": `var(${GOALS[a.goal].color})` } },
+  const li = h("li", { class: "acard" + (compact ? " acard-mini" : ""), id: a.id, "data-id": a.id },
     h("div", { class: "acard-head" },
       h("div", { class: "acard-titles" },
-        h("div", { class: "tags" }, goalTag(a)),
         h("h3", { class: "card-title" }, a.title),
         h("p", { class: "card-text" }, a.oneLiner))),
     h("div", { class: "acard-foot" },
-      h("div", { class: "acard-meta" }, evidMeter(a), votes),
-      h("div", { class: "acard-actions" }, tryBtn, pickButton(a))),
+      !compact && h("div", { class: "acard-meta" }, evidMeter(a), a.wanted && h("span", { class: "tag tag-want" }, a.wanted)),
+      h("div", { class: "acard-actions" }, tryBtn)),
     openArea);
   const setOpen = open => {
     li.classList.toggle("is-open", open);
@@ -3862,7 +3819,7 @@ function buildCard(a) {
     if (open && !demoMounted) { comp.renderLearner(learnerRoot, cfg); demoMounted = true; }
     if (open) setTab("demo"); else { stage.hidden = true; }
   };
-  refs[a.id] = { li, votes, tryBtn, setOpen, setMode };
+  refs[a.id] = { li, tryBtn, setOpen, setMode };
   return li;
 }
 
@@ -3881,188 +3838,6 @@ function closeCard(id) {
   refs[id].tryBtn.focus({ preventScroll: true });
 }
 
-/* ---------- Hlasování ----------
-   Každý hlasující má v db jeden dokument votes/<id> se seznamem aktivit.
-   Všichni čtou celou sbírku a sčítají. Mimo claude.ai zůstane výběr jen
-   v tomto prohlížeči (localStorage). */
-/* Hlasy se ukážou, až hlasuje aspoň tolik lidí. Vlastník stránky je vidí vždy. */
-const VOTE_MIN = 5;
-/* První balíček a termín rozhodnutí. Změnit tady. */
-const PACKAGE = ["sebehodnotici-test", "rozhodovani-kartou", "zavazek-s-pripominkou"];
-const ASK_DEADLINE = "Rozhodnutí potřebujeme do 5. prosince.";
-const EFFORT_LABEL = { S: "malá práce pro vývoj", M: "střední práce pro vývoj", L: "větší práce pro vývoj" };
-/* Srovnání s konkurencí: doplnit jen ověřené údaje. Sekce se ukáže, až tu něco je.
-   names: názvy sloupců, rows: { title, us, them: [true | false | null, ...] }, source: odkud údaje jsou. */
-const COMPETITORS = { names: [], rows: [], source: "" };
-const VOTE_KEY = "svedsky-stul-hlas";
-const vote = { db: null, uid: null, busy: false, dirty: false, mineOnServer: false, isOwner: false };
-function loadLocalPicks() {
-  try { const v = JSON.parse(localStorage.getItem(VOTE_KEY) || "[]"); return Array.isArray(v) ? v.filter(id => typeof id === "string" && byId(id)) : []; }
-  catch (e) { return []; }
-}
-function saveLocalPicks() { try { localStorage.setItem(VOTE_KEY, JSON.stringify(state.selected)); } catch (e) {} }
-function voteNotice(msg) { const el = $("#vote-notice"); el.textContent = nb(msg); el.hidden = !msg; }
-function togglePick(id) {
-  const i = state.selected.indexOf(id);
-  if (i >= 0) state.selected.splice(i, 1); else state.selected.push(id);
-  saveLocalPicks();
-  syncPicks();
-  pushVote();
-}
-async function pushVote() {
-  if (!vote.db || !vote.uid) return;
-  if (vote.busy) { vote.dirty = true; return; }
-  vote.busy = true;
-  try {
-    await vote.db.doc("votes/" + vote.uid).set({ picks: state.selected.slice(), updatedAt: new Date().toISOString() });
-    voteNotice("");
-  } catch (e) {
-    voteNotice(e && e.code === "invalid_argument"
-      ? "Tuhle stránku máte jen pro čtení, hlas zůstane jen v tomto prohlížeči. O právo hlasovat požádejte Veroniku."
-      : "Hlas se teď nepodařilo uložit. Zkuste to za chvíli znovu.");
-  }
-  vote.busy = false;
-  if (vote.dirty) { vote.dirty = false; pushVote(); }
-}
-async function initVotes() {
-  const off = () => { $("#owner-tools").hidden = false; voteNotice("Hlasy ostatních se sčítají jen na sdílené stránce na claude.ai. Tady zůstane váš výběr v tomto prohlížeči."); };
-  if (!(window.claude && typeof window.claude.use === "function")) return off();
-  const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
-  if (!db) return off();
-  vote.db = db;
-  vote.uid = user ? await user.id() : null;
-  vote.isOwner = user ? await user.isOwner() : false;
-  $("#owner-tools").hidden = !vote.isOwner;
-  initDecision();
-  db.collection("votes").onSnapshot(snap => {
-    const counts = {};
-    let voters = 0, mine = null;
-    for (const d of snap.docs) {
-      const data = d.data() || {};
-      const picks = Array.isArray(data.picks) ? data.picks.filter(p => typeof p === "string" && byId(p)) : [];
-      if (vote.uid && d.id === vote.uid) mine = picks;
-      if (!picks.length) continue;
-      voters++;
-      for (const id of picks) counts[id] = (counts[id] || 0) + 1;
-    }
-    vote.mineOnServer = mine !== null;
-    if (mine && !vote.busy && !vote.dirty) { state.selected = mine; saveLocalPicks(); }
-    state.counts = counts; state.voters = voters; state.shared = true;
-    syncPicks();
-  }, () => voteNotice("Hlasy ostatních se teď nenačtou. Váš výběr zůstane v tomto prohlížeči."));
-}
-function voteCount(id) {
-  let n = state.counts[id] || 0;
-  if (state.selected.includes(id) && !vote.mineOnServer) n += 1;
-  return n;
-}
-const hlasy = n => `${n} ${plural(n, "hlas", "hlasy", "hlasů")}`;
-function ranking() {
-  return ACTIVITIES.map(a => ({ a, n: voteCount(a.id) })).filter(r => r.n > 0)
-    .sort((x, y) => y.n - x.n || x.a.title.localeCompare(y.a.title, "cs"));
-}
-function syncPicks() {
-  const sel = state.selected;
-  /* Sdílené hlasy se ukážou až od VOTE_MIN hlasujících, aby nikdo neviděl nulu. */
-  const reveal = !state.shared || vote.isOwner || state.voters >= VOTE_MIN;
-  for (const a of ACTIVITIES) {
-    const n = voteCount(a.id);
-    refs[a.id].li.classList.toggle("is-picked", sel.includes(a.id));
-    refs[a.id].votes.textContent = reveal && n ? hlasy(n) : "";
-  }
-  const rank = reveal ? ranking() : [], max = rank.length ? rank[0].n : 1;
-  $("#pick-list").replaceChildren(...rank.map(({ a, n }, i) =>
-    h("li", { class: "pick-row", "data-id": a.id },
-      h("span", { class: "pick-n", "aria-hidden": "true" }, i + 1),
-      h("div", { class: "pick-main" },
-        h("span", { class: "pick-title" }, a.title),
-        h("span", { class: "pick-meta" }, `${GOALS[a.goal].label}, ${hlasy(n)}`),
-        h("span", { class: "pick-bar", "aria-hidden": "true" }, h("i", { style: { width: `${Math.round(n / max * 100)}%` } }))),
-      h("div", { class: "pick-ctrl" }, pickButton(a, "btn-small")))));
-  document.querySelectorAll("[data-pick]").forEach(b => b.setAttribute("aria-pressed", sel.includes(b.dataset.pick)));
-  const voters = state.voters;
-  $("#vote-sum").textContent = state.shared && reveal && voters ? `Hlasovalo ${voters} ${plural(voters, "člověk", "lidé", "lidí")}.` : "";
-  const any = rank.length > 0;
-  $("#pick-empty").hidden = any;
-  $("#pick-empty").textContent = nb(state.shared && !reveal
-    ? `Výsledky se ukážou, až bude hlasovat ${VOTE_MIN} lidí. Zatím ${voters}. Váš hlas se počítá hned.`
-    : "Zatím nikdo nehlasoval. U aktivity klikněte na Chci tohle.");
-  $("#copy-brief").disabled = !any;
-  $("#save-csv").disabled = !any;
-  $("#brief-preview").hidden = !any;
-  $("#brief-text").textContent = any ? buildBrief() : "";
-  $("#copy-fallback").hidden = true;
-  $("#say").textContent = "";
-}
-
-function buildBrief() {
-  const date = new Date().toLocaleDateString("cs-CZ");
-  const out = [`Švédský stůl aktivit: výsledky hlasování (${date})`, "Pořadí podle počtu hlasů.", ""];
-  ranking().forEach(({ a, n }, i) => {
-    const d = a.panels.dev;
-    out.push(`${i + 1}. ${a.title} (${hlasy(n)})`);
-    out.push(`   Co účastník dělá: ${a.oneLiner}`);
-    out.push(`   Cíl učení: ${GOALS[a.goal].label}`);
-    out.push(`   Dnes v portálu: ${a.panels.today}`);
-    out.push(`   Funkční ukázka: ${isReady(a) ? "ano, je na stránce" : "připravuje se"}`);
-    out.push(`   Proč: ${a.panels.why}`);
-    out.push(`   Důkazy: ${STRENGTH[a.evidence.strength].label}${a.recommended ? ", doporučeno rešerší" : ""}. Zdroj: ${a.evidence.source}`);
-    out.push(`   Kirkpatrick: ${a.evidence.level}`);
-    if (d) {
-      out.push(`   Co se ukládá: ${d.stores}`);
-      out.push(`   Jak se vyhodnocuje: ${d.evaluation}`);
-      out.push(`   Ovládání bez myši a dotyku: ${d.keyboard}`);
-    } else {
-      out.push("   Technický popis: doplníme spolu s funkční ukázkou.");
-    }
-    out.push("");
-  });
-  return out.join("\n");
-}
-function buildCsv() {
-  const rows = [["Pořadí", "Aktivita", "Hlasů", "Co účastník dělá", "Cíl učení", "Dnes v portálu", "Funkční ukázka", "Síla důkazů", "Doporučeno rešerší", "Zdroj", "Kirkpatrick", "Co se ukládá", "Jak se vyhodnocuje", "Ovládání bez myši a dotyku"]];
-  ranking().forEach(({ a, n }, i) => {
-    const d = a.panels.dev || {};
-    rows.push([i + 1, a.title, n, a.oneLiner, GOALS[a.goal].label, a.panels.today, isReady(a) ? "ano" : "připravuje se", STRENGTH[a.evidence.strength].label, a.recommended ? "ano" : "ne", a.evidence.source, a.evidence.level, d.stores || "", d.evaluation || "", d.keyboard || ""]);
-  });
-  const cell = v => { const s = String(v); return /[";\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-  return "﻿" + rows.map(r => r.map(cell).join(";")).join("\r\n");
-}
-function say(msg) { $("#say").textContent = msg; }
-
-function copyBrief() {
-  const text = buildBrief();
-  const done = () => { $("#copy-fallback").hidden = true; say("Zadání je ve schránce. Vložte ho do e-mailu nebo úkolu pro vývoj."); };
-  const fallback = () => {
-    const ta = $("#copy-fallback");
-    ta.value = text; ta.hidden = false; ta.focus(); ta.select();
-    let ok = false;
-    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
-    if (ok) done(); else say("Schránka tu není dostupná. Text je označený v poli níže, zkopírujte ho klávesami Ctrl+C (na Macu Cmd+C).");
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
-  else fallback();
-}
-
-const downloadsReady = (window.claude && typeof window.claude.use === "function")
-  ? window.claude.use("downloads").catch(() => null)
-  : Promise.resolve(null);
-async function saveCsv() {
-  const data = buildCsv();
-  const filename = `hlasovani-aktivity-${new Date().toISOString().slice(0, 10)}.csv`;
-  const dl = await downloadsReady;
-  if (dl) {
-    try { await dl.save({ filename, data }); say("CSV je uložené."); }
-    catch (e) { say(e && e.code === "declined" ? "Ukládání jste zrušili." : "CSV se tu nepodařilo uložit. Použijte Zkopírovat zadání pro vývoj."); }
-    return;
-  }
-  const url = URL.createObjectURL(new Blob([data], { type: "text/csv;charset=utf-8" }));
-  const link = h("a", { href: url, download: filename });
-  document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
-  say("CSV se stahuje. Otevřete ho v Excelu nebo v Tabulkách Google.");
-}
-
 /* ---------- Záložky Proč to funguje a Pro vývoj ---------- */
 function whyBlocks(a) {
   const P = a.panels;
@@ -4071,7 +3846,8 @@ function whyBlocks(a) {
       h("div", { class: "evid" }, evidMeter(a)),
       h("p", { class: "src" }, a.evidence.source),
       h("p", { class: "src" }, "Kirkpatrick: " + a.evidence.level)),
-    h("div", { class: "info-block" }, h("h4", {}, "Jak to děláme dnes"), h("p", {}, P.today))
+    h("div", { class: "info-block" }, h("h4", {}, "Jak to děláme dnes"), h("p", {}, P.today),
+      h("p", { class: "src" }, "Cíl učení: " + GOALS[a.goal].label))
   ];
 }
 function devBlock(a) {
@@ -4098,59 +3874,7 @@ function buildCompare() {
   comp.renderLearner(newRoot, clone(a.config));
 }
 
-/* ---------- Co od vás potřebujeme ---------- */
-const decision = { db: null, uid: null, busy: false };
-function buildAsk() {
-  $("#ask-list").replaceChildren(...PACKAGE.map(byId).filter(Boolean).map(a => {
-    const lvl = a.effort[a.effort.length - 1];
-    return h("li", { class: "ask-item" },
-      h("span", { class: "effort" }, EFFORT_LABEL[lvl] || ""),
-      h("h3", {}, a.title),
-      h("p", {}, a.oneLiner));
-  }));
-  $("#ask-deadline").textContent = nb(ASK_DEADLINE);
-  const say = msg => { $("#ask-say").textContent = nb(msg); };
-  const mark = choice => document.querySelectorAll("[data-choice]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.choice === choice)));
-  document.querySelectorAll("[data-choice]").forEach(b => b.addEventListener("click", async () => {
-    const choice = b.dataset.choice;
-    mark(choice);
-    if (!vote.db || !vote.uid) { say("Tady se odpověď neuloží. Odpovězte prosím Veronice na e-mail: " + (choice === "yes" ? "jdeme do toho" : "chci to probrat") + "."); return; }
-    if (decision.busy) return;
-    decision.busy = true;
-    try {
-      await vote.db.doc("decisions/" + vote.uid).set({ choice, at: new Date().toISOString() });
-      say(choice === "yes" ? "Díky. Veronika vaši odpověď uvidí a ozve se s dalším krokem." : "Díky. Veronika se vám ozve a domluvíte si termín.");
-    } catch (e) {
-      say("Odpověď se teď nepodařilo uložit. Odpovězte prosím Veronice na e-mail.");
-    }
-    decision.busy = false;
-  }));
-}
-async function initDecision() {
-  if (!vote.db || !vote.uid) return;
-  try {
-    const snap = await vote.db.doc("decisions/" + vote.uid).get();
-    const d = snap.exists ? snap.data() : null;
-    if (d && (d.choice === "yes" || d.choice === "talk")) {
-      document.querySelectorAll("[data-choice]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.choice === d.choice)));
-      $("#ask-say").textContent = nb("Vaše odpověď je uložená. Změnit ji můžete kdykoli.");
-    }
-  } catch (e) {}
-}
-
-/* ---------- Srovnání s konkurencí: jen s ověřenými údaji ---------- */
-function buildCompetitors() {
-  const C = COMPETITORS;
-  if (!C.names.length || !C.rows.length) return;
-  const cell = v => v === true ? h("td", { class: "yes" }, "ano") : v === false ? h("td", { class: "no" }, "ne") : h("td", {}, "");
-  $("#cmp").replaceChildren(
-    h("thead", {}, h("tr", {}, h("th", {}, "Aktivita"), h("th", {}, "Náš portál"), C.names.map(n => h("th", {}, n)))),
-    h("tbody", {}, C.rows.map(r => h("tr", {}, h("td", {}, r.title), cell(r.us), C.names.map((n, i) => cell(r.them[i]))))));
-  $("#cmp-src").textContent = nb(C.source || "");
-  $("#konkurence").hidden = false;
-}
-
-/* ---------- Průvodce: čtyři kroky přímo na stránce ----------
+/* ---------- Průvodce: tři kroky přímo na stránce ----------
    Zvýrazní skutečný prvek na první kartě a sám ho ovládá. */
 const TOUR_KEY = "svedsky-stul-pruvodce";
 const tour = { on: false, step: 0, id: null, raf: 0 };
@@ -4160,7 +3884,6 @@ function tourSteps() {
   return [
     { el: () => r.tryBtn, text: "Tlačítko Vyzkoušet otevře ukázku aktivity.", go: "Otevřít ukázku", act: () => openCard(id) },
     { el: () => r.li.querySelector(".mode"), text: "Přepínač ukáže, jak to umíme dnes a jak by to vypadalo nově.", go: "Ukázat Dnes", act: () => r.setMode("today") },
-    { el: () => r.li.querySelector(".acard-actions [data-pick]"), text: "Líbí se vám? Dejte hlas. Hlasy všech se sčítají dole.", go: "Další" },
     { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak se to nastaví.", go: "Hotovo" }
   ];
 }
@@ -4226,14 +3949,7 @@ function initTour() {
 fixStaticText(document.body);
 buildSections();
 buildCompare();
-buildAsk();
-buildCompetitors();
-state.selected = loadLocalPicks();
-syncPicks();
-initVotes();
 initTour();
-$("#copy-brief").addEventListener("click", copyBrief);
-$("#save-csv").addEventListener("click", saveCsv);
 {
   const id = decodeURIComponent(location.hash.slice(1));
   if (id && byId(id)) { if (!byId(id).featured) showRest(); openCard(id); }
