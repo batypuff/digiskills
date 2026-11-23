@@ -317,13 +317,12 @@ input[type="number"].in { max-width: 8rem; font-variant-numeric: tabular-nums; }
 .admin-fields { display: grid; gap: 1.1rem; }
 .admin-fields > .adm-sec:first-child { border-top: 0; padding-top: 0; }
 /* ---------- Záložky otevřené karty ---------- */
-.acard-open { display: grid; gap: 1rem; }
-.ctabs { display: flex; flex-wrap: wrap; gap: .25rem; padding: .25rem; background: var(--white); border-radius: 999px; box-shadow: var(--shadow); }
-.ctab { flex: 1 1 auto; min-height: 2.5rem; padding: .4rem .9rem; border: 0; border-radius: 999px; background: transparent; color: var(--sky); font-family: var(--font); font-weight: 700; font-size: .74rem; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
-.ctab:hover { background: var(--mint-soft); }
-.ctab[aria-selected="true"] { background: var(--sky); color: var(--white); }
+.acard-open { display: grid; gap: .75rem; }
 .linkbtn { background: none; border: 0; padding: .25rem 0; color: var(--sky); font-family: var(--font); font-weight: 700; font-size: .9rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
-.close-bottom { justify-self: end; }
+.details-btn { display: inline-flex; align-items: center; gap: .4rem; justify-self: start; }
+.chev::before { content: ""; display: inline-block; width: .5rem; height: .5rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.details-btn[aria-expanded="true"] .chev::before { transform: translateY(2px) rotate(-135deg); }
+.details { display: grid; gap: 1rem; padding-top: .25rem; }
 .info-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); align-items: start; }
 .info-block { display: grid; gap: .5rem; padding: 1.1rem 1.2rem; background: var(--white); border-radius: 16px; min-width: 0; }
 .info-block h4 { font-size: 1rem; }
@@ -3760,8 +3759,7 @@ function buildCard(a, compact) {
   const adminPane = h("div", { class: "acard-admin", id: "adm-" + a.id, hidden: true },
     h("div", { class: "pane-head" }, h("p", { class: "pane-label" }, "Administrace portálu"), reset),
     h("p", { class: "admin-note" }, "Takhle aktivitu nastaví autor kurzu. Změny se hned projeví v ukázce."),
-    h("div", { class: "admin" }, adminRoot),
-    devBlock(a));
+    h("div", { class: "admin" }, adminRoot));
   /* Přepínač Dnes / Nově v hlavičce ukázky. Dnešní verze se vykreslí až při prvním přepnutí. */
   const modeBtn = (label, mode) => h("button", { type: "button", class: "mode-btn", "aria-pressed": "false", onclick: () => setMode(mode) }, label);
   const bToday = modeBtn("Dnes v portálu", "today"), bNew = modeBtn("Nově", "new");
@@ -3780,28 +3778,34 @@ function buildCard(a, compact) {
     if (today && !oldMounted) { renderToday(oldRoot, a, cfg); oldMounted = true; }
   };
   setMode("new");
-  const stage = h("div", { class: "acard-stage", id: "stage-" + a.id, role: "tabpanel", hidden: true }, portal, adminPane);
+  const stage = h("div", { class: "acard-stage", id: "stage-" + a.id }, portal, adminPane);
   const tryLbl = h("span", {}, "Vyzkoušet");
   const tryBtn = h("button", { type: "button", class: "btn navy", "aria-expanded": "false", "aria-controls": "open-" + a.id,
     onclick: () => (state.open === a.id ? closeCard(a.id) : openCard(a.id)) }, tryLbl);
-  /* Záložky: Ukázka, Proč to funguje, Administrace (ukázka a vedle ní nastavení), Pro vývoj */
-  const whyPanel = h("div", { class: "info-grid", id: "why-" + a.id, role: "tabpanel", hidden: true }, whyBlocks(a));
-  const TABS = [["demo", "Ukázka", stage], ["why", "Proč to funguje", whyPanel], ["admin", "Nastavení a vývoj", stage]];
-  const tabBtns = {};
-  const setTab = key => {
-    for (const [k, , panel] of TABS) { tabBtns[k].setAttribute("aria-selected", String(k === key)); panel.hidden = true; }
-    TABS.find(t => t[0] === key)[2].hidden = false;
-    const adminOn = key === "admin";
-    adminPane.hidden = !adminOn;
-    li.classList.toggle("has-admin", adminOn);
-    if (adminOn && !adminMounted) { mountAdmin(); adminMounted = true; }
+  /* Podrobnosti: proč to funguje, kde se hodí, poznámky pro vývoj a odkaz na nastavení. Vše za jedním odkazem. */
+  const adminLbl = h("span", {}, "Ukázat nastavení");
+  const adminBtn = h("button", { type: "button", class: "linkbtn", "aria-expanded": "false", "aria-controls": adminPane.id, onclick: () => setAdmin(adminPane.hidden) }, adminLbl);
+  const setAdmin = on => {
+    adminPane.hidden = !on;
+    li.classList.toggle("has-admin", on);
+    adminBtn.setAttribute("aria-expanded", String(on));
+    adminLbl.textContent = on ? "Skrýt nastavení" : "Ukázat nastavení";
+    if (on && !adminMounted) { mountAdmin(); adminMounted = true; }
+    if (on) adminPane.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "nearest" });
   };
-  const tabs = h("div", { class: "ctabs", role: "tablist", "aria-label": "Části karty" },
-    TABS.map(([k, label, panel]) => tabBtns[k] = h("button", { type: "button", class: "ctab", role: "tab", "aria-selected": "false", "aria-controls": panel.id, onclick: () => setTab(k) }, label)));
-  const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true },
+  const details = h("div", { class: "details", id: "details-" + a.id, hidden: true },
+    h("div", { class: "info-grid" }, whyBlocks(a), devBlock(a)),
     a.uses && h("p", { class: "uses" }, h("b", {}, "Hodí se i na: "), a.uses),
-    tabs, stage, whyPanel,
-    h("button", { type: "button", class: "linkbtn close-bottom", onclick: () => closeCard(a.id) }, "Zavřít ukázku"));
+    h("p", {}, adminBtn));
+  const detLbl = h("span", {}, "Podrobnosti");
+  const detBtn = h("button", { type: "button", class: "linkbtn details-btn", "aria-expanded": "false", "aria-controls": details.id, onclick: () => setDetails(details.hidden) }, detLbl, h("span", { class: "chev", "aria-hidden": "true" }));
+  const setDetails = on => {
+    details.hidden = !on;
+    detBtn.setAttribute("aria-expanded", String(on));
+    detLbl.textContent = on ? "Skrýt podrobnosti" : "Podrobnosti";
+    if (!on) setAdmin(false);
+  };
+  const openArea = h("div", { class: "acard-open", id: "open-" + a.id, hidden: true }, stage, detBtn, details);
   const li = h("li", { class: "acard" + (compact ? " acard-mini" : ""), id: a.id, "data-id": a.id },
     h("div", { class: "acard-head" },
       h("div", { class: "acard-titles" },
@@ -3815,9 +3819,10 @@ function buildCard(a, compact) {
     li.classList.toggle("is-open", open);
     openArea.hidden = !open;
     tryBtn.setAttribute("aria-expanded", open);
-    tryLbl.textContent = open ? "Zavřít ukázku" : "Vyzkoušet";
+    tryBtn.classList.toggle("navy", !open);
+    tryLbl.textContent = open ? "Zavřít" : "Vyzkoušet";
     if (open && !demoMounted) { comp.renderLearner(learnerRoot, cfg); demoMounted = true; }
-    if (open) setTab("demo"); else { stage.hidden = true; }
+    if (!open) setDetails(false);
   };
   refs[a.id] = { li, tryBtn, setOpen, setMode };
   return li;
@@ -3884,7 +3889,7 @@ function tourSteps() {
   return [
     { el: () => r.tryBtn, text: "Tlačítko Vyzkoušet otevře ukázku aktivity.", go: "Otevřít ukázku", act: () => openCard(id) },
     { el: () => r.li.querySelector(".mode"), text: "Přepínač ukáže, jak to umíme dnes a jak by to vypadalo nově.", go: "Ukázat Dnes", act: () => r.setMode("today") },
-    { el: () => r.li.querySelector(".ctabs"), text: "Pro zvídavé: proč to funguje a jak se to nastaví.", go: "Hotovo" }
+    { el: () => r.li.querySelector(".details-btn"), text: "Pro zvídavé: proč to funguje, kde se hodí a jak se to nastaví.", go: "Hotovo" }
   ];
 }
 function tourStart(id, step) {
